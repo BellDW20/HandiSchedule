@@ -22,7 +22,7 @@ public class TimeFrame {
 		return startTime.fallsWithin(timeFrame) && endTime.fallsWithin(timeFrame);
 	}
 	
-	public int getTotalTimeInMinutes() {
+	public int getTimeInMinutes() {
 		return (endTime.getTimeAsInt() - startTime.getTimeAsInt());
 	}
 	

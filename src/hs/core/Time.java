@@ -15,6 +15,31 @@ public class Time {
 		this.amOrPm = amOrPm;
 	}
 	
+	/**
+	 * Converts military time in format HH:MM:SS to standard time
+	 * in HH:MM AM/PM to be used by the Time class.
+	 * @param militaryTime Time as string in military time to convert
+	 */
+	public Time(String militaryTime) {
+		String[] parts = militaryTime.split(":");
+		int hour = Integer.parseInt(parts[0]);
+		this.minute = Integer.parseInt(parts[1]);
+		
+		if(hour == 0) {
+			this.hour = 12;
+			this.amOrPm = AM;
+		} else if(hour == 12) {
+			this.hour = 12;
+			this.amOrPm = PM;
+		} else if(hour < 12) {
+			this.hour = hour;
+			this.amOrPm = AM;
+		} else {
+			this.hour = hour-12;
+			this.amOrPm = PM;
+		}
+	}
+	
 	public boolean fallsWithin(TimeFrame timeFrame) {
 		return isAfter(timeFrame.getStartTime()) && isBefore(timeFrame.getEndTime());
 	}
