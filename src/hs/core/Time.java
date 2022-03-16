@@ -2,8 +2,6 @@ package hs.core;
 
 public class Time {
 	
-	//test commit
-	
 	static final int AM = 0;
 	static final int PM = 1;
 	
@@ -12,11 +10,14 @@ public class Time {
 	int amOrPm;
 	
 	public Time(int hour, int minute, int amOrPm) {
-		hour = this.hour;
-		minute = this.minute;
-		amOrPm = this.amOrPm;
+		this.hour = hour;
+		this.minute = minute;
+		this.amOrPm = amOrPm;
 	}
 	
+	public boolean fallsWithin(TimeFrame timeFrame) {
+		return isAfter(timeFrame.getStartTime()) && isBefore(timeFrame.getEndTime());
+	}
 	
 	public boolean isAfter(Time time) {
 		if(time.hour < this.hour) {
@@ -52,6 +53,9 @@ public class Time {
 		}
 	}
 	
-	
+	public int getTimeAsInt() {
+		int normalizedHour = hour % 12;
+		return (normalizedHour + (amOrPm==PM?12:0))*60+minute;
+	}
 
 }
