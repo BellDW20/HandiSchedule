@@ -2,6 +2,8 @@ package hs.core;
 
 public class Time {
 	
+	//test commit
+	
 	static final int AM = 0;
 	static final int PM = 1;
 	
