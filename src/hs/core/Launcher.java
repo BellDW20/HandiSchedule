@@ -29,7 +29,8 @@ public class Launcher extends Application {
 		CourseSearchPage csp = new CourseSearchPage(pageManager, "CourseSearch");
 		CalendarPage cp = new CalendarPage(pageManager, "CalendarPage");
 		pageManager.goToPage("CourseSearch");
-		
+		stage.setTitle("HandiSchedule");
+		stage.setResizable(false);
 	}
 	
 }

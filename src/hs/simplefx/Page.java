@@ -60,16 +60,36 @@ public abstract class Page {
 	public abstract void initializeComponents(PageManager pageManager);
 	
 	public void hideComponent(String type, String componentName) {
-		nodeMap.get(type+componentName).setVisible(false);
+		if(type.equals(SUB_PAGE)) {
+			pane.getChildren().remove(subPages.get(componentName).getPane());
+		} else {
+			nodeMap.get(type+componentName).setVisible(false);
+		}
 	}
 	
 	public void showComponent(String type, String componentName) {
-		nodeMap.get(type+componentName).setVisible(true);
+		if(type.equals(SUB_PAGE)) {
+			Pane subPagePane = subPages.get(componentName).getPane();
+			if(!pane.getChildren().contains(subPagePane)) {
+				pane.getChildren().add(subPagePane);
+			}
+		} else {
+			nodeMap.get(type+componentName).setVisible(true);
+		}
 	}
 	
 	public void toggleComponentVisibility(String type, String componentName) {
-		Node n = nodeMap.get(type+componentName);
-		n.setVisible(!n.isVisible());
+		if(type.equals(SUB_PAGE)) {
+			Pane subPagePane = subPages.get(componentName).getPane();
+			if(!pane.getChildren().contains(subPagePane)) {
+				pane.getChildren().add(subPagePane);
+			} else {
+				pane.getChildren().remove(subPagePane);
+			}
+		} else {
+			Node n = nodeMap.get(type+componentName);
+			n.setVisible(!n.isVisible());
+		}
 	}
 	
 	public void removeComponent(String type, String componentName) {

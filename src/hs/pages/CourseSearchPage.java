@@ -11,7 +11,9 @@ public class CourseSearchPage extends Page {
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		// add Load button
-		addButton("loadButton", 10, 5, 80, 40, "Load", null);
+		addButton("loadButton", 10, 5, 80, 40, "Load", ()->{
+			hideComponent(SUB_PAGE, "filterOptions");
+		});
 		
 		// add New button
 		addButton("newButton", 105, 5, 80, 40, "New", null);
@@ -29,10 +31,16 @@ public class CourseSearchPage extends Page {
 		});
 		
 		addTextField("searchField", 10, 70, 500, 40, "Search...");
-		addButton("searchButton", 510, 70, 40, 40, "Search", null);
+		addButton("searchButton", 510, 70, 40, 40, "Search", ()->{
+			hideComponent(SUB_PAGE, "filterOptions");
+		});
 		
-		addButton("filterButton", 560, 70, 40, 40, "Filter", null);
+		addButton("filterButton", 560, 70, 40, 40, "Filter", ()->{
+			toggleComponentVisibility(SUB_PAGE, "filterOptions");
+		});
 		
+		addSubPage("filterOptions", new FilterOptionsPage(pageManager), 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
+		hideComponent(SUB_PAGE, "filterOptions");
 		//this.addSubPage("searchList", null, 0, 200, 400, 400, false);
 		
 	}
