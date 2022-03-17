@@ -82,5 +82,10 @@ public class Time {
 		int normalizedHour = hour % 12;
 		return (normalizedHour + (amOrPm==PM?12:0))*60+minute;
 	}
+	
+	@Override
+	public String toString() {
+		return (hour+":"+(minute<10?"0":"")+minute+((amOrPm==AM)?" AM":" PM"));
+	}
 
 }
