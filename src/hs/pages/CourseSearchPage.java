@@ -44,6 +44,7 @@ public class CourseSearchPage extends Page {
 		
 		addTextField("searchField", 10, 70, 500, 40, "Search...");
 		addButton("searchButton", 510, 70, 40, 40, "Search", ()->{
+			courses.clear();
 			hideComponent(SUB_PAGE, "filterOptions");
 			search.clearFilters();
 			search.addSearchFilter(new CourseNameFilter(getTextField("searchField").getText()));
@@ -53,7 +54,7 @@ public class CourseSearchPage extends Page {
 					temp.getCheckBox("200Level").isSelected(),temp.getCheckBox("300Level").isSelected(), 
 					temp.getCheckBox("400Level").isSelected()));
 			
-			//add in rest filters
+			//add in rest filters HERE
 			search.updateSearch();
 			for (int i = 0; i < search.getSearchResults().size(); i++) {
 				courses.addCourseToDisplay(search.getSearchResults().get(i));

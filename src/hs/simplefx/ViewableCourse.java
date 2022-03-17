@@ -10,6 +10,21 @@ public class ViewableCourse extends Page {
 		drawText(pad, pad, course.getDepartment() + " " + course.getCourseCode() + " "
 				+ course.getSection() + ": " 
 				+ course.getCourseName() + "\n");
+		if (!course.getMeetingTimes().isEmpty()) {
+			String meetings = "";
+			for (int i = 0; i < course.getMeetingTimes().size(); i++) {
+				meetings += course.getMeetingTimes().get(i).toString();
+				if (i != course.getMeetingTimes().size() - 1) {
+					meetings += " and ";
+				}
+			}
+			drawText(pad, pad + 16, meetings);
+		}
+		else {
+			drawText(pad, pad + 16, "Non-standard Class Meetings");
+		}
+		
+		drawText(pad, pad + 32, course.getCreditHours() + " credits");
 	}
 	
 	@Override

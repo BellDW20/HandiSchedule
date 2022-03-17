@@ -28,7 +28,7 @@ public class ViewableCourseList extends Page {
 	public void addCourseToDisplay(Course course) {
 		if(courses.contains(course.getCourseName())) {return;}
 		courses.add(course.getCourseName());
-		addSubPage(course.getCourseName(), new ViewableCourse(course, w, COURSE_HEIGHT, PAD), 
+		addSubPage(course.getCourseName(), new ViewableCourse(course, w-22, COURSE_HEIGHT, PAD), 
 				   PAD, PAD+(courses.size()-1)*(COURSE_HEIGHT+PAD), w, COURSE_HEIGHT,
 				   false
 		);
