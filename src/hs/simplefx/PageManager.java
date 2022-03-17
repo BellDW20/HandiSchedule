@@ -26,6 +26,10 @@ public class PageManager {
 		stage.show();
 	}
 	
+	public Page getPage(String pageName) {
+		return pages.get(pageName);
+	}
+	
 	public int getWindowWidth() {
 		return windowWidth;
 	}
