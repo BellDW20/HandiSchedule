@@ -65,4 +65,39 @@ public class Course {
 	public ArrayList<MeetingTime> getMeetingTimes() {
 		return meetingTimes;
 	}
+	
+	public String getUniqueString() {
+		return department+" "+courseCode+" "+section;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof Course)) {
+			return false;
+		}
+		Course c = (Course)o;
+		return c.getCourseName().equals(courseName) && c.getSection()==section;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(department+" "+courseCode+" "+section+" | "+courseName+" | ");
+		
+		int i;
+		for(i=0; i<meetingTimes.size()-1; i++) {
+			sb.append(meetingTimes.get(i)+", ");
+		}
+		
+		if(meetingTimes.size() == 0) {
+			sb.append("No set meeting time | Variable credit hours");
+		} else {
+			sb.append(meetingTimes.get(i));
+			sb.append(" | "+creditHours+" credit hour(s)");
+		}
+		
+		return sb.toString();
+	}
+
 }	

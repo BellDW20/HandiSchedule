@@ -41,8 +41,8 @@ public class CourseDatabase {
 				
 				//Line Format: CourseCode, ShortTitle, LongTitle, BeginTime, EndTime, Meets, Building, Room, Enrollment, Capacity
 				String courseSection = lineScanner.next();
-				boolean alreadySeenSection = courseMap.containsKey(courseSection);
 				String[] deptAndCode = courseSection.split("\\s+");
+				boolean alreadySeenSection = courseMap.containsKey(courseSection);
 				
 				String shortName = lineScanner.next();
 				if(shortName.startsWith("\"")) {
@@ -69,10 +69,10 @@ public class CourseDatabase {
 				
 				String department = deptAndCode[0];
 				int courseCode = Integer.parseInt(deptAndCode[1]);
-				String section = deptAndCode[2];
+				char section = deptAndCode[2].charAt(0);
 				
 				if(!alreadySeenSection) {
-					courseMap.put(courseSection, new Course(courseName, department, section.charAt(0), courseCode));
+					courseMap.put(courseSection, new Course(courseName, department, section, courseCode));
 				}
 				
 				if(!start.equals("NULL")) {

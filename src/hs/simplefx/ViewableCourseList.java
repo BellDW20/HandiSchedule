@@ -11,7 +11,7 @@ public class ViewableCourseList extends Page {
 	private static final int PAD = 2;
 
 	private int w,h;
-	private ArrayList<String> courses;
+	private ArrayList<Course> courses;
 	
 	public ViewableCourseList(int w, int h) {
 		super();
@@ -26,9 +26,9 @@ public class ViewableCourseList extends Page {
 	}
 	
 	public void addCourseToDisplay(Course course) {
-		if(courses.contains(course.getCourseName())) {return;}
-		courses.add(course.getCourseName());
-		addSubPage(course.getCourseName(), new ViewableCourse(course, w-22, COURSE_HEIGHT, PAD), 
+		if(courses.contains(course)) {return;}
+		courses.add(course);
+		addSubPage(course.getUniqueString(), new ViewableCourse(course, w-22, COURSE_HEIGHT, PAD), 
 				   PAD, PAD+(courses.size()-1)*(COURSE_HEIGHT+PAD), w, COURSE_HEIGHT,
 				   false
 		);
@@ -40,16 +40,16 @@ public class ViewableCourseList extends Page {
 
 	public void clear() {
 		while(!courses.isEmpty()) {
-			String s = courses.remove(0);
-			removeComponent(SUB_PAGE, s);
+			Course s = courses.remove(0);
+			removeComponent(SUB_PAGE, s.getUniqueString());
 		}
 	}
 	
-	public void removeCourseToDisplay(String course) {
+	public void removeCourseToDisplay(Course course) {
 		int index = courses.indexOf(course);
 		
 		courses.remove(index);
-		removeComponent(SUB_PAGE, course);
+		removeComponent(SUB_PAGE, course.getUniqueString());
 		
 		for(int i=index; i<courses.size(); i++) {
 			Node n = getPane().getChildren().get(i);
