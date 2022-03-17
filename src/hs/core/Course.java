@@ -22,6 +22,7 @@ public class Course {
 		this.department = department;
 		this.section = section;
 		this.courseCode = courseCode;
+		meetingTimes = new ArrayList<>();
 	}
 
 	public void addMeetingTime(TimeFrame timeFrame, String daysOfWeek, boolean countedTowardsDayOfWeek) {

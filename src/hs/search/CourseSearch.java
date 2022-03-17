@@ -12,7 +12,6 @@ import hs.core.CourseDatabase;
  *
  */
 public class CourseSearch {
-	private String searchTerm; //Going by class name (for now)
 	private CourseDatabase db;
 	private ArrayList<Course> searchResults;
 	private ArrayList<CourseSearchFilter> filters;
@@ -22,15 +21,10 @@ public class CourseSearch {
 	 * @param db - course database
 	 * @param searchTerm - matches with course name
 	 */
-	public CourseSearch(CourseDatabase db, String searchTerm) {
-		this.searchTerm = searchTerm;
-		this.db = CourseDatabase.loadFromFile("CourseDB_CSV.csv");
+	public CourseSearch(CourseDatabase db) {
+		this.db = db;
 		filters = new ArrayList<>();
 		searchResults = new ArrayList<>();
-	}
-	
-	public void setSearchTerm(String term) {
-		searchTerm = term;
 	}
 	
 	public void addSearchFilter(CourseSearchFilter filter) {
@@ -38,16 +32,10 @@ public class CourseSearch {
 	}
 	
 	/**
-	 * removes filter only if it is already in filter list
-	 * @param filter
+	 * removes all filters
 	 */
-	public void removeSearchFilter(CourseSearchFilter filter) {
-		if (filters.contains(filter)) {
-			filters.remove(filter);
-		}
-		else {
-			return;
-		}
+	public void clearFilters() {
+		filters.clear();
 	}
 	
 	public ArrayList<Course> getSearchResults() {
@@ -62,13 +50,6 @@ public class CourseSearch {
 		searchResults = db.getCopyOfAllCourses();
 		for (int i = 0; i < filters.size(); i++) {
 			filters.get(i).narrowResults(searchResults);
-		}
-		
-		for (int i = 0; i < searchResults.size(); i++) {
-			if (!(searchResults.get(i).getCourseName().contains(searchTerm))) {
-				searchResults.remove(i);
-				i--;
-			}
 		}
 	}
 }
