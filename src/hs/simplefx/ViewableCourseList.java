@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import hs.core.Course;
 import javafx.scene.Node;
 
-public class ViewableCourseList extends Page {
+public abstract class ViewableCourseList extends Page {
 	
 	private static final int COURSE_HEIGHT = 64;
 	private static final int PAD = 2;
@@ -21,9 +21,9 @@ public class ViewableCourseList extends Page {
 	}
 
 	@Override
-	public void initializeComponents(PageManager pageManager) {
-		
-	}
+	public void initializeComponents(PageManager pageManager) {}
+
+	protected abstract void onCourseAdd(Course course);
 	
 	public void addCourseToDisplay(Course course) {
 		if(courses.contains(course)) {return;}
@@ -32,10 +32,11 @@ public class ViewableCourseList extends Page {
 				   PAD, PAD+(courses.size()-1)*(COURSE_HEIGHT+PAD), w, COURSE_HEIGHT,
 				   false
 		);
+		onCourseAdd(course);
 	}
 	
-	public void addButtonToCourse(String course, String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
-		getSubPage(course).addButton(buttonName, x+PAD, y+PAD, w, h, text, onClick);
+	protected void addButtonToCourse(Course course, String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
+		getSubPage(course.getUniqueString()).addButton(buttonName, x+PAD, y+PAD, w, h, text, onClick);
 	}
 
 	public void clear() {
