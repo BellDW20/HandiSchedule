@@ -1,5 +1,8 @@
 package hs.core;
 
+import hs.pages.CalendarPage;
+import hs.pages.CourseSearchPage;
+import hs.simplefx.PageManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -14,14 +17,19 @@ public class Launcher extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		stage.setTitle("Handi Schedule");
-		//Testing adding a button
-		Button btn = new Button();
-		btn.setText("Welcome to HandiSchedule!");
-		StackPane sp = new StackPane();
-		sp.getChildren().add(btn);
-		stage.setScene(new Scene(sp, 800, 600));
-		stage.show();
+//		stage.setTitle("Handi Schedule");
+//		//Testing adding a button
+//		Button btn = new Button();
+//		btn.setText("Welcome to HandiSchedule!");
+//		StackPane sp = new StackPane();
+//		sp.getChildren().add(btn);
+//		stage.setScene(new Scene(sp, 800, 600));
+//		stage.show();
+		PageManager pageManager = new PageManager(stage, 1280, 720);
+		CourseSearchPage csp = new CourseSearchPage(pageManager, "CourseSearch");
+		CalendarPage cp = new CalendarPage(pageManager, "CalendarPage");
+		pageManager.goToPage("CourseSearch");
+		
 	}
 	
 }
