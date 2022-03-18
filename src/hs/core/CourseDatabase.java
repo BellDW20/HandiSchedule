@@ -6,29 +6,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
 public class CourseDatabase {
 
 	private ArrayList<Course> fullCourseList;
+	private ArrayList<String> fullDepartmentsList;
 	
 	public CourseDatabase() {
 		this.fullCourseList = new ArrayList<>();
+		this.fullDepartmentsList = new ArrayList<>();
 	}
 	
 	public void registerCourse(Course course) {
 		fullCourseList.add(course);
+		if(!fullDepartmentsList.contains(course.getDepartment())) {
+			fullDepartmentsList.add(course.getDepartment());
+		}
 	}
 	
 	public ArrayList<Course> getCopyOfAllCourses() {
 		return new ArrayList<Course>(fullCourseList);
 	}
 	
+	public ArrayList<String> getCopyOfAllDepartments() {
+		return new ArrayList<String>(fullDepartmentsList);
+	}
+	
 	public static CourseDatabase loadFromFile(String databasePath) {
 		CourseDatabase db = new CourseDatabase();
 		
 		HashMap<String,Course> courseMap = new HashMap<>();
+		HashSet<String> departmentSet = new HashSet<>();
 		
 		try {
 			Scanner fileScanner = new Scanner(new File(databasePath));
@@ -68,6 +79,8 @@ public class CourseDatabase {
 				lineScanner.next(); //Skip capacity
 				
 				String department = deptAndCode[0];
+				departmentSet.add(department);
+				
 				int courseCode = Integer.parseInt(deptAndCode[1]);
 				char section = deptAndCode[2].charAt(0);
 				
@@ -90,6 +103,9 @@ public class CourseDatabase {
 		
 		//Convert map to sorted list (by dept, course no, then section)
 		db.fullCourseList = new ArrayList<Course>(courseMap.values());
+		db.fullDepartmentsList = new ArrayList<String>(departmentSet);
+		
+		//Sort collections to be in proper order
 		Collections.sort(
 			(List<Course>)db.fullCourseList,
 			new Comparator<Course>() {
@@ -106,6 +122,8 @@ public class CourseDatabase {
 				
 			}
 		);
+		
+		Collections.sort((List<String>)db.fullDepartmentsList);
 		
 		return db;
 	}
