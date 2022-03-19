@@ -8,10 +8,6 @@ public class FilterOptionsPage extends Page {
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = 595;
 	
-	public FilterOptionsPage(PageManager pageManager) {
-		super(pageManager);
-	}
-	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		drawRect(0, 0, WIDTH, HEIGHT);

@@ -20,9 +20,6 @@ public abstract class ViewableCourseList extends Page {
 		this.courses = new ArrayList<>();
 	}
 
-	@Override
-	public void initializeComponents(PageManager pageManager) {}
-
 	protected abstract void onCourseAdd(Course course);
 	
 	public void addCourseToDisplay(Course course) {

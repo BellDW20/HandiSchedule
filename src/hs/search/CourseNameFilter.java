@@ -16,12 +16,14 @@ public class CourseNameFilter extends CourseSearchFilter {
 	public void narrowResults(ArrayList<Course> courseList) {
 		for(int i=0; i<courseList.size(); i++) {
 			
-			String courseName = courseList.get(i).getCourseName().toLowerCase();
+			Course course = courseList.get(i);
+			String courseName = course.getCourseName().toLowerCase();
+			String deptAndCode = course.getDepartment().toLowerCase()+" "+course.getCourseCode();
 			
-			boolean match = false;
+			boolean match = true;
 			for(String term : terms) {
-				if(courseName.contains(term)) {
-					match = true;
+				if(!courseName.contains(term) && !deptAndCode.contains(term)) {
+					match = false;
 					break;
 				}
 			}

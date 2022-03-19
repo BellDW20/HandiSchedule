@@ -24,6 +24,22 @@ public class MeetingTime {
 		return countedTowardsCreditHours;
 	}
 	
+	public boolean isConflictingWith(MeetingTime time) {
+		boolean daysOverlap = false;
+		for(char c : time.getDaysOfWeek()) {
+			if(daysOfWeek.contains(""+c)) {
+				daysOverlap = true;
+				break;
+			}
+		}
+		
+		if(!daysOverlap) {
+			return false;
+		}
+		
+		return timeFrame.fallsWithin(time.getTimeFrame());
+	}
+	
 	@Override
 	public String toString() {
 		return timeFrame+" "+daysOfWeek;

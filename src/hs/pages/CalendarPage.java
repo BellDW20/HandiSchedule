@@ -4,10 +4,6 @@ import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 
 public class CalendarPage extends Page {
-	public CalendarPage(PageManager pageManager, String name) {
-		super(pageManager, name);
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	public void initializeComponents(PageManager pageManager) {

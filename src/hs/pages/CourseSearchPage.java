@@ -16,10 +16,6 @@ public class CourseSearchPage extends Page {
 	
 	private CourseDatabase db;
 	private CourseSearch currentSearch;
-	
-	public CourseSearchPage(PageManager pageManager, String name) {
-		super(pageManager, name);
-	}
 
 	@Override
 	public void initializeComponents(PageManager pageManager) {
@@ -31,7 +27,6 @@ public class CourseSearchPage extends Page {
 		searchList = new CourseSearchList();
 		scheduleList = new CourseScheduleList();
 		searchList.setScheduleList(scheduleList);
-		scheduleList.setSearchList(searchList);
 		addSubPage("searchList", searchList, 10, 120, searchList.getW(), searchList.getH(), true);
 		addSubPage("scheduleList", scheduleList, 770, 120, scheduleList.getW(), scheduleList.getH(), true);
 		
@@ -85,7 +80,9 @@ public class CourseSearchPage extends Page {
 			toggleComponentVisibility(SUB_PAGE, "filterOptions");
 		});
 		
-		addSubPage("filterOptions", new FilterOptionsPage(pageManager), 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
+		FilterOptionsPage filterOptionsPage = new FilterOptionsPage();
+		filterOptionsPage.initializeComponents(pageManager);
+		addSubPage("filterOptions", filterOptionsPage, 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
 		hideComponent(SUB_PAGE, "filterOptions");
 	}
 

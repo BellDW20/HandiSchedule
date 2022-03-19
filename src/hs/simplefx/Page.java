@@ -17,7 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public abstract class Page {
+public class Page {
 	
 	public static final String LABEL = "label-";
 	public static final String BUTTON = "button-";
@@ -28,36 +28,36 @@ public abstract class Page {
 	public static final String SUB_PAGE = "subPage";
 	
 	private Pane pane;
-	private Scene scene;
-	protected String name;
 	
 	private HashMap<String, Node> nodeMap;
 	private HashMap<String, Page> subPages;
 	
-	public Page(PageManager pageManager, String name) {
-		this.pane = new Pane();
-		this.scene = new Scene(pane, pageManager.getWindowWidth(), pageManager.getWindowHeight());
-		this.name = name;
-		this.nodeMap = new HashMap<>();
-		this.subPages = new HashMap<>();
-		initializeComponents(pageManager);
-		pageManager.addPageToProgram(name, this);
-	}
-	
-	public Page(PageManager pageManager) {
-		this();
-		initializeComponents(pageManager);
-	}
+//	public Page(PageManager pageManager, String name) {
+//		this.pane = new Pane();
+//		this.scene = new Scene(pane, pageManager.getWindowWidth(), pageManager.getWindowHeight());
+//		this.name = name;
+//		this.nodeMap = new HashMap<>();
+//		this.subPages = new HashMap<>();
+//		initializeComponents(pageManager);
+//		pageManager.addPageToProgram(name, this);
+//	}
+//	
+//	public Page(PageManager pageManager) {
+//		this();
+//		initializeComponents(pageManager);
+//	}
 	
 	public Page() {
 		this.pane = new Pane();
-		this.scene = null;
-		this.name = null;
+//		this.scene = null;
+//		this.name = null;
 		this.nodeMap = new HashMap<>();
 		this.subPages = new HashMap<>();
 	}
 	
-	public abstract void initializeComponents(PageManager pageManager);
+	public void initializeComponents(PageManager pageManager) {
+		return;
+	}
 	
 	public void hideComponent(String type, String componentName) {
 		if(type.equals(SUB_PAGE)) {
@@ -194,10 +194,6 @@ public abstract class Page {
 	
 	public Page getSubPage(String subPageName) {
 		return subPages.get(subPageName);
-	}
-	
-	public Scene getScene() {
-		return scene;
 	}
 	
 	public Pane getPane() {

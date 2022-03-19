@@ -66,6 +66,18 @@ public class Course {
 		return meetingTimes;
 	}
 	
+	public boolean isConflictingWith(Course course) {
+		for(MeetingTime myTime : meetingTimes) {
+			for(MeetingTime otherTime : course.getMeetingTimes()) {
+				if(myTime.isConflictingWith(otherTime)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public String getUniqueString() {
 		return department+" "+courseCode+" "+section;
 	}

@@ -45,37 +45,11 @@ public class Time {
 	}
 	
 	public boolean isAfter(Time time) {
-		if(time.hour < this.hour) {
-			return true;
-		}
-		else if(time.hour == this.hour) {
-			if(time.minute < this.minute) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		else {
-			return false;
-		}
+		return time.getTimeAsInt() <= getTimeAsInt();
 	}
 	
 	public boolean isBefore(Time time) {
-		if(time.hour > this.hour) {
-			return true;
-		}
-		else if(time.hour == this.hour) {
-			if(time.minute > this.minute) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		else {
-			return false;
-		}
+		return time.getTimeAsInt() >= getTimeAsInt();
 	}
 	
 	public int getTimeAsInt() {
