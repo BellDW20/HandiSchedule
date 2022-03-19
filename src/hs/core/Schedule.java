@@ -18,19 +18,21 @@ public class Schedule {
 		courses = new ArrayList<Course>();
 	}
 	
-	void addCourse(Course course) {
+	public void addCourse(Course course) {
 		courses.add(course);
 	}
 	
-	void removeCourse(Course course) {
+	public void removeCourse(Course course) {
 		courses.remove(course);
 	}
 	
-	int calculateTotalCreditHours() {
+	public int calculateTotalCreditHours() {
 		int totalCreditHours = 0;
 		for(int i = 0; i < courses.size(); i++) {
 			totalCreditHours += courses.get(i).getCreditHours();
 		}
 		return totalCreditHours;
 	}
+	
+
 }

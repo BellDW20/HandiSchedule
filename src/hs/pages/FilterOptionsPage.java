@@ -20,6 +20,16 @@ public class FilterOptionsPage extends Page {
 		addCheckBox("300Level", 180, 50, "300");
 		addCheckBox("400Level", 260, 50, "400");
 		
+		
+		
+		
+		drawText(20, 80, "Course Credit Hours");
+		addCheckBox("0Credits", 20, 100, "0");
+		addCheckBox("1Credit", 100, 100, "1");
+		addCheckBox("2Credits", 180, 100, "2");
+		addCheckBox("3Credits", 260, 100, "3");
+		addCheckBox("4Credits", 340, 100, "4");
+		addCheckBox("5Credits", 420, 100, "5");
 	}
 
 }

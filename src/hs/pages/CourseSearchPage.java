@@ -1,9 +1,11 @@
 package hs.pages;
 
 import hs.core.CourseDatabase;
+import hs.core.Schedule;
 import hs.pages.subPages.CourseScheduleList;
 import hs.pages.subPages.CourseSearchList;
 import hs.search.CourseCodeFilter;
+import hs.search.CourseCreditHourFilter;
 import hs.search.CourseNameFilter;
 import hs.search.CourseSearch;
 import hs.simplefx.Page;
@@ -16,16 +18,18 @@ public class CourseSearchPage extends Page {
 	
 	private CourseDatabase db;
 	private CourseSearch currentSearch;
+	private Schedule currentSchedule;
 
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		//Load course database
 		db = CourseDatabase.loadFromFile("CourseDB_CSV.csv");
 		currentSearch = new CourseSearch(db);
-
+		
 		//Initialize search course list and schedule course list
-		searchList = new CourseSearchList();
-		scheduleList = new CourseScheduleList();
+		currentSchedule = new Schedule();
+		searchList = new CourseSearchList(currentSchedule);
+		scheduleList = new CourseScheduleList(currentSchedule);
 		searchList.setScheduleList(scheduleList);
 		addSubPage("searchList", searchList, 10, 120, searchList.getW(), searchList.getH(), true);
 		addSubPage("scheduleList", scheduleList, 770, 120, scheduleList.getW(), scheduleList.getH(), true);
@@ -66,6 +70,15 @@ public class CourseSearchPage extends Page {
 					temp.getCheckBox("200Level").isSelected(),
 					temp.getCheckBox("300Level").isSelected(),
 					temp.getCheckBox("400Level").isSelected()
+			));
+			
+			currentSearch.addSearchFilter(new CourseCreditHourFilter(
+					temp.getCheckBox("0Credits").isSelected(),
+					temp.getCheckBox("1Credit").isSelected(),
+					temp.getCheckBox("2Credits").isSelected(),
+					temp.getCheckBox("3Credits").isSelected(),
+					temp.getCheckBox("4Credits").isSelected(),
+					temp.getCheckBox("5Credits").isSelected()
 			));
 			
 			//TODO: add in rest filters HERE
