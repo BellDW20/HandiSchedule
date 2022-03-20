@@ -2,12 +2,12 @@ package hs.core;
 
 public class Time {
 	
-	static final int AM = 0;
-	static final int PM = 1;
+	public static final int AM = 0;
+	public static final int PM = 1;
 	
-	int hour;
-	int minute;
-	int amOrPm;
+	private int hour;
+	private int minute;
+	private int amOrPm;
 	
 	public Time(int hour, int minute, int amOrPm) {
 		this.hour = hour;
@@ -60,6 +60,14 @@ public class Time {
 	@Override
 	public String toString() {
 		return (hour+":"+(minute<10?"0":"")+minute+((amOrPm==AM)?" AM":" PM"));
+	}
+	
+	// Takes in choice for AM or PM dropdown, returns integer value depending
+	public static int getAMOrPMFromString(String amOrPM) {
+		if (amOrPM.equals("AM")) {
+			return AM;
+		}
+		return PM;
 	}
 
 }

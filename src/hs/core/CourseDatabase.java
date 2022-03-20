@@ -35,6 +35,14 @@ public class CourseDatabase {
 		return new ArrayList<String>(fullDepartmentsList);
 	}
 	
+	public String[] getAllDepartmentsAsArray() {
+		String[] ret = new String[fullDepartmentsList.size()];
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = new String(fullDepartmentsList.get(i));
+		}
+		return ret;
+	}
+	
 	public static CourseDatabase loadFromFile(String databasePath) {
 		CourseDatabase db = new CourseDatabase();
 		

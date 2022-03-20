@@ -86,14 +86,6 @@ public class CourseSearchPage extends Page {
 		hideComponent(SUB_PAGE, "filterOptions");
 	}
 	
-	// Takes in choice for AM or PM dropdown, returns integer value depending
-	public int getAMOrPMAsInt(String amOrPM) {
-		if (amOrPM.equals("AM")) {
-			return 0;
-		}
-		return 1;
-	}
-	
 	private void performSearch() {
 		searchList.clear();
 		hideComponent(SUB_PAGE, "filterOptions");
@@ -128,8 +120,8 @@ public class CourseSearchPage extends Page {
 				!toAMorPMChoice.equals("AM or PM")) {
 			currentSearch.addSearchFilter(new CourseTimeFrameFilter(
 				new TimeFrame(
-					new Time(Integer.parseInt(fromChoice),0,getAMOrPMAsInt(fromAMorPMChoice)),
-					new Time(Integer.parseInt(toChoice),0,getAMOrPMAsInt(toAMorPMChoice))
+					new Time(Integer.parseInt(fromChoice),0,Time.getAMOrPMFromString(fromAMorPMChoice)),
+					new Time(Integer.parseInt(toChoice),0,Time.getAMOrPMFromString(toAMorPMChoice))
 				)
 			));
 		}
