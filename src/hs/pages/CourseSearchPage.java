@@ -2,12 +2,15 @@ package hs.pages;
 
 import hs.core.CourseDatabase;
 import hs.core.Schedule;
+import hs.core.Time;
+import hs.core.TimeFrame;
 import hs.pages.subPages.CourseScheduleList;
 import hs.pages.subPages.CourseSearchList;
 import hs.search.CourseCodeFilter;
 import hs.search.CourseCreditHourFilter;
 import hs.search.CourseNameFilter;
 import hs.search.CourseSearch;
+import hs.search.CourseTimeFrameFilter;
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 
@@ -83,6 +86,14 @@ public class CourseSearchPage extends Page {
 		hideComponent(SUB_PAGE, "filterOptions");
 	}
 	
+	// Takes in choice for AM or PM dropdown, returns integer value depending
+	public int getAMOrPMAsInt(String amOrPM) {
+		if (amOrPM.equals("AM")) {
+			return 0;
+		}
+		return 1;
+	}
+	
 	private void performSearch() {
 		searchList.clear();
 		hideComponent(SUB_PAGE, "filterOptions");
@@ -105,6 +116,26 @@ public class CourseSearchPage extends Page {
 				temp.getCheckBox("4Credits").isSelected(),
 				temp.getCheckBox("5Credits").isSelected()
 		));
+		
+		String fromChoice = (String)temp.getDropDown("From:").getValue();
+		String fromAMorPMChoice = (String)temp.getDropDown("AM or PMFrom:").getValue();
+		String toChoice = (String)temp.getDropDown("To:").getValue();
+		String toAMorPMChoice = (String)temp.getDropDown("AM or PMTo:").getValue();
+		
+		if (!fromChoice.equals("From") && 
+				!fromAMorPMChoice.equals("AM or PM") &&
+				!toChoice.equals("To") &&
+				!toAMorPMChoice.equals("AM or PM")) {
+			currentSearch.addSearchFilter(new CourseTimeFrameFilter(
+				new TimeFrame(
+					new Time(Integer.parseInt(fromChoice),0,getAMOrPMAsInt(fromAMorPMChoice)),
+					new Time(Integer.parseInt(toChoice),0,getAMOrPMAsInt(toAMorPMChoice))
+				)
+			));
+		}
+				
+	//if all time frame filters are NOT the first option
+		
 		
 		//TODO: add in rest filters HERE
 		currentSearch.updateSearch();

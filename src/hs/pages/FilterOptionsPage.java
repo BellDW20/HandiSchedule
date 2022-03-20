@@ -21,8 +21,6 @@ public class FilterOptionsPage extends Page {
 		addCheckBox("400Level", 260, 50, "400");
 		
 		
-		
-		
 		drawText(20, 80, "Course Credit Hours");
 		addCheckBox("0Credits", 20, 100, "0");
 		addCheckBox("1Credit", 100, 100, "1");
@@ -30,6 +28,20 @@ public class FilterOptionsPage extends Page {
 		addCheckBox("3Credits", 260, 100, "3");
 		addCheckBox("4Credits", 340, 100, "4");
 		addCheckBox("5Credits", 420, 100, "5");
+		
+		drawText(20, 130, "Course Times");
+		addDropDown("From:", 20, 150, "From",
+					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
+		);
+		addDropDown("AM or PMFrom:", 100, 150, "AM or PM", "AM", "PM");
+		addDropDown("To:", 240, 150, "To", 
+					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
+		);
+		addDropDown("AM or PMTo:", 320, 150, "AM or PM", "AM", "PM");
+		
+		
+		
+		
 	}
 
 }
