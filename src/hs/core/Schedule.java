@@ -15,8 +15,8 @@ public class Schedule {
 	private Date dateLastModified;
 	private ArrayList<Course> courses;
 	
-	public Schedule() {
-		this.title = "Untitled Schedule";
+	public Schedule(String title) {
+		this.title = title;
 		courses = new ArrayList<Course>();
 	}
 	
@@ -53,6 +53,10 @@ public class Schedule {
 		return dateLastModified;
 	}
 
+	public ArrayList<Course> getCourses() {
+		return courses;
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
@@ -70,7 +74,8 @@ public class Schedule {
 			ObjectOutputStream dataOut = new ObjectOutputStream(new FileOutputStream(new File(path)));
 			dataOut.writeObject(title);
 			dataOut.writeObject(courses);
-			dataOut.writeObject(new Date(System.currentTimeMillis()));
+			dateLastModified = new Date(System.currentTimeMillis());
+			dataOut.writeObject(dateLastModified);
 			dataOut.close();
 			
 		} catch (IOException e) {
@@ -80,7 +85,7 @@ public class Schedule {
 	
 	@SuppressWarnings("unchecked")
 	public static Schedule loadSchedule(String path) {	
-		Schedule loadedSchedule = new Schedule();
+		Schedule loadedSchedule = new Schedule("");
 		try {
 			ObjectInputStream dataIn = new ObjectInputStream(new FileInputStream(new File(path)));
 			loadedSchedule.title = (String) dataIn.readObject();
@@ -89,6 +94,7 @@ public class Schedule {
 			dataIn.close();
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
+			return null;
 		}
 		
 		return loadedSchedule;

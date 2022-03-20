@@ -1,5 +1,8 @@
 package hs.pages;
 
+import java.io.File;
+
+import hs.core.Course;
 import hs.core.CourseDatabase;
 import hs.core.Schedule;
 import hs.core.Time;
@@ -14,8 +17,14 @@ import hs.search.CourseSearch;
 import hs.search.CourseTimeFrameFilter;
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class CourseSearchPage extends Page {
+	
+	private static final String SAVE_DIR = "./schedules/";
+	private static final String DEFAULT_SCHEDULE_NAME = "Untitled Schedule";
+	private static final String SAVE_EXT = ".schd";
 	
 	private CourseSearchList searchList;
 	private CourseScheduleList scheduleList;
@@ -23,19 +32,22 @@ public class CourseSearchPage extends Page {
 	private CourseDatabase db;
 	private CourseSearch currentSearch;
 	private Schedule currentSchedule;
-
+	
+	private boolean setupFinished = false;
+	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
+		//Make sure schedule folder exists
+		(new File(SAVE_DIR)).mkdirs();
+		
 		//Load course database
 		db = CourseDatabase.loadFromFile("CourseDB_CSV.csv");
 		currentSearch = new CourseSearch(db);
 		
 		//Initialize search course list and schedule course list
-		currentSchedule = new Schedule();
-		
-		searchList = new CourseSearchList(currentSchedule);
+		searchList = new CourseSearchList();
 		searchList.initializeComponents(pageManager);
-		scheduleList = new CourseScheduleList(currentSchedule);
+		scheduleList = new CourseScheduleList();
 		searchList.setScheduleList(scheduleList);
 		addSubPage("searchList", searchList, 10, 120, searchList.getW(), searchList.getH(), true);
 		addSubPage("scheduleList", scheduleList, 770, 120, scheduleList.getW(), scheduleList.getH(), true);
@@ -46,14 +58,36 @@ public class CourseSearchPage extends Page {
 		});
 		
 		//add New button
-		addButton("newButton", 105, 5, 80, 40, "New", null);
+		addButton("newButton", 105, 5, 80, 40, "New", ()->{
+			saveCurrentSchedule();
+			currentSchedule = new Schedule(getFirstUnusedScheduleName());
+			saveCurrentSchedule();
+			setupFinished = false;
+			loadMostRecentlyEditedSchedule(pageManager);
+		});
 		
 		//add text field for editing schedule title
 		addTextField("scheduleTitle", 200, 5, 350, 40, "[Enter schedule title here]");
-		getTextField("scheduleTitle").setText(currentSchedule.getTitle());
+		
 		getTextField("scheduleTitle").textProperty().addListener((obs, oldText, newText) -> {
+			if((new File(getSavePath(newText))).exists() && setupFinished) {
+				Alert renameError = new Alert(AlertType.ERROR);
+				renameError.setHeaderText("Schedule Rename Failed");
+				renameError.setContentText("A schedule with the name '"+newText+"' already exists.");
+				renameError.showAndWait();
+				getTextField("scheduleTitle").setText(getFirstUnusedScheduleName());
+				return;
+			}
+			
+			renameCurrentSchedule(newText);
 			currentSchedule.setTitle(newText);
-			((CalendarPage)pageManager.getPage("CalendarPage")).updateScheduleTitle(newText);
+			saveCurrentSchedule();
+			
+			CalendarPage calendarPage = ((CalendarPage)pageManager.getPage("CalendarPage"));
+			if(calendarPage != null) {
+				calendarPage.updateScheduleTitle(currentSchedule.getTitle());
+			}
+			setupFinished = true;
 		});
 		
 		//add course search view button
@@ -86,6 +120,8 @@ public class CourseSearchPage extends Page {
 		filterOptionsPage.initializeComponents(pageManager);
 		addSubPage("filterOptions", filterOptionsPage, 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
 		hideComponent(SUB_PAGE, "filterOptions");
+		
+		loadMostRecentlyEditedSchedule(pageManager);
 	}
 	
 	private void performSearch() {
@@ -141,7 +177,82 @@ public class CourseSearchPage extends Page {
 
 	public void updateScheduleTitle(String title) {
 		getTextField("scheduleTitle").setText(title);
+		renameCurrentSchedule(title);
 		currentSchedule.setTitle(title);
+		saveCurrentSchedule();
+	}
+	
+	public Schedule getCurrentSchedule() {
+		return currentSchedule;
+	}
+	
+	private String getFirstUnusedScheduleName() {
+		File[] savedSchedules = (new File(SAVE_DIR)).listFiles();
+		
+		int maxUntitled = -1;
+		
+		for(File file : savedSchedules) {
+			String fileName = file.getName().replace(SAVE_EXT, "");
+			if(fileName.startsWith(DEFAULT_SCHEDULE_NAME)) {
+				fileName = fileName.replace(DEFAULT_SCHEDULE_NAME, "").trim();
+				try {
+					int scheduleNumber = Integer.parseInt(fileName);
+					if(scheduleNumber > maxUntitled) {
+						maxUntitled = scheduleNumber;
+					}
+				} catch (Exception e) {
+					continue;
+				}
+			}
+		}
+		
+		return DEFAULT_SCHEDULE_NAME + " " + (maxUntitled+1);
+	}
+	
+	private void loadSchedule(String scheduleTitle, PageManager pageManager) {
+		currentSchedule = Schedule.loadSchedule(getSavePath(scheduleTitle));
+		getTextField("scheduleTitle").setText(scheduleTitle);
+				
+		scheduleList.clear();
+		for(Course c : currentSchedule.getCourses()) {
+			scheduleList.addCourseToDisplay(c);
+		}
+
+		searchList.setCurrentSchedule(currentSchedule);
+		scheduleList.setCurrentSchedule(currentSchedule);
+	}
+	
+	private void loadMostRecentlyEditedSchedule(PageManager pageManager) {
+		File[] savedSchedules = (new File(SAVE_DIR)).listFiles();
+		if(savedSchedules.length == 0) {
+			currentSchedule = new Schedule(DEFAULT_SCHEDULE_NAME+" 0");
+			saveCurrentSchedule();
+			loadMostRecentlyEditedSchedule(pageManager);
+			return;
+		}
+		
+		int mostRecent = 0;
+		long mostRecentTime = -1;
+		for(int i=0; i<savedSchedules.length; i++) {
+			if(savedSchedules[i].lastModified() > mostRecentTime) {
+				mostRecent = i;
+				mostRecentTime = savedSchedules[i].lastModified();
+			}
+		}
+		
+		loadSchedule(savedSchedules[mostRecent].getName().replace(SAVE_EXT, ""), pageManager);
+	}
+	
+	private void saveCurrentSchedule() {
+		currentSchedule.saveSchedule(getSavePath(currentSchedule.getTitle()));
+	}
+	
+	private void renameCurrentSchedule(String newTitle) {
+		(new File(getSavePath(currentSchedule.getTitle()))).renameTo(new File(SAVE_DIR+newTitle+SAVE_EXT));
+	}
+	
+	public static String getSavePath(String scheduleTitle) {
+		return SAVE_DIR+scheduleTitle+SAVE_EXT;
 	}
 	
 }

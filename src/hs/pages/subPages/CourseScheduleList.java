@@ -2,16 +2,19 @@ package hs.pages.subPages;
 
 import hs.core.Course;
 import hs.core.Schedule;
+import hs.pages.CourseSearchPage;
 import hs.simplefx.ViewableCourseList;
 
 public class CourseScheduleList extends ViewableCourseList {
 	
-	Schedule currentSchedule;
+	private Schedule currentSchedule;
 	
-	public CourseScheduleList(Schedule schedule) {
+	public CourseScheduleList() {
 		super(500, 590);
-		this.currentSchedule = schedule;
-		
+	}
+	
+	public void setCurrentSchedule(Schedule currentSchedule) {
+		this.currentSchedule = currentSchedule;
 	}
 	
 	@Override
@@ -19,6 +22,7 @@ public class CourseScheduleList extends ViewableCourseList {
 		addButtonToCourse(course, "removeFromSchedule", 430, 14, 32, 32, "-", ()->{
 			removeCourseToDisplay(course);
 			currentSchedule.removeCourse(course);
+			currentSchedule.saveSchedule(CourseSearchPage.getSavePath(currentSchedule.getTitle()));
 		});
 	}
 

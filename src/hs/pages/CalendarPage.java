@@ -13,7 +13,10 @@ public class CalendarPage extends Page {
 		// add New button
 		addButton("newButton", 105, 5, 80, 40, "New", null);
 		
-		addTextField("scheduleTitle", 200, 5, 350, 40, "[Untitled Schedule]");
+		addTextField("scheduleTitle", 200, 5, 350, 40, "[Enter schedule title here]");
+		getTextField("scheduleTitle").textProperty().addListener((obs, oldText, newText) -> {
+			((CourseSearchPage)pageManager.getPage("CourseSearch")).updateScheduleTitle(newText);
+		});
 		
 		// add courseSearch view button
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {
@@ -24,6 +27,10 @@ public class CalendarPage extends Page {
 		addButton("calendarSwitchButton", 1150, 5, 120, 40, "Calendar", () -> {
 			pageManager.goToPage("CalendarPage");
 		});
+		
+		updateScheduleTitle(
+			((CourseSearchPage)pageManager.getPage("CourseSearch")).getCurrentSchedule().getTitle()
+		);
 	}
 	
 	public void updateScheduleTitle(String title) {
