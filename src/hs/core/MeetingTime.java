@@ -1,7 +1,11 @@
 package hs.core;
 
-public class MeetingTime {
+import java.io.Serializable;
 
+public class MeetingTime implements Serializable {
+
+	private static final long serialVersionUID = -1022595768143615665L;
+	
 	private TimeFrame timeFrame;
 	private String daysOfWeek;
 	private boolean countedTowardsCreditHours;

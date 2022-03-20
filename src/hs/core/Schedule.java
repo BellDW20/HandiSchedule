@@ -1,5 +1,9 @@
 package hs.core;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -11,7 +15,6 @@ public class Schedule {
 	
 	public Schedule() {
 		this.title = "Untitled Schedule";
-		this.dateLastModified = new Date(System.currentTimeMillis());
 		courses = new ArrayList<Course>();
 	}
 	
@@ -36,6 +39,10 @@ public class Schedule {
 		this.title = title;
 	}
 	
+	public void setDateLastModified(Date dateLastModified) {
+		this.dateLastModified = dateLastModified;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -53,6 +60,24 @@ public class Schedule {
 		}
 		
 		return sb.toString();
+	}
+	
+	public void saveSchedule(String path) {
+		try {
+			
+			ObjectOutputStream dataOut = new ObjectOutputStream(new FileOutputStream(new File(path)));
+			dataOut.writeObject(title);
+			dataOut.writeObject(courses);
+			dataOut.writeObject(new Date(System.currentTimeMillis()));
+			dataOut.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Schedule loadSchedule(String path) {		
+		return null;
 	}
 	
 }

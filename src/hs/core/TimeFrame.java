@@ -1,7 +1,11 @@
 package hs.core;
 
-public class TimeFrame {
+import java.io.Serializable;
 
+public class TimeFrame implements Serializable {
+
+	private static final long serialVersionUID = 351803354426374556L;
+	
 	private Time startTime;
 	private Time endTime;
 	

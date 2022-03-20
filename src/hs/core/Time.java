@@ -1,6 +1,10 @@
 package hs.core;
 
-public class Time {
+import java.io.Serializable;
+
+public class Time implements Serializable {
+	
+	private static final long serialVersionUID = -4083991327056493548L;
 	
 	public static final int AM = 0;
 	public static final int PM = 1;

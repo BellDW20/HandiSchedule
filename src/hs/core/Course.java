@@ -1,5 +1,6 @@
 package hs.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,9 @@ import java.util.ArrayList;
  * @author CONRADLJ19
  *
  */
-public class Course {
+public class Course implements Serializable {
+	
+	private static final long serialVersionUID = -7756127829025002535L;
 	
 	private String courseName;
 	private String department;
