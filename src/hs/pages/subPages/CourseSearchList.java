@@ -2,6 +2,7 @@ package hs.pages.subPages;
 
 import hs.core.Course;
 import hs.core.Schedule;
+import hs.simplefx.PageManager;
 import hs.simplefx.ViewableCourseList;
 
 public class CourseSearchList extends ViewableCourseList {
@@ -16,6 +17,11 @@ public class CourseSearchList extends ViewableCourseList {
 
 	public void setScheduleList(CourseScheduleList scheduleList) {
 		this.scheduleList = scheduleList;
+	}
+	
+	@Override
+	public void initializeComponents(PageManager pageManager) {
+		drawText(200, 30, "No Courses Found");
 	}
 	
 	@Override

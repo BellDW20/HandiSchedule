@@ -5,7 +5,6 @@ import java.util.HashMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -24,7 +23,6 @@ public class Page {
 	public static final String TEXT_FIELD = "textField-";
 	public static final String CHECK_BOX = "checkBox-";
 	public static final String DROP_DOWN = "dropDown-";
-	public static final String SCROLL_BAR = "scrollBar-";
 	public static final String SUB_PAGE = "subPage";
 	
 	private Pane pane;
@@ -32,25 +30,8 @@ public class Page {
 	private HashMap<String, Node> nodeMap;
 	private HashMap<String, Page> subPages;
 	
-//	public Page(PageManager pageManager, String name) {
-//		this.pane = new Pane();
-//		this.scene = new Scene(pane, pageManager.getWindowWidth(), pageManager.getWindowHeight());
-//		this.name = name;
-//		this.nodeMap = new HashMap<>();
-//		this.subPages = new HashMap<>();
-//		initializeComponents(pageManager);
-//		pageManager.addPageToProgram(name, this);
-//	}
-//	
-//	public Page(PageManager pageManager) {
-//		this();
-//		initializeComponents(pageManager);
-//	}
-	
 	public Page() {
 		this.pane = new Pane();
-//		this.scene = null;
-//		this.name = null;
 		this.nodeMap = new HashMap<>();
 		this.subPages = new HashMap<>();
 	}
@@ -152,9 +133,10 @@ public class Page {
 		pane.getChildren().add(checkBox);
 	}
 	
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void addDropDown(String dropDownName, int x, int y, String... options) {
 		ComboBox dropDown = new ComboBox();
-		dropDown.getItems().addAll(options);
+		dropDown.getItems().addAll((Object[])options);
 		dropDown.getSelectionModel().selectFirst();
 		dropDown.setLayoutX(x);
 		dropDown.setLayoutY(y);
@@ -190,6 +172,11 @@ public class Page {
 	
 	public CheckBox getCheckBox(String checkBoxName) {
 		return (CheckBox)nodeMap.get(CHECK_BOX+checkBoxName);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public ComboBox getDropDown(String dropDownName) {
+		return (ComboBox)nodeMap.get(DROP_DOWN+dropDownName);
 	}
 	
 	public Page getSubPage(String subPageName) {

@@ -1,16 +1,13 @@
 package hs.core;
 
-import java.awt.image.BufferedImage;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.awt.Graphics;
 
 public class Schedule {
 	
 	private String title;
 	private Date dateLastModified;
 	private ArrayList<Course> courses;
-	
 	
 	public Schedule() {
 		this.title = "Untitled Schedule";
@@ -19,6 +16,7 @@ public class Schedule {
 	}
 	
 	public void addCourse(Course course) {
+		if(courses.contains(course)) {return;}
 		courses.add(course);
 	}
 	
@@ -34,5 +32,27 @@ public class Schedule {
 		return totalCreditHours;
 	}
 	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public Date getDateLastModified() {
+		return dateLastModified;
+	}
 
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		for(Course c : courses) {
+			sb.append(c.toString());
+			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
+	
 }

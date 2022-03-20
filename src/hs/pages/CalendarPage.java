@@ -24,8 +24,10 @@ public class CalendarPage extends Page {
 		addButton("calendarSwitchButton", 1150, 5, 120, 40, "Calendar", () -> {
 			pageManager.goToPage("CalendarPage");
 		});
-		
-
-}
+	}
+	
+	public void updateScheduleTitle(String title) {
+		getTextField("scheduleTitle").setText(title);
+	}
 
 }
