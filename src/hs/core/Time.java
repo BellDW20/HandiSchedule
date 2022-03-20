@@ -44,6 +44,19 @@ public class Time implements Serializable {
 		}
 	}
 	
+	public int getHour() {
+		if (amOrPm == 0) {
+			return hour;
+		}
+		else {
+			return hour + 12;
+		}
+	}
+	
+	public int getMinutes() {
+		return minute;
+	}
+	
 	public boolean fallsWithin(TimeFrame timeFrame) {
 		return isAfter(timeFrame.getStartTime()) && isBefore(timeFrame.getEndTime());
 	}

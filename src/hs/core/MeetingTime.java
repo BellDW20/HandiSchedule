@@ -24,6 +24,10 @@ public class MeetingTime implements Serializable {
 		return daysOfWeek.toCharArray();
 	}
 	
+	public String getDaysOfWeekString() {
+		return daysOfWeek;
+	}
+	
 	public boolean isCountedTowardsCreditHours() {
 		return countedTowardsCreditHours;
 	}
