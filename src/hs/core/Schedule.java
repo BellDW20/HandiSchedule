@@ -1,8 +1,10 @@
 package hs.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -76,8 +78,20 @@ public class Schedule {
 		}
 	}
 	
-	public static Schedule loadSchedule(String path) {		
-		return null;
+	@SuppressWarnings("unchecked")
+	public static Schedule loadSchedule(String path) {	
+		Schedule loadedSchedule = new Schedule();
+		try {
+			ObjectInputStream dataIn = new ObjectInputStream(new FileInputStream(new File(path)));
+			loadedSchedule.title = (String) dataIn.readObject();
+			loadedSchedule.courses = (ArrayList<Course>) dataIn.readObject();
+			loadedSchedule.dateLastModified = (Date) dataIn.readObject();
+			dataIn.close();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return loadedSchedule;
 	}
 	
 }

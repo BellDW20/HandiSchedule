@@ -32,9 +32,7 @@ public class CourseSearchPage extends Page {
 		
 		//Initialize search course list and schedule course list
 		currentSchedule = new Schedule();
-		currentSchedule.addCourse(db.getCopyOfAllCourses().get(0));
-		currentSchedule.saveSchedule("./schedules/untitled.schd");
-	
+		
 		searchList = new CourseSearchList(currentSchedule);
 		searchList.initializeComponents(pageManager);
 		scheduleList = new CourseScheduleList(currentSchedule);
