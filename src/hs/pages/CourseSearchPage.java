@@ -8,6 +8,7 @@ import hs.pages.subPages.CourseScheduleList;
 import hs.pages.subPages.CourseSearchList;
 import hs.search.CourseCodeFilter;
 import hs.search.CourseCreditHourFilter;
+import hs.search.CourseDepartmentFilter;
 import hs.search.CourseNameFilter;
 import hs.search.CourseSearch;
 import hs.search.CourseTimeFrameFilter;
@@ -80,7 +81,7 @@ public class CourseSearchPage extends Page {
 			toggleComponentVisibility(SUB_PAGE, "filterOptions");
 		});
 		
-		FilterOptionsPage filterOptionsPage = new FilterOptionsPage();
+		FilterOptionsPage filterOptionsPage = new FilterOptionsPage(db);
 		filterOptionsPage.initializeComponents(pageManager);
 		addSubPage("filterOptions", filterOptionsPage, 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
 		hideComponent(SUB_PAGE, "filterOptions");
@@ -125,11 +126,12 @@ public class CourseSearchPage extends Page {
 				)
 			));
 		}
-				
-	//if all time frame filters are NOT the first option
 		
+		String deptChoice = (String)temp.getDropDown("Department").getValue();
+		if (!deptChoice.equals("All")) {
+			currentSearch.addSearchFilter(new CourseDepartmentFilter(deptChoice));
+		}
 		
-		//TODO: add in rest filters HERE
 		currentSearch.updateSearch();
 		for (int i = 0; i < currentSearch.getSearchResults().size(); i++) {
 			searchList.addCourseToDisplay(currentSearch.getSearchResults().get(i));

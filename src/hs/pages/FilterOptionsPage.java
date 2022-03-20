@@ -1,5 +1,6 @@
 package hs.pages;
 
+import hs.core.CourseDatabase;
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 
@@ -7,6 +8,12 @@ public class FilterOptionsPage extends Page {
 
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = 595;
+	
+	private CourseDatabase db;
+	
+	public FilterOptionsPage(CourseDatabase db) {
+		this.db = db;
+	}
 	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
@@ -38,6 +45,16 @@ public class FilterOptionsPage extends Page {
 					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
 		);
 		addDropDown("AM or PMTo:", 320, 150, "AM or PM", "AM", "PM");
+		
+		drawText(20, 180, "Departments:");
+		
+		String[] depts = db.getAllDepartmentsAsArray();
+		String[] allAndDepts = new String[depts.length+1];
+		for(int i=0; i<depts.length; i++) {
+			allAndDepts[i+1] = depts[i];
+		}
+		allAndDepts[0] = "All";
+		addDropDown("Department", 20, 200, allAndDepts);
 		
 		
 		
