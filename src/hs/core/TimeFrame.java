@@ -22,6 +22,10 @@ public class TimeFrame implements Serializable {
 		return endTime;
 	}
 	
+	public boolean isOverlappingWith(TimeFrame timeFrame) {
+		return getStartTime().fallsWithin(timeFrame) || timeFrame.getStartTime().fallsWithin(this); 
+	}
+	
 	public boolean fallsWithin(TimeFrame timeFrame) {
 		return startTime.fallsWithin(timeFrame) && endTime.fallsWithin(timeFrame);
 	}

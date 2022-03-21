@@ -179,6 +179,8 @@ public class Schedule {
 			g.drawRect(bufferWidth + (i * headerWidth), headerHeight, headerWidth, (tempY + timeBlockHeight) - headerHeight);
 		}
 
+		ArrayList<MeetingTime> calendarTimes = new ArrayList<>();
+		
 		for (int i = 0; i < courses.size(); i++) {
 			Course temp = courses.get(i);
 			if (temp.getMeetingTimes().isEmpty()) {
@@ -191,9 +193,11 @@ public class Schedule {
 			int endMinute;
 			int classY;
 			int classEndY;
+			int stringY;
 			int classHeight;
 			int classWidth;
 			int coursePadding;
+			int stringBuffer;
 			
 			for (int j = 0; j < temp.getMeetingTimes().size(); j++) {
 				startHour = temp.getMeetingTimes().get(j).getTimeFrame().getStartTime().getMilitaryHour();
@@ -201,18 +205,46 @@ public class Schedule {
 				endHour = temp.getMeetingTimes().get(j).getTimeFrame().getEndTime().getMilitaryHour();
 				endMinute = temp.getMeetingTimes().get(j).getTimeFrame().getEndTime().getMinute();
 				classY = (((startHour - min.getMilitaryHour()) * timeBlockHeight) + ((timeBlockHeight / 5) * (startMinute / 12))) + headerHeight;
+				stringY = classY + 8;
 				classEndY = (((endHour - min.getMilitaryHour()) * timeBlockHeight) + ((timeBlockHeight / 5) * (endMinute / 12))) + headerHeight;
 				classHeight = classEndY - classY;
 				classWidth = headerWidth;
 				coursePadding = 30;
+				
+//				boolean conflicting = false;
 				String text = courses.get(i).getDepartment() + " " + courses.get(i).getCourseCode() + " " + courses.get(i).getSection();
+				
+//				int conflictingIndex = 0;
+//				int numConflicts = 0;
+				for (int k = 0; k < calendarTimes.size(); k++) {
+					if(temp.getMeetingTimes().get(j).isConflictingWith(calendarTimes.get(k))) {
+						BufferedImage bad = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+						Graphics g2 = bad.getGraphics();
+						g2.setColor(black);
+						g2.drawString("NO CALENDAR IS AVAILABLE: YOU HAVE A CONFLICT IN YOUR SCHEDULE", width / 3, height / 2);
+						return bad;
+//						conflicting = true;
+//						stringY += 16;
+//						conflictingIndex = k;
+//						numConflicts++;
+					}
+				}
+				
+				//stringY += 32 * (numConflicts - 1);
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("M")) {
 					g.drawRect(bufferWidth, classY, classWidth, classHeight);
 //					g.setColor(blue);
 //					g.fillRect(bufferWidth, classY, classWidth, classHeight);
 //					g.setColor(black);
-					g.drawString(text, bufferWidth + coursePadding, classY + (classHeight / 2));
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("M")) {
+//						g.drawString("CONFLICTS WITH", bufferWidth + (coursePadding / 2), stringY + (classHeight / 2));
+//						stringY += 16;
+//					}
+					g.drawString(text, bufferWidth + coursePadding, stringY + (classHeight / 2));
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("M")) {
+//						stringY -= 16;
+//					}
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("T")) {
@@ -220,7 +252,14 @@ public class Schedule {
 //					g.setColor(blue);
 //					g.fillRect(bufferWidth + headerWidth, classY, classWidth, classHeight);
 //					g.setColor(black);
-					g.drawString(text, bufferWidth + headerWidth + coursePadding, classY + (classHeight / 2));
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("T")) {
+//						g.drawString("CONFLICTS WITH", bufferWidth +  headerWidth + (coursePadding / 2), stringY + (classHeight / 2));
+//						stringY += 16;
+//					}
+					g.drawString(text, bufferWidth + headerWidth + coursePadding, stringY + (classHeight / 2));
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("T")) {
+//						stringY -= 16;
+//					}
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("W")) {
@@ -228,7 +267,15 @@ public class Schedule {
 //					g.setColor(blue);
 //					g.fillRect(bufferWidth + headerWidth * 2, classY, classWidth, classHeight);
 //					g.setColor(black);
-					g.drawString(text, bufferWidth + (headerWidth * 2) + coursePadding, classY + (classHeight / 2));
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("W")) {
+//						g.drawString("CONFLICTS WITH", bufferWidth + (headerWidth * 2) + (coursePadding / 2), stringY + (classHeight / 2));
+//						stringY += 16;
+//					}
+					g.drawString(text, bufferWidth + (headerWidth * 2) + coursePadding, stringY + (classHeight / 2));
+					
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("W")) {
+//						stringY -= 16;
+//					}
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("R")) {
@@ -236,7 +283,15 @@ public class Schedule {
 //					g.setColor(blue);
 //					g.fillRect(bufferWidth + headerWidth * 3, classY, classWidth, classHeight);
 //					g.setColor(black);
-					g.drawString(text, bufferWidth + (headerWidth * 3) + coursePadding, classY + (classHeight / 2));
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("R")) {
+//						g.drawString("CONFLICTS WITH", bufferWidth + (headerWidth * 3) + (coursePadding / 2), stringY + (classHeight / 2));
+//						stringY += 16;
+//					}
+					g.drawString(text, bufferWidth + (headerWidth * 3) + coursePadding, stringY + (classHeight / 2));
+					
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("R")) {
+//						stringY -= 16;
+//					}
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("F")) {
@@ -244,8 +299,18 @@ public class Schedule {
 //					g.setColor(blue);
 //					g.fillRect(bufferWidth + headerWidth * 4, classY, classWidth, classHeight);
 //					g.setColor(black);
-					g.drawString(text, bufferWidth + (headerWidth * 4) + coursePadding, classY + (classHeight / 2));
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("F")) {
+//						g.drawString("CONFLICTS WITH", bufferWidth + (headerWidth * 4) + (coursePadding / 2), stringY + (classHeight / 2));
+//						stringY += 16;
+//					}
+					g.drawString(text, bufferWidth + (headerWidth * 4) + coursePadding, stringY + (classHeight / 2));
+					
+//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("F")) {
+//						stringY -= 16;
+//					}
 				}
+				
+				calendarTimes.add(temp.getMeetingTimes().get(j));
 			}
 		}
 		

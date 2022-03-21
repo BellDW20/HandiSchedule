@@ -45,7 +45,7 @@ public class MeetingTime implements Serializable {
 			return false;
 		}
 		
-		return timeFrame.fallsWithin(time.getTimeFrame());
+		return timeFrame.isOverlappingWith(time.getTimeFrame());
 	}
 	
 	@Override
