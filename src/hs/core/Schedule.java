@@ -109,7 +109,8 @@ public class Schedule {
 		BufferedImage calendar = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = calendar.getGraphics();
 		Color blue = new Color(173, 216, 230);
-		g.setColor(blue);
+		Color black = new Color(0,0,0);
+		g.setColor(black);
 		
 		int headerWidth = width/6;
 		int headerHeight = 20;
@@ -177,8 +178,6 @@ public class Schedule {
 		for (int i = 0; i < days.length; i++) {
 			g.drawRect(bufferWidth + (i * headerWidth), headerHeight, headerWidth, (tempY + timeBlockHeight) - headerHeight);
 		}
-		
-		Color lightBlue = new Color(173, 216, 230);
 
 		for (int i = 0; i < courses.size(); i++) {
 			Course temp = courses.get(i);
@@ -209,45 +208,45 @@ public class Schedule {
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("M")) {
 					g.drawRect(bufferWidth, classY, classWidth, classHeight);
-					g.setColor(lightBlue);
-					//g.fillRect(bufferWidth, classY, classWidth, classHeight);
 					g.setColor(blue);
+					//g.fillRect(bufferWidth, classY, classWidth, classHeight);
+					g.setColor(black);
 					String text = courses.get(i).getDepartment() + " " + courses.get(i).getCourseCode() + " " + courses.get(i).getSection();
 					g.drawString(text, bufferWidth + coursePadding, classY + (classHeight / 2));
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("T")) {
 					g.drawRect(bufferWidth + headerWidth, classY, classWidth, classHeight);
-					g.setColor(lightBlue);
-					//g.fillRect(bufferWidth + headerWidth, classY, classWidth, classHeight);
 					g.setColor(blue);
+					//g.fillRect(bufferWidth + headerWidth, classY, classWidth, classHeight);
+					g.setColor(black);
 					String text = courses.get(i).getDepartment() + " " + courses.get(i).getCourseCode() + " " + courses.get(i).getSection();
 					g.drawString(text, bufferWidth + headerWidth + coursePadding, classY + (classHeight / 2));
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("W")) {
 					g.drawRect(bufferWidth + headerWidth * 2, classY, classWidth, classHeight);
-					g.setColor(lightBlue);
-					//g.fillRect(bufferWidth + headerWidth * 2, classY, classWidth, classHeight);
 					g.setColor(blue);
+					//g.fillRect(bufferWidth + headerWidth * 2, classY, classWidth, classHeight);
+					g.setColor(black);
 					String text = courses.get(i).getDepartment() + " " + courses.get(i).getCourseCode() + " " + courses.get(i).getSection();
 					g.drawString(text, bufferWidth + (headerWidth * 2) + coursePadding, classY + (classHeight / 2));
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("R")) {
 					g.drawRect(bufferWidth + headerWidth * 3, classY, classWidth, classHeight);
-					g.setColor(lightBlue);
-					//g.fillRect(bufferWidth + headerWidth * 3, classY, classWidth, classHeight);
 					g.setColor(blue);
+					//g.fillRect(bufferWidth + headerWidth * 3, classY, classWidth, classHeight);
+					g.setColor(black);
 					String text = courses.get(i).getDepartment() + " " + courses.get(i).getCourseCode() + " " + courses.get(i).getSection();
 					g.drawString(text, bufferWidth + (headerWidth * 3) + coursePadding, classY + (classHeight / 2));
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("F")) {
 					g.drawRect(bufferWidth + headerWidth * 4, classY, classWidth, classHeight);
-					g.setColor(lightBlue);
-					//g.fillRect(bufferWidth + headerWidth * 4, classY, classWidth, classHeight);
 					g.setColor(blue);
+					//g.fillRect(bufferWidth + headerWidth * 4, classY, classWidth, classHeight);
+					g.setColor(black);
 					String text = courses.get(i).getDepartment() + " " + courses.get(i).getCourseCode() + " " + courses.get(i).getSection();
 					g.drawString(text, bufferWidth + (headerWidth * 4) + coursePadding, classY + (classHeight / 2));
 				}
