@@ -1,10 +1,15 @@
 package hs.pages;
 
+import java.awt.image.BufferedImage;
+
+import hs.pages.subPages.CalendarView;
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 
 public class CalendarPage extends Page {
 
+	private CalendarView calendarView;
+	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		// add Load button
@@ -28,6 +33,9 @@ public class CalendarPage extends Page {
 			pageManager.goToPage("CalendarPage");
 		});
 		
+		calendarView = new CalendarView();
+		addSubPage("calendarView", calendarView, 240, 60, 800, 600, false);
+		
 		updateScheduleTitle(
 			((CourseSearchPage)pageManager.getPage("CourseSearch")).getCurrentSchedule().getTitle()
 		);
@@ -37,4 +45,8 @@ public class CalendarPage extends Page {
 		getTextField("scheduleTitle").setText(title);
 	}
 
+	public void updateCalendarImage(BufferedImage img) {
+		calendarView.updateCalendarImage(img);
+	}
+	
 }

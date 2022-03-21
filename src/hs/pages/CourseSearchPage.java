@@ -93,11 +93,12 @@ public class CourseSearchPage extends Page {
 		//add course search view button
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {
 			pageManager.goToPage("CourseSearch");
-		
 		});
 		
 		//add calendar view button
 		addButton("calendarSwitchButton", 1150, 5, 120, 40, "Calendar", () -> {
+			CalendarPage calendarPage = (CalendarPage)pageManager.getPage("CalendarPage");
+			calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
 			pageManager.goToPage("CalendarPage");
 		});
 		
@@ -107,12 +108,12 @@ public class CourseSearchPage extends Page {
 			performSearch();
 		});
 		
-		addButton("searchButton", 510, 70, 40, 40, "Search", ()->{
+		addButton("searchButton", 510, 70, 80, 40, "Search", ()->{
 			performSearch();
 		});
 		
 		//Add ability to see filter options for search
-		addButton("filterButton", 560, 70, 40, 40, "Filter", ()->{
+		addButton("filterButton", 600, 70, 80, 40, "Filter", ()->{
 			toggleComponentVisibility(SUB_PAGE, "filterOptions");
 		});
 		

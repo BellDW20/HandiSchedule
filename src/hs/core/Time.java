@@ -44,16 +44,12 @@ public class Time implements Serializable {
 		}
 	}
 	
-	public int getHour() {
-		if (amOrPm == 0) {
-			return hour;
-		}
-		else {
-			return hour + 12;
-		}
+	public int getMilitaryHour() {
+		int normalizedHour = hour%12;
+		return (normalizedHour + (amOrPm==PM?12:0));
 	}
 	
-	public int getMinutes() {
+	public int getMinute() {
 		return minute;
 	}
 	
@@ -70,8 +66,7 @@ public class Time implements Serializable {
 	}
 	
 	public int getTimeAsInt() {
-		int normalizedHour = hour % 12;
-		return (normalizedHour + (amOrPm==PM?12:0))*60+minute;
+		return getMilitaryHour()*60+minute;
 	}
 	
 	@Override

@@ -138,14 +138,14 @@ public class Schedule {
 			}
 		}
 
-		int start = min.getHour();
+		int start = min.getMilitaryHour();
 		int end;
 		
-		if (max.getMinutes() != 0) {
-			end = max.getHour() + 1;
+		if (max.getMinute() != 0) {
+			end = max.getMilitaryHour() + 1;
 		}
 		else {
-			end = max.getHour();
+			end = max.getMilitaryHour();
 		}
 		
 		int timeBlockHeight = ((height - headerHeight) / (end - start)) - 1;
@@ -197,12 +197,12 @@ public class Schedule {
 			int coursePadding;
 			
 			for (int j = 0; j < temp.getMeetingTimes().size(); j++) {
-				startHour = temp.getMeetingTimes().get(j).getTimeFrame().getStartTime().getHour();
-				startMinute = temp.getMeetingTimes().get(j).getTimeFrame().getStartTime().getMinutes();
-				endHour = temp.getMeetingTimes().get(j).getTimeFrame().getEndTime().getHour();
-				endMinute = temp.getMeetingTimes().get(j).getTimeFrame().getEndTime().getMinutes();
-				classY = (((startHour - min.getHour()) * timeBlockHeight) + ((timeBlockHeight / 5) * (startMinute / 12))) + headerHeight;
-				classEndY = (((endHour - min.getHour()) * timeBlockHeight) + ((timeBlockHeight / 5) * (endMinute / 12))) + headerHeight;
+				startHour = temp.getMeetingTimes().get(j).getTimeFrame().getStartTime().getMilitaryHour();
+				startMinute = temp.getMeetingTimes().get(j).getTimeFrame().getStartTime().getMinute();
+				endHour = temp.getMeetingTimes().get(j).getTimeFrame().getEndTime().getMilitaryHour();
+				endMinute = temp.getMeetingTimes().get(j).getTimeFrame().getEndTime().getMinute();
+				classY = (((startHour - min.getMilitaryHour()) * timeBlockHeight) + ((timeBlockHeight / 5) * (startMinute / 12))) + headerHeight;
+				classEndY = (((endHour - min.getMilitaryHour()) * timeBlockHeight) + ((timeBlockHeight / 5) * (endMinute / 12))) + headerHeight;
 				classHeight = classEndY - classY;
 				classWidth = headerWidth;
 				coursePadding = 30;
@@ -254,7 +254,7 @@ public class Schedule {
 			}
 		}
 		
-		
 		return calendar;
 	}
+	
 }
