@@ -18,7 +18,7 @@ public class CourseNameFilter extends CourseSearchFilter {
 			
 			Course course = courseList.get(i);
 			String courseName = course.getCourseName().toLowerCase();
-			String deptAndCode = course.getDepartment().toLowerCase()+" "+course.getCourseCode();
+			String deptAndCode = (course.getDepartment()+" "+course.getCourseCode()+" "+course.getSection()).toLowerCase();
 			
 			boolean match = true;
 			for(String term : terms) {

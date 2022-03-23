@@ -15,6 +15,7 @@ public class FilterOptionsPage extends Page {
 		this.db = db;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		drawRect(0, 0, WIDTH, HEIGHT);
@@ -54,9 +55,28 @@ public class FilterOptionsPage extends Page {
 			allAndDepts[i+1] = depts[i];
 		}
 		allAndDepts[0] = "All";
-		addDropDown("Department", 20, 200, allAndDepts);
+		addDropDown("Department", 10, 200, allAndDepts);
 		
-		
+		addButton("clearFilters", 20, HEIGHT-42, 96, 32, "Clear Filters", ()->{
+			getCheckBox("100Level").setSelected(false);
+			getCheckBox("200Level").setSelected(false);
+			getCheckBox("300Level").setSelected(false);
+			getCheckBox("400Level").setSelected(false);
+			
+			getCheckBox("0Credits").setSelected(false);
+			getCheckBox("1Credit").setSelected(false);
+			getCheckBox("2Credits").setSelected(false);
+			getCheckBox("3Credits").setSelected(false);
+			getCheckBox("4Credits").setSelected(false);
+			getCheckBox("5Credits").setSelected(false);
+			
+			getDropDown("From:").setValue("From");
+			getDropDown("AM or PMFrom:").setValue("AM or PM");
+			getDropDown("To:").setValue("To");
+			getDropDown("AM or PMTo:").setValue("AM or PM");
+			
+			getDropDown("Department").setValue("All");
+		});
 		
 		
 	}
