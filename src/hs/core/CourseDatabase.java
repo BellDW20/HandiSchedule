@@ -98,7 +98,7 @@ public class CourseDatabase {
 				
 				if(!start.equals("NULL")) {
 					TimeFrame timeFrame = new TimeFrame(new Time(start), new Time(end));
-					courseMap.get(courseSection).addMeetingTime(timeFrame, daysOfWeek, !courseName.equals("LABORATORY"));
+					courseMap.get(courseSection).addMeetingTime(timeFrame, daysOfWeek, !courseName.contains("LABORATORY"));
 				}
 				
 				lineScanner.close();
