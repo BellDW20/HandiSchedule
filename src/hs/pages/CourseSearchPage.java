@@ -1,7 +1,7 @@
 package hs.pages;
 
 import java.io.File;
-
+import java.util.function.UnaryOperator;
 import hs.core.Course;
 import hs.core.CourseDatabase;
 import hs.core.Schedule;
@@ -19,12 +19,16 @@ import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 
 public class CourseSearchPage extends Page {
 	
-	private static final String SAVE_DIR = "./schedules/";
-	private static final String DEFAULT_SCHEDULE_NAME = "Untitled Schedule";
-	private static final String SAVE_EXT = ".schd";
+	public static final String SAVE_DIR = "./schedules/";
+	public static final String DEFAULT_SCHEDULE_NAME = "Untitled Schedule";
+	public static final String SAVE_EXT = ".schd";
+	public static final String ACCEPTED_SCHEDULE_TITLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
 	
 	private CourseSearchList searchList;
 	private CourseScheduleList scheduleList;
@@ -33,7 +37,8 @@ public class CourseSearchPage extends Page {
 	private CourseSearch currentSearch;
 	private Schedule currentSchedule;
 	
-	private boolean setupFinished = false;
+	private TextField scheduleTitleField;
+	private boolean isReplacingTitle = true;
 	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
@@ -62,33 +67,59 @@ public class CourseSearchPage extends Page {
 			saveCurrentSchedule();
 			currentSchedule = new Schedule(getFirstUnusedScheduleName());
 			saveCurrentSchedule();
-			setupFinished = false;
 			loadMostRecentlyEditedSchedule(pageManager);
 		});
 		
 		//add text field for editing schedule title
 		addTextField("scheduleTitle", 200, 5, 350, 40, "[Enter schedule title here]");
 		
-		getTextField("scheduleTitle").textProperty().addListener((obs, oldText, newText) -> {
-			if((new File(getSavePath(newText))).exists() && setupFinished) {
+		//when the text in the schedule title updates, auto-save the name change
+		getTextField("scheduleTitle").textProperty().addListener((obs, oldText, newText) -> {			
+			renameCurrentSchedule(newText);
+			currentSchedule.setTitle(newText);
+			saveCurrentSchedule();
+		});
+		
+		//filter for accepting name changes to the schedule
+		UnaryOperator<Change> validTitleFilter = change -> {
+			if(isReplacingTitle || !change.isContentChange()) {
+				return change;
+			}
+			
+			String newText = change.getControlNewText();
+			boolean correctFormat = newText.matches("["+ACCEPTED_SCHEDULE_TITLE_CHARS+"]*");
+			boolean alreadyASchedule = (new File(getSavePath(newText))).exists();
+			
+			if(!correctFormat) {
+				Alert renameError = new Alert(AlertType.ERROR);
+				renameError.setHeaderText("Schedule Rename Failed");
+				renameError.setContentText("Schedule titles cannot contain '"+newText.charAt(newText.length()-1)+"'.");
+				renameError.showAndWait();
+			} else if(alreadyASchedule) {
 				Alert renameError = new Alert(AlertType.ERROR);
 				renameError.setHeaderText("Schedule Rename Failed");
 				renameError.setContentText("A schedule with the name '"+newText+"' already exists.");
 				renameError.showAndWait();
-				getTextField("scheduleTitle").setText(getFirstUnusedScheduleName());
-				return;
 			}
 			
-			renameCurrentSchedule(newText);
-			currentSchedule.setTitle(newText);
-			saveCurrentSchedule();
-			
-			CalendarPage calendarPage = ((CalendarPage)pageManager.getPage("CalendarPage"));
-			if(calendarPage != null) {
-				calendarPage.updateScheduleTitle(currentSchedule.getTitle());
+			if(correctFormat && !alreadyASchedule) {
+				return change;
 			}
-			setupFinished = true;
-		});
+			
+			return null;
+		};
+		//applying the text filter to the schedule title field
+		getTextField("scheduleTitle").setTextFormatter(new TextFormatter<>(validTitleFilter));
+		getTextField("scheduleTitle").focusedProperty().addListener((obs, wasFocused, isFocused) -> {
+			if(wasFocused & !isFocused) {
+				if(scheduleTitleField.getText().length() == 0) {
+					isReplacingTitle = true;
+					scheduleTitleField.setText(getFirstUnusedScheduleName());
+					isReplacingTitle = false;
+				}
+			}
+        });
+		scheduleTitleField = getTextField("scheduleTitle");
 		
 		//add course search view button
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {
@@ -99,6 +130,9 @@ public class CourseSearchPage extends Page {
 		addButton("calendarSwitchButton", 1150, 5, 120, 40, "Calendar", () -> {
 			CalendarPage calendarPage = (CalendarPage)pageManager.getPage("CalendarPage");
 			calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
+			calendarPage.setScheduleTitleField(scheduleTitleField);
+			calendarPage.getPane().getChildren().add(scheduleTitleField);
+			getPane().getChildren().remove(scheduleTitleField);
 			pageManager.goToPage("CalendarPage");
 		});
 		
@@ -175,13 +209,6 @@ public class CourseSearchPage extends Page {
 			searchList.addCourseToDisplay(currentSearch.getSearchResults().get(i));
 		}
 	}
-
-	public void updateScheduleTitle(String title) {
-		getTextField("scheduleTitle").setText(title);
-		renameCurrentSchedule(title);
-		currentSchedule.setTitle(title);
-		saveCurrentSchedule();
-	}
 	
 	public Schedule getCurrentSchedule() {
 		return currentSchedule;
@@ -211,6 +238,8 @@ public class CourseSearchPage extends Page {
 	}
 	
 	private void loadSchedule(String scheduleTitle, PageManager pageManager) {
+		isReplacingTitle = true;
+		
 		currentSchedule = Schedule.loadSchedule(getSavePath(scheduleTitle));
 		getTextField("scheduleTitle").setText(scheduleTitle);
 				
@@ -221,6 +250,8 @@ public class CourseSearchPage extends Page {
 
 		searchList.setCurrentSchedule(currentSchedule);
 		scheduleList.setCurrentSchedule(currentSchedule);
+		
+		isReplacingTitle = false;
 	}
 	
 	private void loadMostRecentlyEditedSchedule(PageManager pageManager) {

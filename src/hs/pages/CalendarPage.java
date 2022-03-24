@@ -1,14 +1,15 @@
 package hs.pages;
 
 import java.awt.image.BufferedImage;
-
 import hs.pages.subPages.CalendarView;
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
+import javafx.scene.control.TextField;
 
 public class CalendarPage extends Page {
 
 	private CalendarView calendarView;
+	private TextField scheduleTitleField;
 	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
@@ -18,13 +19,11 @@ public class CalendarPage extends Page {
 		// add New button
 		addButton("newButton", 105, 5, 80, 40, "New", null);
 		
-		addTextField("scheduleTitle", 200, 5, 350, 40, "[Enter schedule title here]");
-		getTextField("scheduleTitle").textProperty().addListener((obs, oldText, newText) -> {
-			((CourseSearchPage)pageManager.getPage("CourseSearch")).updateScheduleTitle(newText);
-		});
-		
 		// add courseSearch view button
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {
+			CourseSearchPage courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");
+			courseSearchPage.getPane().getChildren().add(scheduleTitleField);
+			getPane().getChildren().remove(scheduleTitleField);
 			pageManager.goToPage("CourseSearch");
 		
 		});
@@ -35,18 +34,14 @@ public class CalendarPage extends Page {
 		
 		calendarView = new CalendarView();
 		addSubPage("calendarView", calendarView, 240, 60, 800, 600, false);
-		
-		updateScheduleTitle(
-			((CourseSearchPage)pageManager.getPage("CourseSearch")).getCurrentSchedule().getTitle()
-		);
-	}
-	
-	public void updateScheduleTitle(String title) {
-		getTextField("scheduleTitle").setText(title);
 	}
 
 	public void updateCalendarImage(BufferedImage img) {
 		calendarView.updateCalendarImage(img);
+	}
+	
+	public void setScheduleTitleField(TextField scheduleTitleField) {
+		this.scheduleTitleField = scheduleTitleField;
 	}
 	
 }
