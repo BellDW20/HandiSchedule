@@ -12,26 +12,42 @@ import java.io.ObjectOutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 
+/*
+ * This class contains information that allows a schedule to be created by a user.
+ * Author: Andrew Beichner
+ */
 public class Schedule {
 	
 	private String title;
 	private Date dateLastModified;
 	private ArrayList<Course> courses;
 	
+	//constructor method for Schedule. Takes in the name of a schedule
 	public Schedule(String title) {
 		this.title = title;
 		courses = new ArrayList<Course>();
 	}
 	
+	/*
+	 * Method allows you to add a course to the schedule
+	 */
 	public void addCourse(Course course) {
 		if(courses.contains(course)) {return;}
 		courses.add(course);
 	}
 	
+	/*
+	 * Method lets user remove a course from the schedule
+	 */
 	public void removeCourse(Course course) {
 		courses.remove(course);
 	}
 	
+	
+	/*
+	 * Method calculates the total number of credit hours that a schedule contains
+	 * by adding the credit hours of all the courses it contains together.
+	 */
 	public int calculateTotalCreditHours() {
 		int totalCreditHours = 0;
 		for(int i = 0; i < courses.size(); i++) {
@@ -40,26 +56,32 @@ public class Schedule {
 		return totalCreditHours;
 	}
 	
+	//sets the title of a schedule
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	
+	//sets the date a schedule was last modified or accessed by the user
 	public void setDateLastModified(Date dateLastModified) {
 		this.dateLastModified = dateLastModified;
 	}
 	
+	//getter method for the schedule title.
 	public String getTitle() {
 		return title;
 	}
 	
+	//getter method for the date the schedule was last modified.
 	public Date getDateLastModified() {
 		return dateLastModified;
 	}
 
+	//getter for the courses added to the schedule
 	public ArrayList<Course> getCourses() {
 		return courses;
 	}
 	
+	//returns all of the courses in the schedule in string form
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
@@ -71,6 +93,10 @@ public class Schedule {
 		return sb.toString();
 	}
 	
+	/*
+	 * This method allows a schedule to be saved by the user to be accessed again
+	 * later at their convenience. It takes in a path in the form of a string to the file.
+	 */
 	public void saveSchedule(String path) {
 		try {
 			
@@ -86,6 +112,10 @@ public class Schedule {
 		}
 	}
 	
+	/*
+	 * Method takes in a path in the form of a string to the location of the schedule.
+	 * Allows users to load old schedules back into the program to alter further.
+	 */
 	@SuppressWarnings("unchecked")
 	public static Schedule loadSchedule(String path) {	
 		Schedule loadedSchedule = new Schedule("");
@@ -103,6 +133,11 @@ public class Schedule {
 		return loadedSchedule;
 	}
 	
+	/*
+	 * Method creates the schedule that has been created and is currently being displayed
+	 * as a calendar. Returns a buffered image with calendar info that is displayed to 
+	 * the user.
+	 */
 	public BufferedImage getAsCalendar() {
 		int width = 800;
 		int height = 600;
