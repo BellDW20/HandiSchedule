@@ -67,7 +67,7 @@ public class CourseSearchPage extends Page {
 		
 		//add Load button. This button allows the user to load new schedule.
 		addButton("loadButton", 10, 5, 80, 40, "Load", ()->{
-			((LoadPage)pageManager.getPage("LoadPage")).refresh(pageManager);
+			((LoadPage)pageManager.getPage("LoadPage")).refresh(pageManager, "CourseSearch");
 			pageManager.goToPage("LoadPage");
 		});
 		

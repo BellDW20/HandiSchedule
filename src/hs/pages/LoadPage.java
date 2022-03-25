@@ -12,11 +12,14 @@ public class LoadPage extends Page {
 	
 	private static int BUFFER = 10;
 	private CourseSearchPage courseSearchPage;
+	private CalendarPage calendarPage;
 	private int loadButtonCount;
+	private String pageFrom;
 	
 	public LoadPage() {}
 	
-	public void refresh(PageManager pageManager) {
+	public void refresh(PageManager pageManager, String pageFrom) {
+		this.pageFrom = pageFrom;
 		for(int i=0; i<loadButtonCount; i++) {
 			removeComponent(Page.BUTTON, "Load "+i);
 		}
@@ -33,7 +36,10 @@ public class LoadPage extends Page {
 			String name = schedulesFolder.listFiles()[i].getName();
 			addButton("Load " + Integer.toString(i), x, y, tempWidth, tempHeight, name, ()-> {
 				courseSearchPage.loadSchedule(name.replace(CourseSearchPage.SAVE_EXT, ""), pageManager);
-				pageManager.goToPage("CourseSearch");
+				if(pageFrom.equals("CalendarPage")) {
+					calendarPage.updateCalendarImage(courseSearchPage.getCurrentSchedule().getAsCalendar());
+				}
+				pageManager.goToPage(pageFrom);
 			});
 		}
 	}
@@ -47,13 +53,14 @@ public class LoadPage extends Page {
 		addButton("newButton", 105, 5, 80, 40, "New", null);
 
 		// add courseSearch view button
-		addButton("courseSearchSwitchButton", 1150, 5, 120, 40, "Class Search", () -> {
-			pageManager.goToPage("CourseSearch");
+		addButton("backButton", 1150, 5, 120, 40, "Back", () -> {
+			pageManager.goToPage(pageFrom);
 		});
 		
 		drawRect(0, 0, WIDTH, HEIGHT);
 		drawText(BUFFER, BUFFER, "Schedules");
 		
 		courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");
+		calendarPage = (CalendarPage)pageManager.getPage("CalendarPage");
 	}
 }
