@@ -11,6 +11,10 @@ public class CalendarPage extends Page {
 	private CalendarView calendarView;
 	private TextField scheduleTitleField;
 	
+	
+	/*
+	 * Creates/initializes the components of the calendar page GUI
+	 */
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		// add Load button
@@ -32,14 +36,17 @@ public class CalendarPage extends Page {
 			pageManager.goToPage("CalendarPage");
 		});
 		
+		//creates a new calendar view that will be displayed on the calendar page
 		calendarView = new CalendarView();
 		addSubPage("calendarView", calendarView, 240, 60, 800, 600, false);
 	}
 
+	//updates the calendar view with the newest image based on the current schedule being worked on
 	public void updateCalendarImage(BufferedImage img) {
 		calendarView.updateCalendarImage(img);
 	}
 	
+	//setter for the schedule title field of the calendar page.
 	public void setScheduleTitleField(TextField scheduleTitleField) {
 		this.scheduleTitleField = scheduleTitleField;
 	}

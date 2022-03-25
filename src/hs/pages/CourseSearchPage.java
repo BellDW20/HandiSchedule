@@ -40,6 +40,10 @@ public class CourseSearchPage extends Page {
 	private TextField scheduleTitleField;
 	private boolean isReplacingTitle = true;
 	
+	/*
+	 * Creates and initializes the the components of the course search page.
+	 * Takes in a page manager as a parameter
+	 */
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		//Make sure schedule folder exists
@@ -54,15 +58,19 @@ public class CourseSearchPage extends Page {
 		searchList.initializeComponents(pageManager);
 		scheduleList = new CourseScheduleList();
 		searchList.setScheduleList(scheduleList);
+		
+		//sub page contains the list of all courses that are the results of a search
 		addSubPage("searchList", searchList, 10, 120, searchList.getW(), searchList.getH(), true);
+		
+		//sub page contains the courses currently added to the schedule being worked on
 		addSubPage("scheduleList", scheduleList, 770, 120, scheduleList.getW(), scheduleList.getH(), true);
 		
-		//add Load button
+		//add Load button. This button allows the user to load new schedule.
 		addButton("loadButton", 10, 5, 80, 40, "Load", ()->{
 			hideComponent(SUB_PAGE, "filterOptions");
 		});
 		
-		//add New button
+		//add New button. This button creates a new schedule.
 		addButton("newButton", 105, 5, 80, 40, "New", ()->{
 			saveCurrentSchedule();
 			currentSchedule = new Schedule(getFirstUnusedScheduleName());
@@ -108,6 +116,8 @@ public class CourseSearchPage extends Page {
 			
 			return null;
 		};
+		
+		
 		//applying the text filter to the schedule title field
 		getTextField("scheduleTitle").setTextFormatter(new TextFormatter<>(validTitleFilter));
 		getTextField("scheduleTitle").focusedProperty().addListener((obs, wasFocused, isFocused) -> {
@@ -121,12 +131,12 @@ public class CourseSearchPage extends Page {
         });
 		scheduleTitleField = getTextField("scheduleTitle");
 		
-		//add course search view button
+		//add course search view button. Takes user to the course search page.
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {
 			pageManager.goToPage("CourseSearch");
 		});
 		
-		//add calendar view button
+		//add calendar view button. Takes user to the calendar view page.
 		addButton("calendarSwitchButton", 1150, 5, 120, 40, "Calendar", () -> {
 			CalendarPage calendarPage = (CalendarPage)pageManager.getPage("CalendarPage");
 			calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
@@ -142,8 +152,12 @@ public class CourseSearchPage extends Page {
 			performSearch();
 		});
 		
+		/*
+		 * Add search button that users click to search for courses when they have 
+		 * applied filters and typed in their search.
+		 */
 		addButton("searchButton", 510, 70, 80, 40, "Search", ()->{
-			performSearch();
+			performSearch(); //method searches the course database for valid courses
 		});
 		
 		//Add ability to see filter options for search
@@ -153,16 +167,24 @@ public class CourseSearchPage extends Page {
 		
 		FilterOptionsPage filterOptionsPage = new FilterOptionsPage(db);
 		filterOptionsPage.initializeComponents(pageManager);
+		
+		//subpage contains the filter options that users can select to further narrow their course search
 		addSubPage("filterOptions", filterOptionsPage, 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
 		hideComponent(SUB_PAGE, "filterOptions");
 		
 		loadMostRecentlyEditedSchedule(pageManager);
 	}
 	
+	/*
+	 * Method performs a search on the class database and displays all of the classes in
+	 * the database that match the parameters of the search and applied filters.
+	 */
 	private void performSearch() {
-		searchList.clear();
+		searchList.clear(); //empty the current list of courses so any that don't match the next search are removed
 		hideComponent(SUB_PAGE, "filterOptions");
-		currentSearch.clearFilters();
+		currentSearch.clearFilters(); //reset the filters
+		
+		//add filters that have been applied
 		currentSearch.addSearchFilter(new CourseNameFilter(getTextField("searchField").getText()));
 
 		Page temp = getSubPage("filterOptions");
@@ -210,10 +232,13 @@ public class CourseSearchPage extends Page {
 		}
 	}
 	
+	//getter for the current schedule
+	//returns the classes added to the current schedule
 	public Schedule getCurrentSchedule() {
 		return currentSchedule;
 	}
 	
+	//getter for the name of the first schedule created by a user that has not been modified
 	private String getFirstUnusedScheduleName() {
 		File[] savedSchedules = (new File(SAVE_DIR)).listFiles();
 		
@@ -237,6 +262,11 @@ public class CourseSearchPage extends Page {
 		return DEFAULT_SCHEDULE_NAME + " " + (maxUntitled+1);
 	}
 	
+	/*
+	 * This method loads a schedule. It takes in a title and a page manager, and loads
+	 * the schedule in the state it was in at the end of the last session where it was 
+	 * being modified.
+	 */
 	private void loadSchedule(String scheduleTitle, PageManager pageManager) {
 		isReplacingTitle = true;
 		
