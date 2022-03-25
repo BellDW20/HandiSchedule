@@ -67,7 +67,8 @@ public class CourseSearchPage extends Page {
 		
 		//add Load button. This button allows the user to load new schedule.
 		addButton("loadButton", 10, 5, 80, 40, "Load", ()->{
-			hideComponent(SUB_PAGE, "filterOptions");
+			((LoadPage)pageManager.getPage("LoadPage")).refresh(pageManager);
+			pageManager.goToPage("LoadPage");
 		});
 		
 		//add New button. This button creates a new schedule.
@@ -267,7 +268,7 @@ public class CourseSearchPage extends Page {
 	 * the schedule in the state it was in at the end of the last session where it was 
 	 * being modified.
 	 */
-	private void loadSchedule(String scheduleTitle, PageManager pageManager) {
+	public void loadSchedule(String scheduleTitle, PageManager pageManager) {
 		isReplacingTitle = true;
 		
 		currentSchedule = Schedule.loadSchedule(getSavePath(scheduleTitle));

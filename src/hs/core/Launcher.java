@@ -2,6 +2,7 @@ package hs.core;
 
 import hs.pages.CalendarPage;
 import hs.pages.CourseSearchPage;
+import hs.pages.LoadPage;
 import hs.simplefx.PageManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -23,6 +24,10 @@ public class Launcher extends Application {
 		CalendarPage cp = new CalendarPage(); //CalendarPage
 		cp.initializeComponents(pageManager);
 		pageManager.addPageToProgram(cp, "CalendarPage");
+		
+		LoadPage lp = new LoadPage(); //LoadPage
+		lp.initializeComponents(pageManager);
+		pageManager.addPageToProgram(lp,  "LoadPage");
 		
 		pageManager.goToPage("CourseSearch");
 		stage.setTitle("HandiSchedule");

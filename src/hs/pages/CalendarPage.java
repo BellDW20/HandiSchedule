@@ -18,7 +18,10 @@ public class CalendarPage extends Page {
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		// add Load button
-		addButton("loadButton", 10, 5, 80, 40, "Load", null);
+		addButton("loadButton", 10, 5, 80, 40, "Load", ()->{
+			((LoadPage)pageManager.getPage("LoadPage")).refresh(pageManager);
+			pageManager.goToPage("LoadPage");
+		});
 		
 		// add New button
 		addButton("newButton", 105, 5, 80, 40, "New", null);
