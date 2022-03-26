@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import hs.core.Course;
 
 public class CourseCodeFilter extends CourseSearchFilter {
-
+	
+	//Whether or not the one, two, three, or four
+	//hundred level course codes should be included in the search
 	private boolean one;
 	private boolean two;
 	private boolean three;
@@ -20,12 +22,16 @@ public class CourseCodeFilter extends CourseSearchFilter {
 	
 	@Override
 	public void narrowResults(ArrayList<Course> courseList) {
+		//If we've made any selection, filter. Otherwise, keep everything
 		if (one || two || three || four) {
+			//For every course left in the search...
 			for(int i=0; i<courseList.size(); i++) {
 				boolean accepted = false;
 				Course course = courseList.get(i);
 				int code = course.getCourseCode();
-
+				
+				//If the course falls within any filtered
+				//course code level range, keep it
 				if(one) {
 					if (code < 200) {
 						accepted = true;
@@ -47,6 +53,7 @@ public class CourseCodeFilter extends CourseSearchFilter {
 					}
 				}
 				
+				//If the course didn't match the filter, remove it
 				if (!accepted) {
 					courseList.remove(i);
 					i--;

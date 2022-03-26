@@ -5,6 +5,16 @@ import java.util.ArrayList;
 import hs.core.Course;
 import javafx.scene.Node;
 
+/**
+ * Abstract class meant to be extended for various
+ * different types of course lists which are viewable.
+ * Every time a course is added, a course visual is added to a
+ * scrollable list. Additionally, the child class is also
+ * called when a course is added to add extra functionality
+ * to these course visuals.
+ * @author Douglas Bell
+ */
+
 public abstract class ViewableCourseList extends Page {
 	
 	private static final int COURSE_HEIGHT = 64;
@@ -13,6 +23,11 @@ public abstract class ViewableCourseList extends Page {
 	private int w,h;
 	private ArrayList<Course> courses;
 	
+	/**
+	 * Creates an empty viewable course list of a certain size
+	 * @param w Width of the course list
+	 * @param h Height of the course list
+	 */
 	public ViewableCourseList(int w, int h) {
 		super();
 		this.w = w;
@@ -20,8 +35,18 @@ public abstract class ViewableCourseList extends Page {
 		this.courses = new ArrayList<>();
 	}
 
+	/**
+	 * Run when a course is added. Allows child classes to add extra
+	 * functionality / graphics to the course visuals
+	 * @param course Course that was just added
+	 */
 	protected abstract void onCourseAdd(Course course);
 	
+	/**
+	 * Adds a viewable course to the list, using the child class
+	 * to add functionality / visuals.
+	 * @param course
+	 */
 	public void addCourseToDisplay(Course course) {
 		if(courses.contains(course)) {return;}
 		courses.add(course);
@@ -32,10 +57,24 @@ public abstract class ViewableCourseList extends Page {
 		onCourseAdd(course);
 	}
 	
+	/**
+	 * Adds a button to a given course in the course list
+	 * @param course Course to add a button to
+	 * @param buttonName Name to give the added button
+	 * @param x X-position of the button
+	 * @param y Y-position of the button
+	 * @param w Width of the button
+	 * @param h Height of the button
+	 * @param text The text applied to the button
+	 * @param onClick The action performed when the button is clicked
+	 */
 	protected void addButtonToCourse(Course course, String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
 		getSubPage(course.getUniqueString()).addButton(buttonName, x+PAD, y+PAD, w, h, text, onClick);
 	}
 
+	/**
+	 * Removes all courses from the viewable list
+	 */
 	public void clear() {
 		while(!courses.isEmpty()) {
 			Course s = courses.remove(0);
@@ -43,6 +82,11 @@ public abstract class ViewableCourseList extends Page {
 		}
 	}
 	
+	/**
+	 * Removes a specific course from the list, adjusting all
+	 * other courses accordingly.
+	 * @param course Course to remove from the list
+	 */
 	public void removeCourseToDisplay(Course course) {
 		int index = courses.indexOf(course);
 		
@@ -55,10 +99,18 @@ public abstract class ViewableCourseList extends Page {
 		}
 	}
 	
+	/**
+	 * Getter for the width of this list
+	 * @return Width of the list
+	 */
 	public int getW() { 
 		return w;
 	}
 	
+	/**
+	 * Getter for the height of this list
+	 * @return height of the list
+	 */
 	public int getH() {
 		return h;
 	}
