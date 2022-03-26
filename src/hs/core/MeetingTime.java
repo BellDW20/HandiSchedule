@@ -46,13 +46,13 @@ public class MeetingTime implements Serializable {
 	}
 	
 	/*
-	 * This method checks to see if classes are happening on the same day.
-	 * It looks at the first character of each day of the week that classes occur.
-	 * If the letters are the same, then the classes do overlap. Otherwise, they
-	 * are on different days.
+	 * This method checks to see if time frames conflict
 	 */
 	public boolean isConflictingWith(MeetingTime time) {
 		boolean daysOverlap = false;
+		
+		//If any of the days of the two meeting times overlap,
+		//there is a potential for conflict
 		for(char c : time.getDaysOfWeek()) {
 			if(daysOfWeek.contains(""+c)) {
 				daysOverlap = true;
@@ -60,11 +60,12 @@ public class MeetingTime implements Serializable {
 			}
 		}
 		
+		//Otherwise, there is no conflict
 		if(!daysOverlap) {
 			return false;
 		}
 		
-		//returns true if the courses overlap, false otherwise
+		//If there could be a conflict, check if the time frames overlap
 		return timeFrame.isOverlappingWith(time.getTimeFrame());
 	}
 	

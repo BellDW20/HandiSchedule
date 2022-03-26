@@ -5,21 +5,19 @@ import java.util.ArrayList;
 
 /**
  * This class contains information related to courses for use in other classes as an object.
- * @author CONRADLJ19
- *
+ * @author Levi Conrad
  */
 public class Course implements Serializable {
 	
 	private static final long serialVersionUID = -7756127829025002535L;
 	
-	private String courseName;
-	private String department;
-	private char section;
-	private int courseCode;
-	private int creditHours;
+	private String courseName; // Name of the course
+	private String department; // Department of the course
+	private char section; //Section of the course
+	private int courseCode; //Number of the course (ex 101, 222, etc.)
+	private int creditHours; //Estimated number of credit hours of the course
 	
-	private ArrayList<MeetingTime> meetingTimes;
-	
+	private ArrayList<MeetingTime> meetingTimes; //Times at which the course meets
 	
 	//constructor takes in a name, department, section, and code for each course.
 	public Course(String courseName, String department, char section, int courseCode) {
@@ -37,9 +35,8 @@ public class Course implements Serializable {
 	 */
 	public void addMeetingTime(TimeFrame timeFrame, String daysOfWeek, boolean countedTowardsDayOfWeek) {
 		meetingTimes.add(new MeetingTime(timeFrame, daysOfWeek, countedTowardsDayOfWeek));
-		calculateCreditHours(); // calculates the credit hours based on the meeting times
+		calculateCreditHours(); // recalculates the credit hours based on the meeting times
 	}
-	
 	
 	/*
 	 * Method calculates the total number of credits a course is worth
@@ -48,6 +45,8 @@ public class Course implements Serializable {
 		int totalHours = 0;
 		
 		for(MeetingTime meetingTime : meetingTimes) {
+			//As long as the course is not something such as a lab,
+			//its credit hours are estimated and added to the running total
 			if(meetingTime.isCountedTowardsCreditHours()) {
 				totalHours += meetingTime.getTimeFrame().getTimeInMinutes()*meetingTime.getDaysOfWeek().length;
 			}
@@ -55,7 +54,6 @@ public class Course implements Serializable {
 		
 		creditHours = (int)Math.ceil(totalHours/60.0);
 	}
-	
 	
 	//getter method for the course name
 	public String getCourseName() {
@@ -92,6 +90,7 @@ public class Course implements Serializable {
 	 * has conflicting time slots with another time for another potential course
 	 */
 	public boolean isConflictingWith(Course course) {
+		//If any of our meeting times conflict, there is a conflict
 		for(MeetingTime myTime : meetingTimes) {
 			for(MeetingTime otherTime : course.getMeetingTimes()) {
 				if(myTime.isConflictingWith(otherTime)) {
@@ -100,6 +99,7 @@ public class Course implements Serializable {
 			}
 		}
 		
+		//Otherwise, there is not a conflict
 		return false;
 	}
 	
@@ -111,6 +111,7 @@ public class Course implements Serializable {
 	
 	@Override
 	public boolean equals(Object o) {
+		if(o == this) {return true;}
 		if(!(o instanceof Course)) {
 			return false;
 		}
@@ -122,11 +123,11 @@ public class Course implements Serializable {
 	/*
 	 * This method creates a string of all of a course's important/relevant information.
 	 * This include course department, code, section, name, meeting times, and credit hours.
+	 * Generally used for debugging course creation / loading
 	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
 		
 		//add the department, code, section, and course name to the stringbuilder
 		sb.append(department+" "+courseCode+" "+section+" | "+courseName+" | ");

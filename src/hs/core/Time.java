@@ -2,18 +2,17 @@ package hs.core;
 
 import java.io.Serializable;
 
-
 public class Time implements Serializable {
 	
 	private static final long serialVersionUID = -4083991327056493548L;
 	
-	//int values function as booleans for whether a class is at AM or PM
+	//int values to tell whether a class is at AM or PM
 	public static final int AM = 0;
 	public static final int PM = 1;
 	
-	private int hour;
-	private int minute;
-	private int amOrPm;
+	private int hour; //Hour of the time
+	private int minute; //Minute of the time
+	private int amOrPm; //Whether the time is in the AM or PM
 	
 	//Constructor method takes in the hour and minute of a course, and whether its AM or PM
 	public Time(int hour, int minute, int amOrPm) {
@@ -82,7 +81,9 @@ public class Time implements Serializable {
 		return time.getTimeAsInt() >= getTimeAsInt();
 	}
 	
-	//getter for the time, returns the time as a single integer based on its military time values
+	/* Returns the time as a single integer (as minutes from 00:00)
+	 * based on its military time values
+	 */
 	public int getTimeAsInt() {
 		return getMilitaryHour()*60+minute;
 	}

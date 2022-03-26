@@ -9,6 +9,7 @@ import hs.core.Time;
 import hs.core.TimeFrame;
 import hs.pages.subPages.CourseScheduleList;
 import hs.pages.subPages.CourseSearchList;
+import hs.pages.subPages.FilterOptionsPage;
 import hs.search.CourseCodeFilter;
 import hs.search.CourseCreditHourFilter;
 import hs.search.CourseDepartmentFilter;
@@ -25,20 +26,22 @@ import javafx.scene.control.TextFormatter.Change;
 
 public class CourseSearchPage extends Page {
 	
-	public static final String SAVE_DIR = "./schedules/";
-	public static final String DEFAULT_SCHEDULE_NAME = "Untitled Schedule";
-	public static final String SAVE_EXT = ".schd";
+	public static final String SAVE_DIR = "./schedules/"; //Directory to which schedules are saved
+	public static final String DEFAULT_SCHEDULE_NAME = "Untitled Schedule"; //Default prefix for schedule titles
+	public static final String SAVE_EXT = ".schd"; //Extension for schedule files
+	
+	//The types of characters accepted in the schedule's title
 	public static final String ACCEPTED_SCHEDULE_TITLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
 	
-	private CourseSearchList searchList;
-	private CourseScheduleList scheduleList;
+	private CourseSearchList searchList; //The viewable list of all currently searched courses
+	private CourseScheduleList scheduleList; //The viewable list of courses in the current schedule
 	
-	private CourseDatabase db;
-	private CourseSearch currentSearch;
-	private Schedule currentSchedule;
+	private CourseDatabase db; //Database containing all courses/departments
+	private CourseSearch currentSearch; //The current course search query and its results
+	private Schedule currentSchedule; //The schedule currently being edited
 	
-	private TextField scheduleTitleField;
-	private boolean isReplacingTitle = true;
+	private TextField scheduleTitleField; //The text field for editing the schedule's title
+	private boolean isReplacingTitle = true; //Magic
 	
 	/*
 	 * Creates and initializes the the components of the course search page.
@@ -46,7 +49,7 @@ public class CourseSearchPage extends Page {
 	 */
 	@Override
 	public void initializeComponents(PageManager pageManager) {
-		//Make sure schedule folder exists
+		//Make sure schedule save folder exists
 		(new File(SAVE_DIR)).mkdirs();
 		
 		//Load course database
@@ -74,8 +77,12 @@ public class CourseSearchPage extends Page {
 		//add New button. This button creates a new schedule.
 		addButton("newButton", 105, 5, 80, 40, "New", ()->{
 			saveCurrentSchedule();
+			
+			//make a new schedule and save it
 			currentSchedule = new Schedule(getFirstUnusedScheduleName());
 			saveCurrentSchedule();
+			
+			//load the new schedule
 			loadMostRecentlyEditedSchedule(pageManager);
 		});
 		
@@ -91,14 +98,19 @@ public class CourseSearchPage extends Page {
 		
 		//filter for accepting name changes to the schedule
 		UnaryOperator<Change> validTitleFilter = change -> {
+			//If we're simply replacing the title during schedule loading
+			//or if the title hasn't changed, accept the change
 			if(isReplacingTitle || !change.isContentChange()) {
 				return change;
 			}
 			
+			//Otherwise, make sure it matches the correct format
+			//and would not overwrite an existing schedule
 			String newText = change.getControlNewText();
 			boolean correctFormat = newText.matches("["+ACCEPTED_SCHEDULE_TITLE_CHARS+"]*");
 			boolean alreadyASchedule = (new File(getSavePath(newText))).exists();
 			
+			//Notify the user if their rename is invalid and why
 			if(!correctFormat) {
 				Alert renameError = new Alert(AlertType.ERROR);
 				renameError.setHeaderText("Schedule Rename Failed");
@@ -111,10 +123,12 @@ public class CourseSearchPage extends Page {
 				renameError.showAndWait();
 			}
 			
+			//If the change is valid, accept it
 			if(correctFormat && !alreadyASchedule) {
 				return change;
 			}
 			
+			//Otherwise, reject it
 			return null;
 		};
 		
@@ -122,6 +136,8 @@ public class CourseSearchPage extends Page {
 		//applying the text filter to the schedule title field
 		getTextField("scheduleTitle").setTextFormatter(new TextFormatter<>(validTitleFilter));
 		getTextField("scheduleTitle").focusedProperty().addListener((obs, wasFocused, isFocused) -> {
+			//If the title text field lost focus and was empty,
+			//replace it with a default schedule title
 			if(wasFocused & !isFocused) {
 				if(scheduleTitleField.getText().length() == 0) {
 					isReplacingTitle = true;
@@ -139,11 +155,14 @@ public class CourseSearchPage extends Page {
 		
 		//add calendar view button. Takes user to the calendar view page.
 		addButton("calendarSwitchButton", 1150, 5, 120, 40, "Calendar", () -> {
+			//JavaFX workaround
 			CalendarPage calendarPage = (CalendarPage)pageManager.getPage("CalendarPage");
 			calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
 			calendarPage.setScheduleTitleField(scheduleTitleField);
 			calendarPage.getPane().getChildren().add(scheduleTitleField);
 			getPane().getChildren().remove(scheduleTitleField);
+			
+			//Go to calendar page
 			pageManager.goToPage("CalendarPage");
 		});
 		
@@ -173,6 +192,7 @@ public class CourseSearchPage extends Page {
 		addSubPage("filterOptions", filterOptionsPage, 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
 		hideComponent(SUB_PAGE, "filterOptions");
 		
+		//Load the last schedule saved into the program on startup
 		loadMostRecentlyEditedSchedule(pageManager);
 	}
 	
@@ -185,10 +205,12 @@ public class CourseSearchPage extends Page {
 		hideComponent(SUB_PAGE, "filterOptions");
 		currentSearch.clearFilters(); //reset the filters
 		
-		//add filters that have been applied
+		//Add the filter for what was searched in the search text field
 		currentSearch.addSearchFilter(new CourseNameFilter(getTextField("searchField").getText()));
-
+		
 		Page temp = getSubPage("filterOptions");
+		
+		//Create course code filter
 		currentSearch.addSearchFilter(new CourseCodeFilter(
 				temp.getCheckBox("100Level").isSelected(),
 				temp.getCheckBox("200Level").isSelected(),
@@ -196,6 +218,7 @@ public class CourseSearchPage extends Page {
 				temp.getCheckBox("400Level").isSelected()
 		));
 		
+		//Create course credit hour filter
 		currentSearch.addSearchFilter(new CourseCreditHourFilter(
 				temp.getCheckBox("0Credits").isSelected(),
 				temp.getCheckBox("1Credit").isSelected(),
@@ -210,10 +233,13 @@ public class CourseSearchPage extends Page {
 		String toChoice = (String)temp.getDropDown("To:").getValue();
 		String toAMorPMChoice = (String)temp.getDropDown("AM or PMTo:").getValue();
 		
+		//If the user selected a time frame to filter by...
 		if (!fromChoice.equals("From") && 
 				!fromAMorPMChoice.equals("AM or PM") &&
 				!toChoice.equals("To") &&
 				!toAMorPMChoice.equals("AM or PM")) {
+			
+			//create the time frame filter
 			currentSearch.addSearchFilter(new CourseTimeFrameFilter(
 				new TimeFrame(
 					new Time(Integer.parseInt(fromChoice),0,Time.getAMOrPMFromString(fromAMorPMChoice)),
@@ -222,11 +248,14 @@ public class CourseSearchPage extends Page {
 			));
 		}
 		
+		//If the user selected a department to filter by,
+		//create the department filter
 		String deptChoice = (String)temp.getDropDown("Department").getValue();
 		if (!deptChoice.equals("All")) {
 			currentSearch.addSearchFilter(new CourseDepartmentFilter(deptChoice));
 		}
 		
+		//Perform the search and display it
 		currentSearch.updateSearch();
 		for (int i = 0; i < currentSearch.getSearchResults().size(); i++) {
 			searchList.addCourseToDisplay(currentSearch.getSearchResults().get(i));
@@ -285,15 +314,23 @@ public class CourseSearchPage extends Page {
 		isReplacingTitle = false;
 	}
 	
+	/**
+	 * Finds the most recently modified schedule and loads it.
+	 * @param pageManager PageManager to use to properly load schedule
+	 */
 	private void loadMostRecentlyEditedSchedule(PageManager pageManager) {
 		File[] savedSchedules = (new File(SAVE_DIR)).listFiles();
+		
+		//If there are no saved schedules...
 		if(savedSchedules.length == 0) {
+			//Make a new one and load it
 			currentSchedule = new Schedule(DEFAULT_SCHEDULE_NAME+" 0");
 			saveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
 			return;
 		}
 		
+		//Otherwise, find the most recently modified...
 		int mostRecent = 0;
 		long mostRecentTime = -1;
 		for(int i=0; i<savedSchedules.length; i++) {
@@ -303,17 +340,30 @@ public class CourseSearchPage extends Page {
 			}
 		}
 		
+		//And load it
 		loadSchedule(savedSchedules[mostRecent].getName().replace(SAVE_EXT, ""), pageManager);
 	}
 	
+	/**
+	 * Saves the current schedule to its respective file
+	 */
 	private void saveCurrentSchedule() {
 		currentSchedule.saveSchedule(getSavePath(currentSchedule.getTitle()));
 	}
 	
+	/**
+	 * Renames the current schedule, affecting its associated file
+	 * @param newTitle The new title of the schedule
+	 */
 	private void renameCurrentSchedule(String newTitle) {
 		(new File(getSavePath(currentSchedule.getTitle()))).renameTo(new File(SAVE_DIR+newTitle+SAVE_EXT));
 	}
 	
+	/**
+	 * Used for generating the default save path for a schedule
+	 * @param scheduleTitle Title of the schedule
+	 * @return The default save path for the schedule
+	 */
 	public static String getSavePath(String scheduleTitle) {
 		return SAVE_DIR+scheduleTitle+SAVE_EXT;
 	}

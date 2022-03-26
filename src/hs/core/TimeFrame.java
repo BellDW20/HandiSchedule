@@ -9,7 +9,6 @@ public class TimeFrame implements Serializable {
 	private Time startTime;
 	private Time endTime;
 	
-	
 	//Constructor method takes in a start time and an end time for a class
 	public TimeFrame(Time startTime, Time endTime) {
 		this.startTime = startTime;

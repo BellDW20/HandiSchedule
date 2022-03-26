@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 /*
  * This class contains information that allows a schedule to be created by a user.
- * Author: Andrew Beichner
+ * Author: Andrew Beichner, Levi Conrad
  */
 public class Schedule {
 	
@@ -29,7 +29,7 @@ public class Schedule {
 	}
 	
 	/*
-	 * Method allows you to add a course to the schedule
+	 * Method adds a course to the schedule
 	 */
 	public void addCourse(Course course) {
 		if(courses.contains(course)) {return;}
@@ -37,7 +37,7 @@ public class Schedule {
 	}
 	
 	/*
-	 * Method lets user remove a course from the schedule
+	 * Method removes a course from the schedule
 	 */
 	public void removeCourse(Course course) {
 		courses.remove(course);
@@ -56,7 +56,7 @@ public class Schedule {
 		return totalCreditHours;
 	}
 	
-	//sets the title of a schedule
+	//sets the title of the schedule
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -134,9 +134,8 @@ public class Schedule {
 	}
 	
 	/*
-	 * Method creates the schedule that has been created and is currently being displayed
-	 * as a calendar. Returns a buffered image with calendar info that is displayed to 
-	 * the user.
+	 * Method creates a calendar showing the courses in the schedule.
+	 * Returns a buffered image with calendar info to be displayed to the user.
 	 */
 	public BufferedImage getAsCalendar() {
 		int width = 800;

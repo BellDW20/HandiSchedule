@@ -13,19 +13,26 @@ import javafx.scene.shape.Rectangle;
 
 public class CalendarView extends Page {
 
-	private Image calendarImg = null;
+	private Image calendarImg = null; //Image of the calendar to view
 	private Rectangle calendarComponent;
 	
+	/**
+	 * Creates a blank calendar view
+	 */
 	public CalendarView() {
 		super();
-//		drawText(300, 292, "No Calendar to View - Empty Schedule");
 		calendarComponent = new Rectangle();
 		calendarComponent.setLayoutX(0);
 		calendarComponent.setLayoutY(0);
 		getPane().getChildren().add(calendarComponent);
 	}
 	
+	/**
+	 * Updates the calendar which can be viewed
+	 * @param img Image of the calendar to be viewed
+	 */
 	public void updateCalendarImage(BufferedImage img) {
+		//Convert buffered image into something JavaFX likes
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(img, "png", out);
@@ -35,10 +42,11 @@ public class CalendarView extends Page {
 		
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 		calendarImg = new Image(in);
+		
+		//Replace the calendar view with the new image
 		calendarComponent.setWidth(calendarImg.getWidth());
 		calendarComponent.setHeight(calendarImg.getHeight());
 		calendarComponent.setFill(new ImagePattern(calendarImg));
-
 	}
 	
 }

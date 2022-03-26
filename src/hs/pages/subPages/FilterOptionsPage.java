@@ -1,4 +1,4 @@
-package hs.pages;
+package hs.pages.subPages;
 
 import hs.core.CourseDatabase;
 import hs.simplefx.Page;
@@ -6,10 +6,11 @@ import hs.simplefx.PageManager;
 
 public class FilterOptionsPage extends Page {
 
+	//Width and height of this subpage
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = 595;
 	
-	private CourseDatabase db;
+	private CourseDatabase db; //A reference to the course database
 	
 	public FilterOptionsPage(CourseDatabase db) {
 		this.db = db;
@@ -21,14 +22,14 @@ public class FilterOptionsPage extends Page {
 		drawRect(0, 0, WIDTH, HEIGHT);
 		drawText(10, 10, "Filters");
 		
-		//Course code filters
+		//Add course code filters
 		drawText(20, 30, "Course Code Levels");
 		addCheckBox("100Level", 20, 50, "100");
 		addCheckBox("200Level", 100, 50, "200");
 		addCheckBox("300Level", 180, 50, "300");
 		addCheckBox("400Level", 260, 50, "400");
 		
-		
+		//Add credit hour filters
 		drawText(20, 80, "Course Credit Hours");
 		addCheckBox("0Credits", 20, 100, "0");
 		addCheckBox("1Credit", 100, 100, "1");
@@ -37,6 +38,7 @@ public class FilterOptionsPage extends Page {
 		addCheckBox("4Credits", 340, 100, "4");
 		addCheckBox("5Credits", 420, 100, "5");
 		
+		//Adds drop downs for selecting a time frame to filter by
 		drawText(20, 130, "Course Times");
 		addDropDown("From:", 20, 150, "From",
 					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
@@ -47,6 +49,7 @@ public class FilterOptionsPage extends Page {
 		);
 		addDropDown("AM or PMTo:", 320, 150, "AM or PM", "AM", "PM");
 		
+		//Adds the department filter (with an "All" departments option)
 		drawText(20, 180, "Departments:");
 		
 		String[] depts = db.getAllDepartmentsAsArray();
@@ -57,6 +60,7 @@ public class FilterOptionsPage extends Page {
 		allAndDepts[0] = "All";
 		addDropDown("Department", 10, 200, allAndDepts);
 		
+		//Adds a button which clears all set filters to their default value
 		addButton("clearFilters", 20, HEIGHT-42, 96, 32, "Clear Filters", ()->{
 			getCheckBox("100Level").setSelected(false);
 			getCheckBox("200Level").setSelected(false);

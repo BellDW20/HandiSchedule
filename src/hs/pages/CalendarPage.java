@@ -11,7 +11,6 @@ public class CalendarPage extends Page {
 	private CalendarView calendarView;
 	private TextField scheduleTitleField;
 	
-	
 	/*
 	 * Creates/initializes the components of the calendar page GUI
 	 */
@@ -26,15 +25,19 @@ public class CalendarPage extends Page {
 		// add New button
 		addButton("newButton", 105, 5, 80, 40, "New", null);
 		
-		// add courseSearch view button
+		// add button to switch to the course search page
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {
+			//Fun JavaFX workaround ;)
 			CourseSearchPage courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");
 			courseSearchPage.getPane().getChildren().add(scheduleTitleField);
 			getPane().getChildren().remove(scheduleTitleField);
+			
+			//then go to course search page
 			pageManager.goToPage("CourseSearch");
 		
 		});
-		// add calendar View button
+		
+		// add button to switch to the calendar page
 		addButton("calendarSwitchButton", 1150, 5, 120, 40, "Calendar", () -> {
 			pageManager.goToPage("CalendarPage");
 		});
@@ -44,7 +47,7 @@ public class CalendarPage extends Page {
 		addSubPage("calendarView", calendarView, 240, 60, 800, 600, false);
 	}
 
-	//updates the calendar view with the newest image based on the current schedule being worked on
+	//updates the calendar view with the newest calendar image based on the current schedule being worked on
 	public void updateCalendarImage(BufferedImage img) {
 		calendarView.updateCalendarImage(img);
 	}

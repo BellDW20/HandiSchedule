@@ -6,20 +6,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * A "database" which holds a list of all courses and all of the
+ * departments that these courses could be in. While queries are
+ * not supported directly in the database, it is still possible to
+ * access the data in the database and manually search it.
+ * @author Douglas Bell
+ */
+
 public class CourseDatabase {
 
-	private ArrayList<Course> fullCourseList;
-	private ArrayList<String> fullDepartmentsList;
+	private ArrayList<Course> fullCourseList; // List of all courses
+	private ArrayList<String> fullDepartmentsList; // List of all departments
 	
+	/**
+	 * Constructs an empty course database containing no courses
+	 * and no departments.
+	 */
 	public CourseDatabase() {
 		this.fullCourseList = new ArrayList<>();
 		this.fullDepartmentsList = new ArrayList<>();
 	}
 	
+	/**
+	 * Registers a course by adding it into the database,
+	 * and adding its department to the database if not already present
+	 * @param course Course to add into the database
+	 */
 	public void registerCourse(Course course) {
 		fullCourseList.add(course);
 		if(!fullDepartmentsList.contains(course.getDepartment())) {
@@ -27,14 +43,59 @@ public class CourseDatabase {
 		}
 	}
 	
+	/**
+	 * Sorts the course and department lists of the database.
+	 * Courses are sorted by department, then course number, then section.
+	 * Departments are sorted alphabetically.
+	 */
+	public void sortDatabase() {
+		Collections.sort((List<Course>)this.fullCourseList,
+			new Comparator<Course>() {
+
+				@Override
+				public int compare(Course a, Course b) {
+					//compares department...
+					int dept = a.getDepartment().compareTo(b.getDepartment());
+					if(dept != 0) {return dept;}
+					//then tries course number...
+					int no = Integer.compare(a.getCourseCode(), b.getCourseCode());
+					if(no != 0) {return no;}
+					//otherwise resorts to section
+					return Character.compare(a.getSection(), b.getSection());
+				}
+				
+			}
+		);
+		
+		Collections.sort((List<String>)this.fullDepartmentsList);
+	}
+	
+	/**
+	 * Returns a copy of the list of references to the courses
+	 * currently registered in the database
+	 * @return A copy of the list of references to the courses
+	 * currently registered in the database
+	 */
 	public ArrayList<Course> getCopyOfAllCourses() {
 		return new ArrayList<Course>(fullCourseList);
 	}
 	
+	/**
+	 * Returns a copy of the list of references to the departments
+	 * currently registered in the database
+	 * @return A copy of the list of references to the departments
+	 * currently registered in the database
+	 */
 	public ArrayList<String> getCopyOfAllDepartments() {
 		return new ArrayList<String>(fullDepartmentsList);
 	}
 	
+	/**
+	 * Returns the list of all departments currently registered
+	 * in the database as an array of Strings.
+	 * @return The list of all departments currently registered
+	 * in the database as an array of Strings.
+	 */
 	public String[] getAllDepartmentsAsArray() {
 		String[] ret = new String[fullDepartmentsList.size()];
 		for(int i=0; i<ret.length; i++) {
@@ -43,27 +104,45 @@ public class CourseDatabase {
 		return ret;
 	}
 	
+	/**
+	 * Creates a course database from a CSV file residing
+	 * at a given path.
+	 * @param databasePath Path of the database to load as a CSV file
+	 * @return A course database containing all courses / course info
+	 * 		   as specified by the CSV file
+	 */
 	public static CourseDatabase loadFromFile(String databasePath) {
+		//Create an empty database
 		CourseDatabase db = new CourseDatabase();
 		
+		//Map to keep track of all courses we have encountered by
+		//"name" (eg MATH 222 A)
 		HashMap<String,Course> courseMap = new HashMap<>();
-		HashSet<String> departmentSet = new HashSet<>();
 		
 		try {
+			//Begin reading the CSV file
 			Scanner fileScanner = new Scanner(new File(databasePath));
 			
 			fileScanner.nextLine(); //Skip CSV column name header
+			
+			//Every other line is a course
 			while(fileScanner.hasNextLine()) {
-				String line = fileScanner.nextLine();
-				Scanner lineScanner = new Scanner(line);
-				lineScanner.useDelimiter(",");
+				String line = fileScanner.nextLine(); //Get the next course
+				
+				Scanner lineScanner = new Scanner(line); //Begin scanning this course in
+				lineScanner.useDelimiter(","); //Data is separated by commas
 				
 				//Line Format: CourseCode, ShortTitle, LongTitle, BeginTime, EndTime, Meets, Building, Room, Enrollment, Capacity
 				String courseSection = lineScanner.next();
 				String[] deptAndCode = courseSection.split("\\s+");
+				
+				//If we've already seen this section of the course, we don't
+				//want to add a new course to the map (in fact, we can't).
+				//We will instead add this line as another meeting time of the same section
 				boolean alreadySeenSection = courseMap.containsKey(courseSection);
 				
 				String shortName = lineScanner.next();
+				//Handles if the short name also contained commas
 				if(shortName.startsWith("\"")) {
 					while(!shortName.endsWith("\"")) {
 						shortName+=", "+lineScanner.next();
@@ -71,6 +150,7 @@ public class CourseDatabase {
 				}
 				
 				String courseName = lineScanner.next();
+				//Handles if the actual name also contained commas
 				if(courseName.startsWith("\"")) {
 					while(!courseName.endsWith("\"")) {
 						courseName+=", "+lineScanner.next();
@@ -78,25 +158,29 @@ public class CourseDatabase {
 					courseName = courseName.substring(1,courseName.length()-1);
 				}
 				
-				String start = lineScanner.next();
-				String end = lineScanner.next();
-				String daysOfWeek = lineScanner.next();
+				String start = lineScanner.next(); //Start time
+				String end = lineScanner.next(); //End time
+				String daysOfWeek = lineScanner.next(); //Meeting days
+				
 				lineScanner.next(); //Skip building
 				lineScanner.next(); //Skip room
 				lineScanner.next(); //Skip enrollment
 				lineScanner.next(); //Skip capacity
 				
+				//Get the department, course code, and section
 				String department = deptAndCode[0];
-				departmentSet.add(department);
-				
 				int courseCode = Integer.parseInt(deptAndCode[1]);
 				char section = deptAndCode[2].charAt(0);
 				
+				//If we've not yet seen this course section...
 				if(!alreadySeenSection) {
+					//Add it as a new course to the map
 					courseMap.put(courseSection, new Course(courseName, department, section, courseCode));
 				}
 				
+				//As long as this course actually has a meeting time...
 				if(!start.equals("NULL")) {
+					//Add the meeting time specified by this line to the course in question
 					TimeFrame timeFrame = new TimeFrame(new Time(start), new Time(end));
 					courseMap.get(courseSection).addMeetingTime(timeFrame, daysOfWeek, !courseName.contains("LABORATORY"));
 				}
@@ -109,29 +193,13 @@ public class CourseDatabase {
 			e.printStackTrace();
 		}
 		
-		//Convert map to sorted list (by dept, course no, then section)
-		db.fullCourseList = new ArrayList<Course>(courseMap.values());
-		db.fullDepartmentsList = new ArrayList<String>(departmentSet);
+		//Register all courses into the database
+		for(Course course : courseMap.values()) {
+			db.registerCourse(course);
+		}
 		
 		//Sort collections to be in proper order
-		Collections.sort(
-			(List<Course>)db.fullCourseList,
-			new Comparator<Course>() {
-
-				@Override
-				public int compare(Course a, Course b) {
-					int dept = a.getDepartment().compareTo(b.getDepartment());
-					if(dept != 0) {return dept;}
-					int no = Integer.compare(a.getCourseCode(), b.getCourseCode());
-					if(no != 0) {return no;}
-					
-					return Character.compare(a.getSection(), b.getSection());
-				}
-				
-			}
-		);
-		
-		Collections.sort((List<String>)db.fullDepartmentsList);
+		db.sortDatabase();
 		
 		return db;
 	}
