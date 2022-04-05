@@ -43,10 +43,10 @@ public class LoadPage extends Page {
 			int tempHeight = 40;
 			int y = BUFFER + (tempHeight * (i + 1));
 			int x = BUFFER;
-			String name = schedules[i].getName();
+			String name = schedules[i].getName().replace(CourseSearchPage.SAVE_EXT, "");
 			
 			addButton("Load " + Integer.toString(i), x, y, tempWidth, tempHeight, name, ()-> {
-				courseSearchPage.loadSchedule(name.replace(CourseSearchPage.SAVE_EXT, ""), pageManager);
+				courseSearchPage.loadSchedule(name, pageManager);
 				
 				//If we came from the calendar page, we need to update the
 				//calendar appropriately

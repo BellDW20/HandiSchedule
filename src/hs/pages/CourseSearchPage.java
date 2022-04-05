@@ -49,6 +49,8 @@ public class CourseSearchPage extends Page {
 	 */
 	@Override
 	public void initializeComponents(PageManager pageManager) {
+		int offset = 55;
+		
 		//Make sure schedule save folder exists
 		(new File(SAVE_DIR)).mkdirs();
 		
@@ -68,14 +70,20 @@ public class CourseSearchPage extends Page {
 		//sub page contains the courses currently added to the schedule being worked on
 		addSubPage("scheduleList", scheduleList, 770, 120, scheduleList.getW(), scheduleList.getH(), true);
 		
+		//add Delete button. This button allows the user to delete the current schedule
+		addButton("deleteButton", 10, 5, 40, 40, "Del", ()->{
+			deleteCurrentSchedule();
+			loadMostRecentlyEditedSchedule(pageManager);
+		});
+		
 		//add Load button. This button allows the user to load new schedule.
-		addButton("loadButton", 10, 5, 80, 40, "Load", ()->{
+		addButton("loadButton", 10+offset, 5, 80, 40, "Load", ()->{
 			((LoadPage)pageManager.getPage("LoadPage")).refresh(pageManager, "CourseSearch");
 			pageManager.goToPage("LoadPage");
 		});
 		
 		//add New button. This button creates a new schedule.
-		addButton("newButton", 105, 5, 80, 40, "New", ()->{
+		addButton("newButton", 105+offset, 5, 80, 40, "New", ()->{
 			saveCurrentSchedule();
 			
 			//make a new schedule and save it
@@ -87,7 +95,7 @@ public class CourseSearchPage extends Page {
 		});
 		
 		//add text field for editing schedule title
-		addTextField("scheduleTitle", 200, 5, 350, 40, "[Enter schedule title here]");
+		addTextField("scheduleTitle", 200+offset, 5, 350, 40, "[Enter schedule title here]");
 		
 		//when the text in the schedule title updates, auto-save the name change
 		getTextField("scheduleTitle").textProperty().addListener((obs, oldText, newText) -> {			
@@ -316,7 +324,7 @@ public class CourseSearchPage extends Page {
 	 * Finds the most recently modified schedule and loads it.
 	 * @param pageManager PageManager to use to properly load schedule
 	 */
-	private void loadMostRecentlyEditedSchedule(PageManager pageManager) {
+	public void loadMostRecentlyEditedSchedule(PageManager pageManager) {
 		File[] savedSchedules = (new File(SAVE_DIR)).listFiles();
 		
 		//If there are no saved schedules...
@@ -347,6 +355,10 @@ public class CourseSearchPage extends Page {
 	 */
 	private void saveCurrentSchedule() {
 		currentSchedule.saveSchedule(getSavePath(currentSchedule.getTitle()));
+	}
+	
+	public void deleteCurrentSchedule() {
+		(new File(getSavePath(currentSchedule.getTitle()))).delete();
 	}
 	
 	/**
