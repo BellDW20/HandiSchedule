@@ -1,5 +1,7 @@
 package hs.pages.subPages;
 
+import java.util.ArrayList;
+
 import hs.core.Course;
 import hs.core.Schedule;
 import hs.pages.CourseSearchPage;
@@ -9,8 +11,8 @@ public class CourseScheduleList extends ViewableCourseList {
 	
 	private Schedule currentSchedule; //Reference to the current schedule
 	
-	public CourseScheduleList() {
-		super(500, 590);
+	public CourseScheduleList(ArrayList<Course> allCourses) {
+		super(allCourses, 500, 590);
 	}
 	
 	/**

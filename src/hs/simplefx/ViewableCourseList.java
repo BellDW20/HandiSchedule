@@ -1,6 +1,7 @@
 package hs.simplefx;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import hs.core.Course;
 import javafx.scene.Node;
@@ -22,17 +23,28 @@ public abstract class ViewableCourseList extends Page {
 
 	private int w,h;
 	private ArrayList<Course> courses;
+	private HashMap<String, ViewableCourse> cachedViewableCourses;
 	
 	/**
 	 * Creates an empty viewable course list of a certain size
 	 * @param w Width of the course list
 	 * @param h Height of the course list
 	 */
-	public ViewableCourseList(int w, int h) {
+	public ViewableCourseList(ArrayList<Course> coursesToCache, int w, int h) {
 		super();
 		this.w = w;
 		this.h = h;
 		this.courses = new ArrayList<>();
+		
+		initializeCache(coursesToCache);
+	}
+	
+	public void initializeCache(ArrayList<Course> coursesToCache) {
+		cachedViewableCourses = new HashMap<String, ViewableCourse>();
+		for(Course course : coursesToCache) {
+			cachedViewableCourses.put(course.getUniqueString(), new ViewableCourse(course, w-22, COURSE_HEIGHT, PAD));
+			onCourseAdd(course);
+		}
 	}
 
 	/**
@@ -50,11 +62,21 @@ public abstract class ViewableCourseList extends Page {
 	public void addCourseToDisplay(Course course) {
 		if(courses.contains(course)) {return;}
 		courses.add(course);
-		addSubPage(course.getUniqueString(), new ViewableCourse(course, w-22, COURSE_HEIGHT, PAD), 
+		addSubPage(course.getUniqueString(), cachedViewableCourses.get(course.getUniqueString()), 
 				   PAD, PAD+(courses.size()-1)*(COURSE_HEIGHT+PAD), w, COURSE_HEIGHT,
 				   false
 		);
-		onCourseAdd(course);
+	}
+	
+	public void addCoursesToDisplay(ArrayList<Course> courses) {
+		ArrayList<Page> pages = new ArrayList<>();
+		for(int i=0; i<courses.size(); i++) {
+			Course course = courses.get(i);
+			if(this.courses.contains(course)) {continue;}
+			this.courses.add(course);
+			pages.add(cachedViewableCourses.get(course.getUniqueString()));
+		}
+		addSubPages(pages, PAD, PAD, w, COURSE_HEIGHT, 0, COURSE_HEIGHT+PAD);
 	}
 	
 	/**
@@ -69,7 +91,7 @@ public abstract class ViewableCourseList extends Page {
 	 * @param onClick The action performed when the button is clicked
 	 */
 	protected void addButtonToCourse(Course course, String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
-		getSubPage(course.getUniqueString()).addButton(buttonName, x+PAD, y+PAD, w, h, text, onClick);
+		cachedViewableCourses.get(course.getUniqueString()).addButton(buttonName, x+PAD, y+PAD, w, h, text, onClick);
 	}
 
 	/**

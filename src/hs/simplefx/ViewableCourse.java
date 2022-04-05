@@ -10,6 +10,8 @@ import hs.core.Course;
 
 public class ViewableCourse extends Page {
 	
+	private String uniqueString;
+	
 	/**
 	 * Creates a viewable course from a given course
 	 * @param course Course to make into a visual
@@ -19,6 +21,7 @@ public class ViewableCourse extends Page {
 	 */
 	public ViewableCourse(Course course, int w, int h, int pad) {
 		super();
+		this.uniqueString = course.getUniqueString();
 		//Make a background rectangle
 		drawRect(0, 0, w, h);
 		
@@ -49,4 +52,9 @@ public class ViewableCourse extends Page {
 	@Override
 	public void initializeComponents(PageManager pageManager) {}
 
+	@Override
+	public String toString() {
+		return uniqueString;
+	}
+	
 }

@@ -57,9 +57,9 @@ public class CourseSearchPage extends Page {
 		currentSearch = new CourseSearch(db);
 		
 		//Initialize search course list and schedule course list
-		searchList = new CourseSearchList();
+		searchList = new CourseSearchList(db.getCopyOfAllCourses());
 		searchList.initializeComponents(pageManager);
-		scheduleList = new CourseScheduleList();
+		scheduleList = new CourseScheduleList(db.getCopyOfAllCourses());
 		searchList.setScheduleList(scheduleList);
 		
 		//sub page contains the list of all courses that are the results of a search
@@ -257,9 +257,7 @@ public class CourseSearchPage extends Page {
 		
 		//Perform the search and display it
 		currentSearch.updateSearch();
-		for (int i = 0; i < currentSearch.getSearchResults().size(); i++) {
-			searchList.addCourseToDisplay(currentSearch.getSearchResults().get(i));
-		}
+		searchList.addCoursesToDisplay(currentSearch.getSearchResults());
 	}
 	
 	//getter for the current schedule

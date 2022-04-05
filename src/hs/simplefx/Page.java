@@ -1,5 +1,6 @@
 package hs.simplefx;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
@@ -258,6 +259,20 @@ public class Page {
 		}
 			
 		subPages.put(subPageName, subPage);
+	}
+	
+	public void addSubPages(ArrayList<Page> subPages, int x, int y, int w, int h, int ox, int oy) {
+		ArrayList<Node> nodes = new ArrayList<>(subPages.size());
+		for(int i=0; i<subPages.size(); i++) {
+			Page subPage = subPages.get(i);
+			subPage.getPane().setLayoutX(x+ox*i);
+			subPage.getPane().setLayoutY(y+oy*i);
+			clipRegion(subPage.getPane(), w, h);
+			nodes.add(subPage.getPane());
+			this.subPages.put(subPage.toString(), subPage);
+		}
+		
+		pane.getChildren().addAll(nodes);
 	}
 	
 	/**
