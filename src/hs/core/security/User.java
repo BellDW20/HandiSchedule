@@ -16,14 +16,10 @@ public class User implements Serializable {
 		this.username = username;
 		this.passwordSalt = generateSalt();
 		this.passwordHash = generateSaltedHash(password.toCharArray(), passwordSalt);
-		System.out.println("Created user:");
-		System.out.println("	PHash: "+toHexString(passwordHash));
 	}
 	
 	public boolean isValidLogin(String password) {
 		byte[] passwordAttemptHash = generateSaltedHash(password.toCharArray(), passwordSalt);
-		System.out.println("Attempting to login as user:");
-		System.out.println("	AttemptHash: "+toHexString(passwordAttemptHash));
 		
 		int bytesMatching = 0;
 		for(int i=0; i<passwordHash.length; i++) {

@@ -33,7 +33,7 @@ public class LoadPage extends Page {
 		
 		
 		//Gets all saved schedule files
-		File schedulesFolder = new File("./schedules");
+		File schedulesFolder = new File(CourseSearchPage.getSaveDirPath());
 		File[] schedules = schedulesFolder.listFiles();
 		loadButtonCount = schedules.length;
 		

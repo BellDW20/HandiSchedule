@@ -3,6 +3,7 @@ package hs.core;
 import hs.pages.CalendarPage;
 import hs.pages.CourseSearchPage;
 import hs.pages.LoadPage;
+import hs.pages.LoginPage;
 import hs.simplefx.PageManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -14,7 +15,7 @@ import javafx.stage.Stage;
  */
 
 public class Launcher extends Application {
-
+	
 	public static void main(String[] args) {
 		launch(); // Default to start any JavaFX application
 		//NOTE: start(Stage stage) will be called by JavaFX on startup
@@ -23,6 +24,11 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		PageManager pageManager = new PageManager(stage, 1280, 720);
+		
+		//Create and set up the login page
+		LoginPage loginPage = new LoginPage();
+		loginPage.initializeComponents(pageManager);
+		pageManager.addPageToProgram(loginPage, "LoginPage");
 		
 		//Create and set up the course search page
 		CourseSearchPage csp = new CourseSearchPage();
@@ -40,7 +46,7 @@ public class Launcher extends Application {
 		pageManager.addPageToProgram(lp,  "LoadPage");
 		
 		//Start from the course search page
-		pageManager.goToPage("CourseSearch");
+		pageManager.goToPage("LoginPage");
 		
 		//Give the window a title and don't allow resizing the window
 		stage.setTitle("HandiSchedule");

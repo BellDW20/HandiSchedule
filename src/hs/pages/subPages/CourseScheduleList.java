@@ -9,7 +9,7 @@ import hs.simplefx.ViewableCourseList;
 
 public class CourseScheduleList extends ViewableCourseList {
 	
-	private Schedule currentSchedule; //Reference to the current schedule
+	private CourseSearchPage courseSearchPage;
 	
 	public CourseScheduleList(ArrayList<Course> allCourses) {
 		super(allCourses, 500, 590);
@@ -19,8 +19,8 @@ public class CourseScheduleList extends ViewableCourseList {
 	 * Updates the reference to the current schedule
 	 * @param currentSchedule The new reference to the current schedule
 	 */
-	public void setCurrentSchedule(Schedule currentSchedule) {
-		this.currentSchedule = currentSchedule;
+	public void setCourseSearchPage(CourseSearchPage courseSearchPage) {
+		this.courseSearchPage = courseSearchPage;
 	}
 	
 	@Override
@@ -30,8 +30,9 @@ public class CourseScheduleList extends ViewableCourseList {
 		//can remove the added course
 		addButtonToCourse(course, "removeFromSchedule", 430, 14, 32, 32, "-", ()->{
 			removeCourseToDisplay(course);
+			Schedule currentSchedule = courseSearchPage.getCurrentSchedule();
 			currentSchedule.removeCourse(course);
-			currentSchedule.saveSchedule(CourseSearchPage.getSavePath(currentSchedule.getTitle()));
+			courseSearchPage.asynchronouslySaveCurrentSchedule();
 		});
 	}
 

@@ -3,23 +3,18 @@ package hs.core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.Date;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
  * This class contains information that allows a schedule to be created by a user.
  * Author: Andrew Beichner, Levi Conrad
  */
-public class Schedule {
+public class Schedule implements Serializable {
+	
+	private static final long serialVersionUID = 8304598421321818363L;
 	
 	private String title;
-	private Date dateLastModified;
 	private ArrayList<Course> courses;
 	
 	//constructor method for Schedule. Takes in the name of a schedule
@@ -61,19 +56,9 @@ public class Schedule {
 		this.title = title;
 	}
 	
-	//sets the date a schedule was last modified or accessed by the user
-	public void setDateLastModified(Date dateLastModified) {
-		this.dateLastModified = dateLastModified;
-	}
-	
 	//getter method for the schedule title.
 	public String getTitle() {
 		return title;
-	}
-	
-	//getter method for the date the schedule was last modified.
-	public Date getDateLastModified() {
-		return dateLastModified;
 	}
 
 	//getter for the courses added to the schedule
@@ -91,46 +76,6 @@ public class Schedule {
 		}
 		
 		return sb.toString();
-	}
-	
-	/*
-	 * This method allows a schedule to be saved by the user to be accessed again
-	 * later at their convenience. It takes in a path in the form of a string to the file.
-	 */
-	public void saveSchedule(String path) {
-		try {
-			
-			ObjectOutputStream dataOut = new ObjectOutputStream(new FileOutputStream(new File(path)));
-			dataOut.writeObject(title);
-			dataOut.writeObject(courses);
-			dateLastModified = new Date(System.currentTimeMillis());
-			dataOut.writeObject(dateLastModified);
-			dataOut.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/*
-	 * Method takes in a path in the form of a string to the location of the schedule.
-	 * Allows users to load old schedules back into the program to alter further.
-	 */
-	@SuppressWarnings("unchecked")
-	public static Schedule loadSchedule(String path) {	
-		Schedule loadedSchedule = new Schedule("");
-		try {
-			ObjectInputStream dataIn = new ObjectInputStream(new FileInputStream(new File(path)));
-			loadedSchedule.title = (String) dataIn.readObject();
-			loadedSchedule.courses = (ArrayList<Course>) dataIn.readObject();
-			loadedSchedule.dateLastModified = (Date) dataIn.readObject();
-			dataIn.close();
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
-		
-		return loadedSchedule;
 	}
 	
 	/*

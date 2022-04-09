@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -196,6 +197,24 @@ public class Page {
 		textField.setPromptText(promptText);
 		
 		nodeMap.put(TEXT_FIELD+textFieldName, textField);
+		pane.getChildren().add(textField);
+	}
+	
+	/**
+	 * Adds a password field to the page with a given prompt text
+	 * @param passwordFieldName Name of the text field component
+	 * @param x X-position of the text field
+	 * @param y Y-position of the text field
+	 * @param w Width of the text field
+	 * @param h Height of the text field
+	 * @param promptText The text that appears when no text is in the password field
+	 */
+	public void addPasswordField(String passwordFieldName, int x, int y, int w, int h, String promptText) {
+		PasswordField textField = new PasswordField();
+		setupLayout(textField, x, y, w, h);
+		textField.setPromptText(promptText);
+		
+		nodeMap.put(TEXT_FIELD+passwordFieldName, textField);
 		pane.getChildren().add(textField);
 	}
 	

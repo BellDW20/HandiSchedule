@@ -35,10 +35,12 @@ public class FileEncryptor {
 			
 			try {
 				byte[] decrypted = decryptData(password, fileSalt, in.readAllBytes());
+				in.close();
 				return Arrays.copyOf(decrypted, contentsLength);
 			} catch (Exception e) {
 				System.out.println("Invalid decryption");
 			}
+			in.close();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

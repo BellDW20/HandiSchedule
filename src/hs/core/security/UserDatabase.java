@@ -88,7 +88,7 @@ public class UserDatabase implements Serializable {
 			Schedule schedule = (Schedule)objIn.readObject();
 			return schedule;
 		} catch(Exception e) {
-			e.printStackTrace();
+			System.out.println("Schedule decryption invalid (wrong credentials)");
 		}
 		
 		return null;

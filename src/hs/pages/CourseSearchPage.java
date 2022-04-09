@@ -33,8 +33,8 @@ public class CourseSearchPage extends Page {
 	//The types of characters accepted in the schedule's title
 	public static final String ACCEPTED_SCHEDULE_TITLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
 	
-	private CourseSearchList searchList; //The viewable list of all currently searched courses
-	private CourseScheduleList scheduleList; //The viewable list of courses in the current schedule
+	private static CourseSearchList searchList; //The viewable list of all currently searched courses
+	private static CourseScheduleList scheduleList; //The viewable list of courses in the current schedule
 	
 	private CourseDatabase db; //Database containing all courses/departments
 	private CourseSearch currentSearch; //The current course search query and its results
@@ -48,12 +48,7 @@ public class CourseSearchPage extends Page {
 	 * Takes in a page manager as a parameter
 	 */
 	@Override
-	public void initializeComponents(PageManager pageManager) {
-		int offset = 55;
-		
-		//Make sure schedule save folder exists
-		(new File(SAVE_DIR)).mkdirs();
-		
+	public void initializeComponents(PageManager pageManager) {	
 		//Load course database
 		db = CourseDatabase.loadFromFile("CourseDB_CSV.csv");
 		currentSearch = new CourseSearch(db);
@@ -61,7 +56,9 @@ public class CourseSearchPage extends Page {
 		//Initialize search course list and schedule course list
 		searchList = new CourseSearchList(db.getCopyOfAllCourses());
 		searchList.initializeComponents(pageManager);
+		searchList.setCourseSearchPage(this);
 		scheduleList = new CourseScheduleList(db.getCopyOfAllCourses());
+		scheduleList.setCourseSearchPage(this);
 		searchList.setScheduleList(scheduleList);
 		
 		//sub page contains the list of all courses that are the results of a search
@@ -71,37 +68,45 @@ public class CourseSearchPage extends Page {
 		addSubPage("scheduleList", scheduleList, 770, 120, scheduleList.getW(), scheduleList.getH(), true);
 		
 		//add Delete button. This button allows the user to delete the current schedule
-		addButton("deleteButton", 10, 5, 40, 40, "Del", ()->{
+		addButton("deleteButton", 540, 670, 200, 40, "Delete Schedule", ()->{
 			deleteCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
 		});
 		
+		//add Logout button. This button allows the user to logout of their account
+		//and return to the login screen
+		addButton("logoutButton", 10, 5, 80, 40, "Logout", ()->{
+			LoginPage.loggedInUser = null;
+			LoginPage.loggedInPassword = null;
+			pageManager.goToPage("LoginPage");
+			resetGUI();
+		});
+		
 		//add Load button. This button allows the user to load new schedule.
-		addButton("loadButton", 10+offset, 5, 80, 40, "Load", ()->{
+		addButton("loadButton", 100, 5, 80, 40, "Load", ()->{
 			((LoadPage)pageManager.getPage("LoadPage")).refresh(pageManager, "CourseSearch");
 			pageManager.goToPage("LoadPage");
 		});
 		
 		//add New button. This button creates a new schedule.
-		addButton("newButton", 105+offset, 5, 80, 40, "New", ()->{
-			saveCurrentSchedule();
+		addButton("newButton", 190, 5, 80, 40, "New", ()->{
+			immediatelySaveCurrentSchedule();
 			
 			//make a new schedule and save it
 			currentSchedule = new Schedule(getFirstUnusedScheduleName());
-			saveCurrentSchedule();
+			immediatelySaveCurrentSchedule();
 			
 			//load the new schedule
 			loadMostRecentlyEditedSchedule(pageManager);
 		});
 		
 		//add text field for editing schedule title
-		addTextField("scheduleTitle", 200+offset, 5, 350, 40, "[Enter schedule title here]");
+		addTextField("scheduleTitle", 280, 5, 350, 40, "[Enter schedule title here]");
 		
 		//when the text in the schedule title updates, auto-save the name change
 		getTextField("scheduleTitle").textProperty().addListener((obs, oldText, newText) -> {			
 			renameCurrentSchedule(newText);
 			currentSchedule.setTitle(newText);
-			saveCurrentSchedule();
 		});
 		
 		//filter for accepting name changes to the schedule
@@ -152,6 +157,7 @@ public class CourseSearchPage extends Page {
 					scheduleTitleField.setText(getFirstUnusedScheduleName());
 					isReplacingTitle = false;
 				}
+				asynchronouslySaveCurrentSchedule();
 			}
         });
 		scheduleTitleField = getTextField("scheduleTitle");
@@ -199,9 +205,12 @@ public class CourseSearchPage extends Page {
 		//subpage contains the filter options that users can select to further narrow their course search
 		addSubPage("filterOptions", filterOptionsPage, 10, 120, FilterOptionsPage.WIDTH, FilterOptionsPage.HEIGHT, false);
 		hideComponent(SUB_PAGE, "filterOptions");
-		
-		//Load the last schedule saved into the program on startup
-		loadMostRecentlyEditedSchedule(pageManager);
+	}
+	
+	public void resetGUI() {
+		searchList.clear();
+		getTextField("searchField").clear();
+		hideComponent(SUB_PAGE, "filterOptions");
 	}
 	
 	/*
@@ -276,7 +285,8 @@ public class CourseSearchPage extends Page {
 	
 	//getter for the name of the first schedule created by a user that has not been modified
 	private String getFirstUnusedScheduleName() {
-		File[] savedSchedules = (new File(SAVE_DIR)).listFiles();
+		//Make sure schedule save folder exists
+		File[] savedSchedules = (new File(getSaveDirPath())).listFiles();
 		
 		int maxUntitled = -1;
 		
@@ -303,21 +313,27 @@ public class CourseSearchPage extends Page {
 	 * the schedule in the state it was in at the end of the last session where it was 
 	 * being modified.
 	 */
-	public void loadSchedule(String scheduleTitle, PageManager pageManager) {
+	public boolean loadSchedule(String scheduleTitle, PageManager pageManager) {
 		isReplacingTitle = true;
 		
-		currentSchedule = Schedule.loadSchedule(getSavePath(scheduleTitle));
+		Schedule potentialSchedule = LoginPage.userDatabase.loadEncryptedSchedule(
+				getSavePath(scheduleTitle), 
+				LoginPage.loggedInUser, LoginPage.loggedInPassword
+		);
+		if(potentialSchedule == null) {
+			isReplacingTitle = false;
+			return false;
+		}
+		currentSchedule = potentialSchedule;
 		getTextField("scheduleTitle").setText(scheduleTitle);
 				
 		scheduleList.clear();
 		for(Course c : currentSchedule.getCourses()) {
 			scheduleList.addCourseToDisplay(c);
 		}
-
-		searchList.setCurrentSchedule(currentSchedule);
-		scheduleList.setCurrentSchedule(currentSchedule);
 		
 		isReplacingTitle = false;
+		return true;
 	}
 	
 	/**
@@ -325,13 +341,13 @@ public class CourseSearchPage extends Page {
 	 * @param pageManager PageManager to use to properly load schedule
 	 */
 	public void loadMostRecentlyEditedSchedule(PageManager pageManager) {
-		File[] savedSchedules = (new File(SAVE_DIR)).listFiles();
+		File[] savedSchedules = (new File(getSaveDirPath())).listFiles();
 		
 		//If there are no saved schedules...
 		if(savedSchedules.length == 0) {
 			//Make a new one and load it
 			currentSchedule = new Schedule(DEFAULT_SCHEDULE_NAME+" 0");
-			saveCurrentSchedule();
+			immediatelySaveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
 			return;
 		}
@@ -347,14 +363,34 @@ public class CourseSearchPage extends Page {
 		}
 		
 		//And load it
-		loadSchedule(savedSchedules[mostRecent].getName().replace(SAVE_EXT, ""), pageManager);
+		if(!loadSchedule(savedSchedules[mostRecent].getName().replace(SAVE_EXT, ""), pageManager)) {
+			//If it fails since it isn't your schedule, just open a blank one
+			currentSchedule = new Schedule(getFirstUnusedScheduleName());
+			immediatelySaveCurrentSchedule();
+			loadMostRecentlyEditedSchedule(pageManager);
+		}
 	}
 	
 	/**
 	 * Saves the current schedule to its respective file
 	 */
-	private void saveCurrentSchedule() {
-		currentSchedule.saveSchedule(getSavePath(currentSchedule.getTitle()));
+	public void asynchronouslySaveCurrentSchedule() {
+		Thread thread = new Thread() {
+			@Override 
+			public void run() {
+				synchronized(currentSchedule) {
+					immediatelySaveCurrentSchedule();
+				}
+			}
+		};
+		thread.start();
+	}
+	
+	public void immediatelySaveCurrentSchedule() {
+		LoginPage.userDatabase.saveEncryptedSchedule(
+			currentSchedule, getSavePath(currentSchedule.getTitle()), 
+			LoginPage.loggedInUser, LoginPage.loggedInPassword
+		);
 	}
 	
 	public void deleteCurrentSchedule() {
@@ -366,7 +402,7 @@ public class CourseSearchPage extends Page {
 	 * @param newTitle The new title of the schedule
 	 */
 	private void renameCurrentSchedule(String newTitle) {
-		(new File(getSavePath(currentSchedule.getTitle()))).renameTo(new File(SAVE_DIR+newTitle+SAVE_EXT));
+		(new File(getSavePath(currentSchedule.getTitle()))).renameTo(new File(getSavePath(newTitle)));
 	}
 	
 	/**
@@ -375,7 +411,11 @@ public class CourseSearchPage extends Page {
 	 * @return The default save path for the schedule
 	 */
 	public static String getSavePath(String scheduleTitle) {
-		return SAVE_DIR+scheduleTitle+SAVE_EXT;
+		return getSaveDirPath()+scheduleTitle+SAVE_EXT;
+	}
+	
+	public static String getSaveDirPath() {
+		return SAVE_DIR+LoginPage.loggedInUser+"/";
 	}
 	
 }

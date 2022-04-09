@@ -3,7 +3,6 @@ package hs.pages.subPages;
 import java.util.ArrayList;
 
 import hs.core.Course;
-import hs.core.Schedule;
 import hs.pages.CourseSearchPage;
 import hs.simplefx.PageManager;
 import hs.simplefx.ViewableCourseList;
@@ -11,7 +10,7 @@ import hs.simplefx.ViewableCourseList;
 public class CourseSearchList extends ViewableCourseList {
 
 	private CourseScheduleList scheduleList; //Reference to the visual schedule course list
-	private Schedule currentSchedule; //Reference to the current schedule
+	private CourseSearchPage courseSearchPage;
 	
 	public CourseSearchList(ArrayList<Course> allCourses) {
 		super(allCourses, 500, 590);
@@ -21,8 +20,8 @@ public class CourseSearchList extends ViewableCourseList {
 	 * Updates the reference to the current schedule
 	 * @param currentSchedule The new reference to the current schedule
 	 */
-	public void setCurrentSchedule(Schedule currentSchedule) {
-		this.currentSchedule = currentSchedule;
+	public void setCourseSearchPage(CourseSearchPage courseSearchPage) {
+		this.courseSearchPage = courseSearchPage;
 	}
 
 	/**
@@ -46,8 +45,8 @@ public class CourseSearchList extends ViewableCourseList {
 		//can added the given course to the schedule
 		addButtonToCourse(course, "addToSchedule", 430, 14, 32, 32, "+", ()->{
 			scheduleList.addCourseToDisplay(course);
-			currentSchedule.addCourse(course);
-			currentSchedule.saveSchedule(CourseSearchPage.getSavePath(currentSchedule.getTitle()));
+			courseSearchPage.getCurrentSchedule().addCourse(course);
+			courseSearchPage.asynchronouslySaveCurrentSchedule();
 		});
 	}
 

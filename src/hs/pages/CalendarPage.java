@@ -16,30 +16,28 @@ public class CalendarPage extends Page {
 	 */
 	@Override
 	public void initializeComponents(PageManager pageManager) {
-		int offset = 55;
-		// add Delete button
-		addButton("deleteButton", 10, 5, 40, 40, "Del", ()->{
-			CourseSearchPage courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");
-			courseSearchPage.deleteCurrentSchedule();
-			courseSearchPage.loadMostRecentlyEditedSchedule(pageManager);
-			updateCalendarImage(courseSearchPage.getCurrentSchedule().getAsCalendar());
+		// add logout button
+		addButton("logoutButton", 10, 5, 80, 40, "Logout", ()->{
+			LoginPage.loggedInUser = null;
+			LoginPage.loggedInPassword = null;
+			putBackCourseTitle(pageManager);
+			pageManager.goToPage("LoginPage");
+			((CourseSearchPage)pageManager.getPage("CourseSearch")).resetGUI();
 		});
 		
 		// add Load button
-		addButton("loadButton", 10+offset, 5, 80, 40, "Load", ()->{
+		addButton("loadButton", 100, 5, 80, 40, "Load", ()->{
 			((LoadPage)pageManager.getPage("LoadPage")).refresh(pageManager, "CalendarPage");
 			pageManager.goToPage("LoadPage");
 		});
 		
 		// add New button
-		addButton("newButton", 105+offset, 5, 80, 40, "New", null);
+		addButton("newButton", 190, 5, 80, 40, "New", null);
 		
 		// add button to switch to the course search page
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {
-			//Fun JavaFX workaround ;)
-			CourseSearchPage courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");
-			courseSearchPage.getPane().getChildren().add(scheduleTitleField);
-			getPane().getChildren().remove(scheduleTitleField);
+			//JavaFx workaround ;)
+			putBackCourseTitle(pageManager);
 			
 			//then go to course search page
 			pageManager.goToPage("CourseSearch");
@@ -64,6 +62,12 @@ public class CalendarPage extends Page {
 	//setter for the schedule title field of the calendar page.
 	public void setScheduleTitleField(TextField scheduleTitleField) {
 		this.scheduleTitleField = scheduleTitleField;
+	}
+	
+	private void putBackCourseTitle(PageManager pageManager) {
+		CourseSearchPage courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");
+		courseSearchPage.getPane().getChildren().add(scheduleTitleField);
+		getPane().getChildren().remove(scheduleTitleField);
 	}
 	
 }
