@@ -20,11 +20,12 @@ public class Course implements Serializable {
 	private ArrayList<MeetingTime> meetingTimes; //Times at which the course meets
 	
 	//constructor takes in a name, department, section, and code for each course.
-	public Course(String courseName, String department, char section, int courseCode) {
+	public Course(String courseName, String department, char section, int courseCode, int creditHours) {
 		this.courseName = courseName;
 		this.department = department;
 		this.section = section;
 		this.courseCode = courseCode;
+		this.creditHours = creditHours;
 		meetingTimes = new ArrayList<>();
 	}
 	
@@ -33,26 +34,8 @@ public class Course implements Serializable {
 	 * It takes in a time of day the course occurs, the days it occurs,
 	 * and a boolean.
 	 */
-	public void addMeetingTime(TimeFrame timeFrame, String daysOfWeek, boolean countedTowardsDayOfWeek) {
-		meetingTimes.add(new MeetingTime(timeFrame, daysOfWeek, countedTowardsDayOfWeek));
-		calculateCreditHours(); // recalculates the credit hours based on the meeting times
-	}
-	
-	/*
-	 * Method calculates the total number of credits a course is worth
-	 */
-	private void calculateCreditHours() {
-		int totalHours = 0;
-		
-		for(MeetingTime meetingTime : meetingTimes) {
-			//As long as the course is not something such as a lab,
-			//its credit hours are estimated and added to the running total
-			if(meetingTime.isCountedTowardsCreditHours()) {
-				totalHours += meetingTime.getTimeFrame().getTimeInMinutes()*meetingTime.getDaysOfWeek().length;
-			}
-		}
-		
-		creditHours = (int)Math.ceil(totalHours/60.0);
+	public void addMeetingTime(TimeFrame timeFrame, String daysOfWeek) {
+		meetingTimes.add(new MeetingTime(timeFrame, daysOfWeek));
 	}
 	
 	//getter method for the course name

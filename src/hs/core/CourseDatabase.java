@@ -103,7 +103,7 @@ public class CourseDatabase {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Creates a course database from a CSV file residing
 	 * at a given path.
@@ -118,7 +118,6 @@ public class CourseDatabase {
 		//Map to keep track of all courses we have encountered by
 		//"name" (eg MATH 222 A)
 		HashMap<String,Course> courseMap = new HashMap<>();
-		
 		try {
 			//Begin reading the CSV file
 			Scanner fileScanner = new Scanner(new File(databasePath));
@@ -132,22 +131,28 @@ public class CourseDatabase {
 				Scanner lineScanner = new Scanner(line); //Begin scanning this course in
 				lineScanner.useDelimiter(","); //Data is separated by commas
 				
-				//Line Format: CourseCode, ShortTitle, LongTitle, BeginTime, EndTime, Meets, Building, Room, Enrollment, Capacity
-				String courseSection = lineScanner.next();
-				String[] deptAndCode = courseSection.split("\\s+");
+				//Line Format: Fall/spring, dept, course code, section, title, credit hours, m?, t?, w?, r?, f?, startTime, endTime
+				boolean isFall = lineScanner.next().equals("10");
+				if(!isFall) {
+					lineScanner.close();
+					continue;
+				}
+				
+				String department = lineScanner.next();
+				int courseCode = Integer.parseInt(lineScanner.next());
+				String sectionString = lineScanner.next();
+				if(sectionString.length() == 0) {
+					lineScanner.close();
+					continue;
+				}
+				char section = sectionString.charAt(0);
+				
+				String courseSection = department+" "+courseCode+" "+section;
 				
 				//If we've already seen this section of the course, we don't
 				//want to add a new course to the map (in fact, we can't).
 				//We will instead add this line as another meeting time of the same section
 				boolean alreadySeenSection = courseMap.containsKey(courseSection);
-				
-				String shortName = lineScanner.next();
-				//Handles if the short name also contained commas
-				if(shortName.startsWith("\"")) {
-					while(!shortName.endsWith("\"")) {
-						shortName+=", "+lineScanner.next();
-					}
-				}
 				
 				String courseName = lineScanner.next();
 				//Handles if the actual name also contained commas
@@ -158,31 +163,32 @@ public class CourseDatabase {
 					courseName = courseName.substring(1,courseName.length()-1);
 				}
 				
-				String start = lineScanner.next(); //Start time
-				String end = lineScanner.next(); //End time
-				String daysOfWeek = lineScanner.next(); //Meeting days
+				int creditHours = Integer.parseInt(lineScanner.next());
 				
-				lineScanner.next(); //Skip building
-				lineScanner.next(); //Skip room
-				lineScanner.next(); //Skip enrollment
-				lineScanner.next(); //Skip capacity
+				String daysOfWeek = "";
+				for(int i=0; i<5; i++) {
+					daysOfWeek += lineScanner.next();
+				}
 				
-				//Get the department, course code, and section
-				String department = deptAndCode[0];
-				int courseCode = Integer.parseInt(deptAndCode[1]);
-				char section = deptAndCode[2].charAt(0);
+				if(daysOfWeek.length() == 0) {
+					lineScanner.close();
+					continue;
+				}
+				
+				String start = lineScanner.next();
+				String end = lineScanner.next();
 				
 				//If we've not yet seen this course section...
 				if(!alreadySeenSection) {
 					//Add it as a new course to the map
-					courseMap.put(courseSection, new Course(courseName, department, section, courseCode));
+					courseMap.put(courseSection, new Course(courseName, department, section, courseCode, creditHours));
 				}
 				
 				//As long as this course actually has a meeting time...
 				if(!start.equals("NULL")) {
 					//Add the meeting time specified by this line to the course in question
-					TimeFrame timeFrame = new TimeFrame(new Time(start), new Time(end));
-					courseMap.get(courseSection).addMeetingTime(timeFrame, daysOfWeek, !courseName.contains("LABORATORY"));
+					TimeFrame timeFrame = new TimeFrame(new Time(start, false), new Time(end, false));
+					courseMap.get(courseSection).addMeetingTime(timeFrame, daysOfWeek);
 				}
 				
 				lineScanner.close();
@@ -200,6 +206,10 @@ public class CourseDatabase {
 		
 		//Sort collections to be in proper order
 		db.sortDatabase();
+		
+		for(Course course : db.fullCourseList) {
+			System.out.println(course);
+		}
 		
 		return db;
 	}

@@ -8,17 +8,15 @@ public class MeetingTime implements Serializable {
 	
 	private TimeFrame timeFrame;
 	private String daysOfWeek;
-	private boolean countedTowardsCreditHours;
 	
 	/*
 	 * Constructor method. Takes in a time for the class, the days of the week the class
 	 * occurs, and a boolean to tell if it is counted towards total credit hours in a 
 	 * student's schedule.
 	 */
-	public MeetingTime(TimeFrame timeFrame, String daysOfWeek, boolean countedTowardsCreditHours) {
+	public MeetingTime(TimeFrame timeFrame, String daysOfWeek) {
 		this.timeFrame = timeFrame;
 		this.daysOfWeek = daysOfWeek;
-		this.countedTowardsCreditHours = countedTowardsCreditHours;
 	}
 	
 	//getter for the time frame of a class
@@ -35,14 +33,6 @@ public class MeetingTime implements Serializable {
 	//getter for the days of the week a course occurs on. Returns the full string/name of the days
 	public String getDaysOfWeekString() {
 		return daysOfWeek;
-	}
-	
-	/*
-	 * Method tells whether a class is counted toward credit hours or not
-	 * If yesm it returns true, else it returns false.
-	 */
-	public boolean isCountedTowardsCreditHours() {
-		return countedTowardsCreditHours;
 	}
 	
 	/*

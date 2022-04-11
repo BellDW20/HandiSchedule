@@ -21,29 +21,32 @@ public class Time implements Serializable {
 		this.amOrPm = amOrPm;
 	}
 	
-	/**
-	 * Converts military time in format HH:MM:SS to standard time
-	 * in HH:MM AM/PM to be used by the Time class.
-	 * @param militaryTime Time as string in military time to convert
-	 */
-	public Time(String militaryTime) {
-		String[] parts = militaryTime.split(":");
-		int hour = Integer.parseInt(parts[0]);
-		this.minute = Integer.parseInt(parts[1]);
-		
-		//checks to see if an hour is before or after noon, and changes its value to military time based on the results
-		if(hour == 0) {
-			this.hour = 12;
-			this.amOrPm = AM;
-		} else if(hour == 12) {
-			this.hour = 12;
-			this.amOrPm = PM;
-		} else if(hour < 12) {
-			this.hour = hour;
-			this.amOrPm = AM;
+	public Time(String time, boolean isMilitary) {
+		if(isMilitary) {
+			String[] parts = time.split(":");
+			int hour = Integer.parseInt(parts[0]);
+			this.minute = Integer.parseInt(parts[1]);
+			
+			//checks to see if an hour is before or after noon, and changes its value to military time based on the results
+			if(hour == 0) {
+				this.hour = 12;
+				this.amOrPm = AM;
+			} else if(hour == 12) {
+				this.hour = 12;
+				this.amOrPm = PM;
+			} else if(hour < 12) {
+				this.hour = hour;
+				this.amOrPm = AM;
+			} else {
+				this.hour = hour-12;
+				this.amOrPm = PM;
+			}
 		} else {
-			this.hour = hour-12;
-			this.amOrPm = PM;
+			String[] parts = time.split("\\s+");
+			String[] timeParts = parts[0].split(":");
+			this.hour = Integer.parseInt(timeParts[0]);
+			this.minute = Integer.parseInt(timeParts[1]);
+			this.amOrPm = parts[1].equals("AM")?AM:PM;
 		}
 	}
 	

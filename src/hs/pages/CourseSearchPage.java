@@ -50,7 +50,7 @@ public class CourseSearchPage extends Page {
 	@Override
 	public void initializeComponents(PageManager pageManager) {	
 		//Load course database
-		db = CourseDatabase.loadFromFile("CourseDB_CSV.csv");
+		db = CourseDatabase.loadFromFile("./CourseDB_CSV.csv");
 		currentSearch = new CourseSearch(db);
 		
 		//Initialize search course list and schedule course list
