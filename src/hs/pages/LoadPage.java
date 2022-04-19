@@ -1,6 +1,8 @@
 package hs.pages;
 
 import java.io.File;
+import java.util.ArrayList;
+
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 
@@ -35,6 +37,12 @@ public class LoadPage extends Page {
 		//Gets all saved schedule files
 		File schedulesFolder = new File(CourseSearchPage.getSaveDirPath());
 		File[] schedules = schedulesFolder.listFiles();
+		
+		ArrayList<File> tempSchedules = new ArrayList<>();
+		for (int i = 0; i < schedules.length; i++) {
+			tempSchedules.add(schedules[i]);
+		}
+		
 		loadButtonCount = schedules.length;
 		
 		//For each one, add a button to load that schedule
@@ -43,7 +51,17 @@ public class LoadPage extends Page {
 			int tempHeight = 40;
 			int y = BUFFER + (tempHeight * (i + 1));
 			int x = BUFFER;
-			String name = schedules[i].getName().replace(CourseSearchPage.SAVE_EXT, "");
+			int maxIndex = 0;
+			
+			for (int j = 0; j < tempSchedules.size(); j++) {
+				if (tempSchedules.get(maxIndex).lastModified() <= tempSchedules.get(j).lastModified()) {
+					maxIndex = j;
+				}
+			}
+			
+			String name = tempSchedules.get(maxIndex).getName().replace(CourseSearchPage.SAVE_EXT, "");
+			
+			tempSchedules.remove(maxIndex);
 			
 			addButton("Load " + Integer.toString(i), x, y, tempWidth, tempHeight, name, ()-> {
 				courseSearchPage.loadSchedule(name, pageManager);
