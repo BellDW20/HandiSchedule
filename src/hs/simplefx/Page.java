@@ -165,7 +165,7 @@ public class Page {
 	 * @param text The text applied to the button
 	 * @param onClick The event that occurs when the user clicks the button
 	 */
-	public void addButton(String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
+	public Button addButton(String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
 		Button button = new Button(text);
 		setupLayout(button, x, y, w, h);
 		
@@ -180,6 +180,7 @@ public class Page {
 		
 		nodeMap.put(BUTTON+buttonName, button);
 		pane.getChildren().add(button);
+		return button;
 	}
 	
 	/**

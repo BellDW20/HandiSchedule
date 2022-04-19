@@ -7,6 +7,7 @@ import hs.simplefx.PageManager;
 import hs.simplefx.text.CharacterTextFilter;
 import hs.simplefx.text.LengthTextFilter;
 import hs.simplefx.text.TextFilterer;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -31,6 +32,9 @@ public class LoginPage extends Page {
 		title.setFont(new Font(64.0));
 		getPane().getChildren().add(title);
 		
+		// Styling title text
+		title.setStyle("");
+		
 		Text alert = new Text();
 		alert.setX(540);
 		alert.setY(500);
@@ -49,7 +53,8 @@ public class LoginPage extends Page {
 		PasswordField passField = (PasswordField)getTextField("passwordField");
 		userField.setTextFormatter(lengthFilter.getAsTextFormatter());
 		
-		addButton("loginButton", 540, 440, 90, 40, "Login", ()->{
+		Button loginButton = new Button();
+		loginButton = addButton("loginButton", 540, 440, 90, 40, "Login", ()->{
 			int loginStatus = userDatabase.isValidLogin(userField.getText(), passField.getText());
 			
 			if(loginStatus == UserDatabase.LOGIN_SUCCESS) {
@@ -72,6 +77,9 @@ public class LoginPage extends Page {
 			}
 			
 		});
+		
+		loginButton.setStyle("-fx-background-color: #0000ff" +
+							"");
 		
 		addButton("registerButton", 650, 440, 90, 40, "Register", ()->{
 			if(userField.getText().length() == 0) {
