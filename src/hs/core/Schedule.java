@@ -16,11 +16,17 @@ public class Schedule implements Serializable {
 	
 	private String title;
 	private ArrayList<Course> courses;
+	private int creditHours;
 	
 	//constructor method for Schedule. Takes in the name of a schedule
 	public Schedule(String title) {
 		this.title = title;
 		courses = new ArrayList<Course>();
+		creditHours = 0;
+	}
+	
+	public int getCreditHours() {
+		return creditHours;
 	}
 	
 	/*
@@ -29,26 +35,16 @@ public class Schedule implements Serializable {
 	public void addCourse(Course course) {
 		if(courses.contains(course)) {return;}
 		courses.add(course);
+		creditHours += course.getCreditHours();
 	}
 	
 	/*
 	 * Method removes a course from the schedule
 	 */
 	public void removeCourse(Course course) {
-		courses.remove(course);
-	}
-	
-	
-	/*
-	 * Method calculates the total number of credit hours that a schedule contains
-	 * by adding the credit hours of all the courses it contains together.
-	 */
-	public int calculateTotalCreditHours() {
-		int totalCreditHours = 0;
-		for(int i = 0; i < courses.size(); i++) {
-			totalCreditHours += courses.get(i).getCreditHours();
+		if (courses.remove(course)) {
+			creditHours -= course.getCreditHours();
 		}
-		return totalCreditHours;
 	}
 	
 	//sets the title of the schedule

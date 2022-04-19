@@ -47,6 +47,8 @@ public class CourseSearchList extends ViewableCourseList {
 			scheduleList.addCourseToDisplay(course);
 			courseSearchPage.getCurrentSchedule().addCourse(course);
 			courseSearchPage.asynchronouslySaveCurrentSchedule();
+			courseSearchPage.removeComponent(BUTTON, "creditButton");
+			courseSearchPage.addButton("creditButton", 770, 75, 200, 40, "Current Credits: " + courseSearchPage.getCurrentSchedule().getCreditHours(), null);
 		});
 	}
 

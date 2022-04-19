@@ -1,5 +1,6 @@
 package hs.pages;
 
+import java.awt.Graphics;
 import java.io.File;
 import java.util.function.UnaryOperator;
 import hs.core.Course;
@@ -98,7 +99,11 @@ public class CourseSearchPage extends Page {
 			
 			//load the new schedule
 			loadMostRecentlyEditedSchedule(pageManager);
+
+			String temp = "Current Credits: " + currentSchedule.getCreditHours();
+			addButton("creditButton", 770, 75, 200, 40, temp, null);
 		});
+		
 		
 		//add text field for editing schedule title
 		addTextField("scheduleTitle", 280, 5, 350, 40, "[Enter schedule title here]");
@@ -331,7 +336,9 @@ public class CourseSearchPage extends Page {
 		for(Course c : currentSchedule.getCourses()) {
 			scheduleList.addCourseToDisplay(c);
 		}
-		
+
+		String temp = "Current Credits: " + potentialSchedule.getCreditHours();
+		addButton("creditButton", 770, 75, 200, 40, temp, null);
 		isReplacingTitle = false;
 		return true;
 	}
@@ -349,6 +356,9 @@ public class CourseSearchPage extends Page {
 			currentSchedule = new Schedule(DEFAULT_SCHEDULE_NAME+" 0");
 			immediatelySaveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
+
+			String temp = "Current Credits: " + currentSchedule.getCreditHours();
+			addButton("creditButton", 770, 75, 200, 40, temp, null);
 			return;
 		}
 		
@@ -368,6 +378,9 @@ public class CourseSearchPage extends Page {
 			currentSchedule = new Schedule(getFirstUnusedScheduleName());
 			immediatelySaveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
+
+			String temp = "Current Credits: " + currentSchedule.getCreditHours();
+			addButton("creditButton", 770, 75, 200, 40, temp, null);
 		}
 	}
 	
