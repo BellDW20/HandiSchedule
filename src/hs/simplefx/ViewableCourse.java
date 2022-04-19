@@ -26,7 +26,7 @@ public class ViewableCourse extends Page {
 		drawRect(0, 0, w, h);
 		
 		//Draw all relevant course information
-		drawText(pad, pad, course.getDepartment() + " " + course.getCourseCode() + " "
+		addLabel("courseInfo", pad, pad, course.getDepartment() + " " + course.getCourseCode() + " "
 				+ course.getSection() + ": " 
 				+ course.getCourseName() + "\n");
 		
@@ -39,14 +39,14 @@ public class ViewableCourse extends Page {
 					meetings += " and ";
 				}
 			}
-			drawText(pad, pad + 16, meetings);
+			addLabel("meetingInfo", pad, pad + 16, meetings);
 		}
 		else {
-			drawText(pad, pad + 16, "Non-standard Class Meetings");
+			addLabel("meetingInfo", pad, pad + 16, "Non-standard Class Meetings");
 		}
 		
 		//Draw the number of credits the course is
-		drawText(pad, pad + 32, course.getCreditHours() + " credits");
+		addLabel("creditInfo", pad, pad + 32, course.getCreditHours() + " credits");
 	}
 	
 	@Override

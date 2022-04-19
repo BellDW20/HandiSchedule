@@ -1,6 +1,5 @@
 package hs.pages;
 
-import java.awt.Graphics;
 import java.io.File;
 import java.util.function.UnaryOperator;
 import hs.core.Course;

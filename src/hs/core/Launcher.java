@@ -1,17 +1,11 @@
 package hs.core;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import hs.pages.CalendarPage;
 import hs.pages.CourseSearchPage;
 import hs.pages.LoadPage;
 import hs.pages.LoginPage;
 import hs.simplefx.PageManager;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**

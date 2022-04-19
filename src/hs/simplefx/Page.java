@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -17,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 /**
  * Manages JavaFX components in a more "friendly" way akin to
@@ -143,16 +143,17 @@ public class Page {
 	}
 	
 	/**
-	 * Draws text at a certain position on the page
+	 * Adds text at a certain position on the page
+	 * @param String labelName Name of the label component
 	 * @param x X-position of the text
 	 * @param y Y-position of the text
 	 * @param text Text to draw as a string
 	 */
-	public void drawText(int x, int y, String text) {
-		Label label = new Label(text);
-		label.setLayoutX(x);
-		label.setLayoutY(y);
-		pane.getChildren().add(label);
+	public void addLabel(String labelName, int x, int y, String text) {
+		Text t = new Text(text);
+		t.setLayoutX(x);
+		t.setLayoutY(y);
+		nodeMap.put(LABEL+labelName, t);
 	}
 	
 	/**
@@ -330,6 +331,15 @@ public class Page {
 	 */
 	public ComboBox getDropDown(String dropDownName) {
 		return (ComboBox)nodeMap.get(DROP_DOWN+dropDownName);
+	}
+	
+	/**
+	 * Gets the label component with the given name
+	 * @param labelName Name of the label to get
+	 * @return The label component with the given name
+	 */
+	public Text getLabel(String labelName) {
+		return (Text)nodeMap.get(LABEL+labelName);
 	}
 	
 	/**
