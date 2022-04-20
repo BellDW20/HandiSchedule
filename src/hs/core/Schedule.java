@@ -74,6 +74,47 @@ public class Schedule implements Serializable {
 		return sb.toString();
 	}
 	
+	
+public Schedule resolveSchedule(Schedule s) {
+		
+		boolean isResolved = false;
+		Schedule resolvedSchedule = s;
+		CourseDatabase cd = new CourseDatabase();
+		ArrayList<Course> allCourses = new ArrayList<Course>();
+		
+		allCourses = cd.getCopyOfAllCourses();
+		
+		while(isResolved = false) {
+			
+			for(int i = 0; i < resolvedSchedule.getCourses().size(); i++) {
+				for(int j = 0; j < resolvedSchedule.getCourses().size(); j++) {
+					if(resolvedSchedule.getCourses().get(i).isConflictingWith(resolvedSchedule.getCourses().get(j))) {
+					
+						for(int k = 0; k < allCourses.size(); k++) {
+							if((allCourses.get(k).getDepartment() + Integer.toString(allCourses.get(k).getCourseCode())).equals((resolvedSchedule.getCourses().get(i).getDepartment() + Integer.toString(resolvedSchedule.getCourses().get(i).getCourseCode())))) {
+								removeCourse(resolvedSchedule.getCourses().get(i));
+								addCourse(allCourses.get(k));
+								i = 0;
+								j = 0;
+							}
+							else {
+								if((allCourses.get(k).getDepartment() + Integer.toString(allCourses.get(k).getCourseCode())).equals((resolvedSchedule.getCourses().get(j).getDepartment() + Integer.toString(resolvedSchedule.getCourses().get(j).getCourseCode())))) {
+									removeCourse(resolvedSchedule.getCourses().get(j));
+									addCourse(allCourses.get(k));
+									i = 0;
+									j = 0;
+								}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return resolvedSchedule;
+	}
+	
 	/*
 	 * Method creates a calendar showing the courses in the schedule.
 	 * Returns a buffered image with calendar info to be displayed to the user.
