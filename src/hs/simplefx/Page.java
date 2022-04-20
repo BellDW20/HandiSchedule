@@ -152,8 +152,9 @@ public class Page {
 	public void addLabel(String labelName, int x, int y, String text) {
 		Text t = new Text(text);
 		t.setLayoutX(x);
-		t.setLayoutY(y);
+		t.setLayoutY(y+t.getFont().getSize());
 		nodeMap.put(LABEL+labelName, t);
+		pane.getChildren().add(t);
 	}
 	
 	/**
