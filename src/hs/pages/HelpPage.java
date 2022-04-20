@@ -28,6 +28,11 @@ public class HelpPage extends Page {
 	private Text[] cspLabels;
 	private Text[] cspDesc;
 	
+	private ImageView calendarShot;
+	private Button calendarhHelpButton;
+	private Text[] calendarLabels;
+	private Text[] calendarDesc;
+	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
 		getStartedText = addLabel("gettingStartedText", 10, 24, "Getting Started with HandiSchedule...");
@@ -48,6 +53,10 @@ public class HelpPage extends Page {
 			showCourseSearchHelp();
 		});
 		
+		courseSearchHelpButton = addButton("calendarHelpButton", 10, 228, 160, 40, "The Calendar", ()->{
+			showCalendarHelp();
+		});
+		
 		backButton = addButton("backButton", 1150, 10, 120, 40, "Back to Login", ()->{
 			pageManager.goToPage("LoginPage");
 		});
@@ -57,16 +66,25 @@ public class HelpPage extends Page {
 		
 		setLoginVisibility(false);
 		setCSPVisibility(false);
+		setCalendarVisibility(false);
 	}
 	
 	private void showLoginHelp() {
 		setLoginVisibility(true);
 		setCSPVisibility(false);
+		setCalendarVisibility(false);
 	}
 	
 	private void showCourseSearchHelp() {
 		setLoginVisibility(false);
 		setCSPVisibility(true);
+		setCalendarVisibility(false);
+	}
+	
+	private void showCalendarHelp() {
+		setLoginVisibility(false);
+		setCSPVisibility(false);
+		setCalendarVisibility(true);
 	}
 	
 	private void setLoginVisibility(boolean visible) {
@@ -89,9 +107,20 @@ public class HelpPage extends Page {
 		}
 	}
 	
+	private void setCalendarVisibility(boolean visible) {
+		calendarShot.setVisible(visible);
+		for(Text l : calendarLabels) {
+			l.setVisible(visible);
+		}
+		for(Text l : calendarDesc) {
+			l.setVisible(visible);
+		}
+	}
+	
 	private void createScreenshots(PageManager pageManager) {
 		loginShot = generateScreenshot(pageManager.getPage("LoginPage"));
 		courseSearchShot = generateScreenshot(pageManager.getPage("CourseSearch"));
+		calendarShot = generateScreenshot(pageManager.getPage("CalendarPage"));
 	}
 	
 	private void createLabels(PageManager pageManager) {
@@ -186,6 +215,21 @@ public class HelpPage extends Page {
 		cspDesc[9] = addLabel("cspD9", 1000, 660,
 				"10 - Clicking here will delete the schedule that\n"
 			+   "	  is currently being edited."
+		);
+		
+		//Calendar Labels
+		calendarLabels = new Text[1];
+		calendarLabels[0] = addLabel("clndrL0", 180+400, 180+225, "1");
+		
+		calendarDesc = new Text[2];
+		calendarDesc[0] = addLabel("clndrD0", 1000, 180, 
+				"1 - When you switch to the calendar view,\n"
+			+ 	"	 a calendar containing a weekly schedule\n"
+			+ 	"	 will appear here.");
+		calendarDesc[calendarDesc.length-1] = addLabel("clndrDNote", 10, 690, 
+				"Note: The buttons along the top function the same as they do in"
+			+   "the course search page. Check the help section for the course"
+			+   "course search page for more details."
 		);
 	}
 	
