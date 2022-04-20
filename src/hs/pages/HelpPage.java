@@ -16,6 +16,7 @@ public class HelpPage extends Page {
 	private Text getStartedText;
 	private Text getStartedText2;
 	private Rectangle outline;
+	private Button backButton;
 	
 	private ImageView loginShot;
 	private Button loginHelpButton;
@@ -24,6 +25,8 @@ public class HelpPage extends Page {
 	
 	private ImageView courseSearchShot;
 	private Button courseSearchHelpButton;
+	private Text[] cspLabels;
+	private Text[] cspDesc;
 	
 	@Override
 	public void initializeComponents(PageManager pageManager) {
@@ -45,41 +48,45 @@ public class HelpPage extends Page {
 			showCourseSearchHelp();
 		});
 		
+		backButton = addButton("backButton", 1150, 10, 120, 40, "Back to Login", ()->{
+			pageManager.goToPage("LoginPage");
+		});
+		
 		createScreenshots(pageManager);
 		createLabels(pageManager);
 		
-		hideLoginHelp();
-		hideCourseSearchHelp();
+		setLoginVisibility(false);
+		setCSPVisibility(false);
 	}
 	
 	private void showLoginHelp() {
-		hideCourseSearchHelp();
-		loginShot.setVisible(true);
-		for(Text l : loginLabels) {
-			l.setVisible(true);
-		}
-		for(Text l : loginDesc) {
-			l.setVisible(true);
-		}
-	}
-	
-	private void hideLoginHelp() {
-		loginShot.setVisible(false);
-		for(Text l : loginLabels) {
-			l.setVisible(false);
-		}
-		for(Text l : loginDesc) {
-			l.setVisible(false);
-		}
+		setLoginVisibility(true);
+		setCSPVisibility(false);
 	}
 	
 	private void showCourseSearchHelp() {
-		hideLoginHelp();
-		courseSearchShot.setVisible(true);
+		setLoginVisibility(false);
+		setCSPVisibility(true);
 	}
 	
-	private void hideCourseSearchHelp() {
-		courseSearchShot.setVisible(false);
+	private void setLoginVisibility(boolean visible) {
+		loginShot.setVisible(visible);
+		for(Text l : loginLabels) {
+			l.setVisible(visible);
+		}
+		for(Text l : loginDesc) {
+			l.setVisible(visible);
+		}
+	}
+	
+	private void setCSPVisibility(boolean visible) {
+		courseSearchShot.setVisible(visible);
+		for(Text l : cspLabels) {
+			l.setVisible(visible);
+		}
+		for(Text l : cspDesc) {
+			l.setVisible(visible);
+		}
 	}
 	
 	private void createScreenshots(PageManager pageManager) {
@@ -88,6 +95,7 @@ public class HelpPage extends Page {
 	}
 	
 	private void createLabels(PageManager pageManager) {
+		//Login labels
 		loginLabels = new Text[4];
 		loginLabels[0] = addLabel("loginL1", 180+310, 180+205, "1");
 		loginLabels[1] = addLabel("loginL2", 180+310, 180+245, "2");
@@ -100,20 +108,84 @@ public class HelpPage extends Page {
 			  + "	 on it and typing. Used for both loggin in and\n"
 			  + "	 registering as a new user"
 		);
-		loginDesc[1] = addLabel("loginD2", 1000, 280,
+		loginDesc[1] = addLabel("loginD2", 1000, 240,
 				"2 - A password can be put in this field by clicking\n"
 			  + "	 on it and typing. Used for both logging in and\n"
 			  + "	 registering as a new user"
 		);
-		loginDesc[2] = addLabel("loginD3", 1000, 380,
+		loginDesc[2] = addLabel("loginD3", 1000, 300,
 				"3 - Clicking here will attempt to login with the\n"
 			  + "	 username and password provided in the\n"
 			  + "	 above fields."
 		);
-		loginDesc[3] = addLabel("loginD4", 1000, 480,
+		loginDesc[3] = addLabel("loginD4", 1000, 360,
 				"4 - Clicking here will attempt to create a new\n"
 			  + "	 account with the username and password\n"
 			  + "	 provided in the above fields."
+		);
+		
+		//Course search labels
+		cspLabels = new Text[10];
+		cspLabels[0] = addLabel("cspL0", 180+30, 180+28, "1");
+		cspLabels[1] = addLabel("cspL1", 180+85, 180+28, "2");
+		cspLabels[2] = addLabel("cspL2", 180+140, 180+28, "3");
+		cspLabels[3] = addLabel("cspL3", 180+280, 180+28, "4");
+		cspLabels[4] = addLabel("cspL4", 180+670, 180+28, "5");
+		cspLabels[5] = addLabel("cspL5", 180+755, 180+28, "6");
+		cspLabels[6] = addLabel("cspL6", 180+155, 180+68, "7");
+		cspLabels[7] = addLabel("cspL7", 180+340, 180+68, "8");
+		cspLabels[8] = addLabel("cspL8", 180+395, 180+68, "9");
+		cspLabels[9] = addLabel("cspL9", 180+395, 180+400, "10");
+		
+		cspDesc = new Text[10];
+		cspDesc[0] = addLabel("cspD0", 1000, 120, 
+				"1 - Clicking here will save your schedule and\n"
+			  + "	 log you out of your account, bringing you\n"
+			  + "	 back to the login page."
+		);
+		cspDesc[1] = addLabel("cspD1", 1000, 180,
+				"2 - Clicking here will bring you to a page\n"
+			  + "	 from which you can load any of the schedules\n"
+			  + "	 you had worked on previously."
+		);
+		cspDesc[2] = addLabel("cspD2", 1000, 240,
+				"3 - Clicking here will save your schedule and\n"
+			  + "	 open an new, untitled, blank schedult to\n"
+			  + "	 work on."
+		);
+		cspDesc[3] = addLabel("cspD3", 1000, 300,
+				"4 - Clicking here will & typing will change the\n"
+			  + "	 name of the schedule you are currently\n"
+			  + "	 working on, autosaving these changes."
+		);
+		cspDesc[4] = addLabel("cspD4", 1000, 360,
+				"5 - Clicking here from any page will bring\n"
+			  + "	 you back to this page - the course search\n"
+			  + "	 page."
+		);
+		cspDesc[5] = addLabel("cspD5", 1000, 420,
+				"6 - Clicking here from any page will bring\n"
+			  + "	 you the calendar page.\n"
+		);
+		cspDesc[6] = addLabel("cspD6", 1000, 465,
+				"7 - Clicking here, typing, and pressing enter\n"
+			  + "	 or clicking the \"Search\" button will\n"
+			  + " 	 search for courses with a similar name\n"
+			  + "	 or course code."
+		);
+		cspDesc[7] = addLabel("cspD7", 1000, 540,
+				"8 - Clicking here will perform a search\n"
+			+   "	 for courses based on the current search\n"
+			+   "	 term and the set filters"
+		);
+		cspDesc[8] = addLabel("cspD8", 1000, 600,
+				"9 - Clicking here will toggle a list of filters\n"
+			+   "	 which can be used to narrow your search.\n"
+			+   "	 These filters can be removed at any time."
+		);
+		cspDesc[9] = addLabel("cspD9", 1000, 660,
+				"10 - Clicking here will delete the schedule that\n"
+			+   "	  is currently being edited."
 		);
 	}
 	
