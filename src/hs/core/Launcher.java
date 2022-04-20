@@ -42,11 +42,6 @@ public class Launcher extends Application {
 		loginPage.initializeComponents(pageManager);
 		pageManager.addPageToProgram(loginPage, "LoginPage");
 		
-		//Create and set up the help page
-		HelpPage helpPage = new HelpPage();
-		helpPage.initializeComponents(pageManager);
-		pageManager.addPageToProgram(helpPage, "HelpPage");
-		
 		//Create and set up the course search page
 		CourseSearchPage csp = new CourseSearchPage();
 		csp.initializeComponents(pageManager);
@@ -61,6 +56,11 @@ public class Launcher extends Application {
 		LoadPage lp = new LoadPage();
 		lp.initializeComponents(pageManager);
 		pageManager.addPageToProgram(lp,  "LoadPage");
+
+		//Create and set up the help page
+		HelpPage helpPage = new HelpPage();
+		helpPage.initializeComponents(pageManager);
+		pageManager.addPageToProgram(helpPage, "HelpPage");
 		
 		//Start from the login page
 		pageManager.goToPage("LoginPage");

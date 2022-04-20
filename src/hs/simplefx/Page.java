@@ -134,12 +134,13 @@ public class Page {
 	 * @param w Width of the rectangle
 	 * @param h Height of the rectangle
 	 */
-	public void drawRect(int x, int y, int w, int h) {
+	public Rectangle drawRect(int x, int y, int w, int h) {
 		Rectangle rect = new Rectangle(x,y,w,h);
 		rect.setStrokeWidth(1);
 		rect.setFill(Color.WHITE);
 		rect.setStroke(Color.BLACK);
 		pane.getChildren().add(rect);
+		return rect;
 	}
 	
 	/**
@@ -149,12 +150,13 @@ public class Page {
 	 * @param y Y-position of the text
 	 * @param text Text to draw as a string
 	 */
-	public void addLabel(String labelName, int x, int y, String text) {
+	public Text addLabel(String labelName, int x, int y, String text) {
 		Text t = new Text(text);
 		t.setLayoutX(x);
 		t.setLayoutY(y+t.getFont().getSize());
 		nodeMap.put(LABEL+labelName, t);
 		pane.getChildren().add(t);
+		return t;
 	}
 	
 	/**
@@ -194,13 +196,14 @@ public class Page {
 	 * @param h Height of the text field
 	 * @param promptText The text that appears when no text is in the text field
 	 */
-	public void addTextField(String textFieldName, int x, int y, int w, int h, String promptText) {
+	public TextField addTextField(String textFieldName, int x, int y, int w, int h, String promptText) {
 		TextField textField = new TextField();
 		setupLayout(textField, x, y, w, h);
 		textField.setPromptText(promptText);
 		
 		nodeMap.put(TEXT_FIELD+textFieldName, textField);
 		pane.getChildren().add(textField);
+		return textField;
 	}
 	
 	/**
@@ -212,13 +215,14 @@ public class Page {
 	 * @param h Height of the text field
 	 * @param promptText The text that appears when no text is in the password field
 	 */
-	public void addPasswordField(String passwordFieldName, int x, int y, int w, int h, String promptText) {
+	public PasswordField addPasswordField(String passwordFieldName, int x, int y, int w, int h, String promptText) {
 		PasswordField textField = new PasswordField();
 		setupLayout(textField, x, y, w, h);
 		textField.setPromptText(promptText);
 		
 		nodeMap.put(TEXT_FIELD+passwordFieldName, textField);
 		pane.getChildren().add(textField);
+		return textField;
 	}
 	
 	/**
@@ -228,13 +232,14 @@ public class Page {
 	 * @param y Y-position of the check box
 	 * @param text Label to place beside the check box
 	 */
-	public void addCheckBox(String checkBoxName, int x, int y, String text) {
+	public CheckBox addCheckBox(String checkBoxName, int x, int y, String text) {
 		CheckBox checkBox = new CheckBox(text);
 		checkBox.setLayoutX(x);
 		checkBox.setLayoutY(y);
 		
 		nodeMap.put(CHECK_BOX+checkBoxName, checkBox);
 		pane.getChildren().add(checkBox);
+		return checkBox;
 	}
 	
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -245,7 +250,7 @@ public class Page {
 	 * @param y Y-position of the drop down
 	 * @param options A list of options for the drop down as strings
 	 */
-	public void addDropDown(String dropDownName, int x, int y, String... options) {
+	public ComboBox addDropDown(String dropDownName, int x, int y, String... options) {
 		ComboBox dropDown = new ComboBox();
 		dropDown.getItems().addAll((Object[])options);
 		dropDown.getSelectionModel().selectFirst();
@@ -254,6 +259,7 @@ public class Page {
 
 		nodeMap.put(DROP_DOWN+dropDownName, dropDown);
 		pane.getChildren().add(dropDown);
+		return dropDown;
 	}
 	
 	/**
