@@ -2,6 +2,7 @@ package hs.core;
 
 import hs.pages.CalendarPage;
 import hs.pages.CourseSearchPage;
+import hs.pages.HelpPage;
 import hs.pages.LoadPage;
 import hs.pages.LoginPage;
 import hs.simplefx.PageManager;
@@ -40,6 +41,11 @@ public class Launcher extends Application {
 		LoginPage loginPage = new LoginPage();
 		loginPage.initializeComponents(pageManager);
 		pageManager.addPageToProgram(loginPage, "LoginPage");
+		
+		//Create and set up the help page
+		HelpPage helpPage = new HelpPage();
+		helpPage.initializeComponents(pageManager);
+		pageManager.addPageToProgram(helpPage, "HelpPage");
 		
 		//Create and set up the course search page
 		CourseSearchPage csp = new CourseSearchPage();
