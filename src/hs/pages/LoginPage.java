@@ -7,10 +7,12 @@ import hs.simplefx.PageManager;
 import hs.simplefx.text.CharacterTextFilter;
 import hs.simplefx.text.LengthTextFilter;
 import hs.simplefx.text.TextFilterer;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -28,22 +30,28 @@ public class LoginPage extends Page {
 	public void initializeComponents(PageManager pageManager) {
 		userDatabase = UserDatabase.loadDatabase("./users.dtb");
 		userDatabase.saveDatabase();
+		//pageManager.getPageScenes().get("LoginPage").getStylesheets().add("loginButton.css");
+	
+//		Color bgColor = new Color(0.64, 0.84, 0.94, 1.0);
+//		
+//		Rectangle bgRectangle = new Rectangle();
+//		bgRectangle = drawRect(0, 0, 1280, 720);
+//		bgRectangle.setFill(bgColor);
 		
 		Text title = new Text();
 		title.setText("HandiSchedule");
 		title.setX(430);
 		title.setY(200);
-		title.setFont(new Font(64.0));
+		title.setFont(Font.font("Verdana", 64.0));
+		//title.setFont(new Font(64.0));
 		getPane().getChildren().add(title);
-		
-		// Styling title text
-		title.setStyle("");
 		
 		alert = new Text();
 		alert.setX(540);
 		alert.setY(500);
 		alert.setVisible(false);
 		getPane().getChildren().add(alert);
+		
 		
 		TextFilterer lengthFilter = new TextFilterer()
 			.addFilter(new LengthTextFilter(0,26))
@@ -62,10 +70,8 @@ public class LoginPage extends Page {
 			onLoginClick(pageManager);
 		});
 		
-		loginButton.setStyle("-fx-background-color: #0000ff" +
-							"");
-		
-		addButton("registerButton", 650, 440, 90, 40, "Register", ()->{
+		Button registerButton = new Button();
+		registerButton = addButton("registerButton", 650, 440, 90, 40, "Register", ()->{
 			onRegisterClick(pageManager);
 		});
 		
