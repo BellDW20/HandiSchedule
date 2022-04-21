@@ -25,6 +25,33 @@ public class Schedule implements Serializable {
 		creditHours = 0;
 	}
 	
+	public Schedule(Schedule s) {
+		if (!s.title.contains("(copy)")) {
+			this.title = s.title += " (copy)";
+		}
+		else if (s.title.endsWith("(copy)")){
+			this.title = s.title += " 2";
+		}
+		else {
+			int i = 3;
+			boolean found = false;
+			while (!found) {
+				if (s.title.endsWith(" " + Integer.toString(i - 1))) {
+					this.title = s.title.replace(" (copy) " + Integer.toString(i-1), " (copy) " + Integer.toString(i));
+					found = true;
+				}
+				else {
+					i++;
+				}
+			}
+		}
+		this.creditHours = s.creditHours;
+		this.courses = new ArrayList<Course>();
+		for (int i = 0; i < s.courses.size(); i++) {
+			this.courses.add(s.courses.get(i));
+		}
+	}
+	
 	public int getCreditHours() {
 		return creditHours;
 	}

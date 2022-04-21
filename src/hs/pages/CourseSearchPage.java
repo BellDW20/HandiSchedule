@@ -73,6 +73,19 @@ public class CourseSearchPage extends Page {
 			loadMostRecentlyEditedSchedule(pageManager);
 		});
 		
+		addButton("copyButton", 540, 620, 200, 40, "Copy Schedule", ()->{
+			immediatelySaveCurrentSchedule();
+			
+			Schedule temp = new Schedule(currentSchedule);
+
+			
+			currentSchedule = temp;
+			immediatelySaveCurrentSchedule();
+			
+			//load the new schedule
+			loadMostRecentlyEditedSchedule(pageManager);
+		});
+		
 		addLabel("scheduleCredits", 770, 100, "Current Credits: 0");
 		
 		//add Logout button. This button allows the user to logout of their account
