@@ -7,6 +7,7 @@ import hs.pages.LoadPage;
 import hs.pages.LoginPage;
 import hs.simplefx.PageManager;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -36,6 +37,8 @@ public class Launcher extends Application {
 //            Map.Entry<String, Scene> hmElement = (Map.Entry<String, Scene>)hmIterator.next();
 //            hmElement.getValue().getStylesheets().add(css);
 //		}
+		
+		stage.getIcons().add(new Image("file:./icon.png"));
 		
 		//Create and set up the login page
 		LoginPage loginPage = new LoginPage();
