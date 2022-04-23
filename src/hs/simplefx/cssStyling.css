@@ -1,11 +1,25 @@
+.root {
+	-fx-background-color: #becce8;	
+}
+
 .button { 
-   -fx-background-color: #4d80c4; 
+   -fx-background-color: #4d80c4;
+   -fx-border-color: #2d67b5;
    -fx-text-fill: white; 
 }
 
 .button:hover {
 	-fx-background-color: #3a69a6;
 	-fx-transition: 0.4s;
+}
+
+.text-field {
+	-fx-border-color: #2d67b5;
+}
+
+.pane {
+	-fx-border-color: #2d67b5;
+	-fx-background-color: #3a69a6;
 }
 
 .text {

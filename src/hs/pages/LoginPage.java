@@ -31,8 +31,8 @@ public class LoginPage extends Page {
 		userDatabase = UserDatabase.loadDatabase("./users.dtb");
 		userDatabase.saveDatabase();
 		//pageManager.getPageScenes().get("LoginPage").getStylesheets().add("loginButton.css");
-	
-//		Color bgColor = new Color(0.64, 0.84, 0.94, 1.0);
+		
+//		Color bgColor = new Color(0.71, 0.79, 0.89, 1.0);
 //		
 //		Rectangle bgRectangle = new Rectangle();
 //		bgRectangle = drawRect(0, 0, 1280, 720);
