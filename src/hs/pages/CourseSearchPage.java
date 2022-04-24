@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.function.UnaryOperator;
 import hs.core.Course;
 import hs.core.CourseDatabase;
+import hs.core.Launcher;
 import hs.core.Schedule;
 import hs.core.Time;
 import hs.core.TimeFrame;
@@ -175,6 +176,7 @@ public class CourseSearchPage extends Page {
 					scheduleTitleField.setText(getFirstUnusedScheduleName());
 					isReplacingTitle = false;
 				}
+				Launcher.logger.changedScheduleName(currentSchedule);
 				asynchronouslySaveCurrentSchedule();
 			}
         });

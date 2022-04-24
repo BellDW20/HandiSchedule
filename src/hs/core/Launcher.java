@@ -18,7 +18,9 @@ import javafx.stage.Stage;
 
 public class Launcher extends Application {
 	
+	public static Logger logger = new Logger();
 	public static void main(String[] args) {
+		
 		launch(); // Default to start any JavaFX application
 		//NOTE: start(Stage stage) will be called by JavaFX on startup
 	}

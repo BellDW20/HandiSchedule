@@ -68,6 +68,7 @@ public class Schedule implements Serializable {
 		if(courses.contains(course)) {return;}
 		courses.add(course);
 		creditHours += course.getCreditHours();
+		Launcher.logger.addedClass(course);
 	}
 	
 	/*
@@ -76,6 +77,7 @@ public class Schedule implements Serializable {
 	public void removeCourse(Course course) {
 		if (courses.remove(course)) {
 			creditHours -= course.getCreditHours();
+			Launcher.logger.removedClass(course);
 		}
 	}
 	
@@ -158,6 +160,7 @@ public class Schedule implements Serializable {
 			}
 		}
 		
+		Launcher.logger.resolvedSchedule(this);
 		return !conflicting;
 	}
 	
