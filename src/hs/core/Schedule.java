@@ -105,6 +105,8 @@ public class Schedule implements Serializable {
 public Schedule resolveSchedule(Schedule s) {
 		
 		boolean isResolved = false;
+		boolean hasOtherSection1 = false;
+		boolean hasOtherSection2 = false;
 		Schedule resolvedSchedule = s;
 		CourseDatabase cd = new CourseDatabase();
 		ArrayList<Course> allCourses = new ArrayList<Course>();
@@ -123,20 +125,27 @@ public Schedule resolveSchedule(Schedule s) {
 								addCourse(allCourses.get(k));
 								i = 0;
 								j = 0;
+								hasOtherSection1 = true;
 							}
-							else {
-								if((allCourses.get(k).getDepartment() + Integer.toString(allCourses.get(k).getCourseCode())).equals((resolvedSchedule.getCourses().get(j).getDepartment() + Integer.toString(resolvedSchedule.getCourses().get(j).getCourseCode())))) {
+							else if(((allCourses.get(k).getDepartment() + Integer.toString(allCourses.get(k).getCourseCode())).equals((resolvedSchedule.getCourses().get(j).getDepartment() + Integer.toString(resolvedSchedule.getCourses().get(j).getCourseCode()))))) {
+								
 									removeCourse(resolvedSchedule.getCourses().get(j));
 									addCourse(allCourses.get(k));
 									i = 0;
 									j = 0;
+									hasOtherSection2 = true;
 								}
-								
+							else {
+								removeCourse(resolvedSchedule.getCourses().get(i));
+								i=0;
+								j=0;
 							}
 						}
 					}
 				}
+				
 			}
+			
 		}
 		
 		return resolvedSchedule;
