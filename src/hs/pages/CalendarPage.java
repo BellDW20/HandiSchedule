@@ -49,6 +49,11 @@ public class CalendarPage extends Page {
 			pageManager.goToPage("CalendarPage");
 		});
 		
+		// add resolve schedule button
+		addButton("resolveScheduleButton", 540, 670, 200, 40, "Resolve Schedule", ()->{
+			((CourseSearchPage)pageManager.getPage("CourseSearch")).resolveCurrentSchedule(this);
+		});
+		
 		//creates a new calendar view that will be displayed on the calendar page
 		calendarView = new CalendarView();
 		addSubPage("calendarView", calendarView, 240, 60, 800, 600, false);

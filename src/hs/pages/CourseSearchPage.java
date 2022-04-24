@@ -114,7 +114,7 @@ public class CourseSearchPage extends Page {
 			//load the new schedule
 			loadMostRecentlyEditedSchedule(pageManager);
 
-			getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
+			updateScheduleCredits();
 		});
 		
 		
@@ -301,6 +301,16 @@ public class CourseSearchPage extends Page {
 		return currentSchedule;
 	}
 	
+	public void resolveCurrentSchedule(CalendarPage calendarPage) {
+		currentSchedule.resolveSchedule(db);
+		scheduleList.clear();
+		scheduleList.addCoursesToDisplay(currentSchedule.getCourses());
+		calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
+		asynchronouslySaveCurrentSchedule();
+		updateScheduleCredits();
+		
+	}
+	
 	//getter for the name of the first schedule created by a user that has not been modified
 	private String getFirstUnusedScheduleName() {
 		//Make sure schedule save folder exists
@@ -350,9 +360,13 @@ public class CourseSearchPage extends Page {
 			scheduleList.addCourseToDisplay(c);
 		}
 
-		getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
+		updateScheduleCredits();
 		isReplacingTitle = false;
 		return true;
+	}
+	
+	private void updateScheduleCredits() {
+		getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
 	}
 	
 	/**
@@ -369,7 +383,7 @@ public class CourseSearchPage extends Page {
 			immediatelySaveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
 
-			getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
+			updateScheduleCredits();
 			return;
 		}
 		
@@ -390,7 +404,7 @@ public class CourseSearchPage extends Page {
 			immediatelySaveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
 
-			getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
+			updateScheduleCredits();
 		}
 	}
 	

@@ -117,13 +117,14 @@ public class Schedule implements Serializable {
 		return false;
 	}
 	
-	public boolean resolveSchedule() {
+	public boolean resolveSchedule(CourseDatabase db) {
+		if(!isConflicting()) {
+			return true;
+		}
 		
-		CourseDatabase cd = new CourseDatabase();
-		ArrayList<Course> allCourses = new ArrayList<Course>();
+		ArrayList<Course> allCourses = db.getCopyOfAllCourses();
 		ArrayList<ArrayList<Course>> possibleSections = new ArrayList<ArrayList<Course>>();
 		ArrayList<ArrayList<Course>> possibleSchedules = new ArrayList<ArrayList<Course>>();
-		allCourses = cd.getCopyOfAllCourses();
 		
 		for(int i = 0; i < getCourses().size(); i++) {
 			ArrayList<Course> sections = new ArrayList<Course>();
@@ -158,7 +159,6 @@ public class Schedule implements Serializable {
 		}
 		
 		return !conflicting;
-		
 	}
 	
 	/*
