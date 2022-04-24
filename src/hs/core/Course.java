@@ -86,6 +86,16 @@ public class Course implements Serializable {
 		return false;
 	}
 	
+	public boolean differsOnlyBySection(Course c) {
+		if(c.getCourseName().equals(this.getCourseName()) && (c.getSection() != (this.getSection()))) {
+			return true;
+		}
+		
+		else {
+			return false;
+		}
+	}
+	
 	//returns the department, code, and section of a particular course delimited by spaces.
 	public String getUniqueString() {
 		return department+" "+courseCode+" "+section;

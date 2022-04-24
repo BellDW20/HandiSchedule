@@ -1,10 +1,11 @@
 package hs.core;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import hs.math.CartesianProduct;
 
 /*
  * This class contains information that allows a schedule to be created by a user.
@@ -50,6 +51,10 @@ public class Schedule implements Serializable {
 		for (int i = 0; i < s.courses.size(); i++) {
 			this.courses.add(s.courses.get(i));
 		}
+	}
+	
+	private Schedule(ArrayList<Course> c) {
+		this.courses = c;
 	}
 	
 	public int getCreditHours() {
@@ -101,54 +106,59 @@ public class Schedule implements Serializable {
 		return sb.toString();
 	}
 	
+	public boolean isConflicting() {
+		for(int i = 0; i < getCourses().size(); i++) {
+			for(int j = i+1; j < getCourses().size(); j++) {
+				if(getCourses().get(i).isConflictingWith(getCourses().get(j))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
-public Schedule resolveSchedule(Schedule s) {
+	public boolean resolveSchedule() {
 		
-		boolean isResolved = false;
-		boolean hasOtherSection1 = false;
-		boolean hasOtherSection2 = false;
-		Schedule resolvedSchedule = s;
 		CourseDatabase cd = new CourseDatabase();
 		ArrayList<Course> allCourses = new ArrayList<Course>();
-		
+		ArrayList<ArrayList<Course>> possibleSections = new ArrayList<ArrayList<Course>>();
+		ArrayList<ArrayList<Course>> possibleSchedules = new ArrayList<ArrayList<Course>>();
 		allCourses = cd.getCopyOfAllCourses();
 		
-		while(isResolved = false) {
-			
-			for(int i = 0; i < resolvedSchedule.getCourses().size(); i++) {
-				for(int j = 0; j < resolvedSchedule.getCourses().size(); j++) {
-					if(resolvedSchedule.getCourses().get(i).isConflictingWith(resolvedSchedule.getCourses().get(j))) {
-					
-						for(int k = 0; k < allCourses.size(); k++) {
-							if((allCourses.get(k).getDepartment() + Integer.toString(allCourses.get(k).getCourseCode())).equals((resolvedSchedule.getCourses().get(i).getDepartment() + Integer.toString(resolvedSchedule.getCourses().get(i).getCourseCode())))) {
-								removeCourse(resolvedSchedule.getCourses().get(i));
-								addCourse(allCourses.get(k));
-								i = 0;
-								j = 0;
-								hasOtherSection1 = true;
-							}
-							else if(((allCourses.get(k).getDepartment() + Integer.toString(allCourses.get(k).getCourseCode())).equals((resolvedSchedule.getCourses().get(j).getDepartment() + Integer.toString(resolvedSchedule.getCourses().get(j).getCourseCode()))))) {
-								
-									removeCourse(resolvedSchedule.getCourses().get(j));
-									addCourse(allCourses.get(k));
-									i = 0;
-									j = 0;
-									hasOtherSection2 = true;
-								}
-							else {
-								removeCourse(resolvedSchedule.getCourses().get(i));
-								i=0;
-								j=0;
-							}
-						}
-					}
+		for(int i = 0; i < getCourses().size(); i++) {
+			ArrayList<Course> sections = new ArrayList<Course>();
+			sections.add(getCourses().get(i));
+			for(int j = 0; j < allCourses.size(); j++) {
+				if(getCourses().get(i).differsOnlyBySection(allCourses.get(j))) {
+					sections.add(allCourses.get(j));
 				}
-				
 			}
-			
+			possibleSections.add(sections);
 		}
 		
-		return resolvedSchedule;
+		boolean conflicting = true;
+		int schIndex = 0;
+		possibleSchedules = CartesianProduct.cartesianProduct(possibleSections);
+		
+		for (schIndex = 0; schIndex < possibleSchedules.size(); schIndex++) {
+			Schedule potentialSchedule = new Schedule(possibleSchedules.get(schIndex));
+			if(!potentialSchedule.isConflicting()) {
+				conflicting = false;
+				break;
+			}
+		}
+		
+		if(!conflicting) {
+			courses.clear();
+			creditHours = 0;
+			
+			for(Course course : possibleSchedules.get(schIndex)) {
+				addCourse(course);
+			}
+		}
+		
+		return !conflicting;
+		
 	}
 	
 	/*
