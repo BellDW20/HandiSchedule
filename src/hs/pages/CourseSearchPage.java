@@ -1,6 +1,5 @@
 package hs.pages;
 
-import java.awt.Graphics;
 import java.io.File;
 import java.util.function.UnaryOperator;
 import hs.core.Course;
@@ -74,6 +73,21 @@ public class CourseSearchPage extends Page {
 			loadMostRecentlyEditedSchedule(pageManager);
 		});
 		
+		addButton("copyButton", 540, 620, 200, 40, "Copy Schedule", ()->{
+			immediatelySaveCurrentSchedule();
+			
+			Schedule temp = new Schedule(currentSchedule);
+
+			
+			currentSchedule = temp;
+			immediatelySaveCurrentSchedule();
+			
+			//load the new schedule
+			loadMostRecentlyEditedSchedule(pageManager);
+		});
+		
+		addLabel("scheduleCredits", 770, 100, "Current Credits: 0");
+		
 		//add Logout button. This button allows the user to logout of their account
 		//and return to the login screen
 		addButton("logoutButton", 10, 5, 80, 40, "Logout", ()->{
@@ -100,8 +114,7 @@ public class CourseSearchPage extends Page {
 			//load the new schedule
 			loadMostRecentlyEditedSchedule(pageManager);
 
-			String temp = "Current Credits: " + currentSchedule.getCreditHours();
-			addButton("creditButton", 770, 75, 200, 40, temp, null);
+			getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
 		});
 		
 		
@@ -337,8 +350,7 @@ public class CourseSearchPage extends Page {
 			scheduleList.addCourseToDisplay(c);
 		}
 
-		String temp = "Current Credits: " + potentialSchedule.getCreditHours();
-		addButton("creditButton", 770, 75, 200, 40, temp, null);
+		getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
 		isReplacingTitle = false;
 		return true;
 	}
@@ -357,8 +369,7 @@ public class CourseSearchPage extends Page {
 			immediatelySaveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
 
-			String temp = "Current Credits: " + currentSchedule.getCreditHours();
-			addButton("creditButton", 770, 75, 200, 40, temp, null);
+			getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
 			return;
 		}
 		
@@ -379,8 +390,7 @@ public class CourseSearchPage extends Page {
 			immediatelySaveCurrentSchedule();
 			loadMostRecentlyEditedSchedule(pageManager);
 
-			String temp = "Current Credits: " + currentSchedule.getCreditHours();
-			addButton("creditButton", 770, 75, 200, 40, temp, null);
+			getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
 		}
 	}
 	

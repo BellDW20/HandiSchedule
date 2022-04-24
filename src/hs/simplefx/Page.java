@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -17,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 /**
  * Manages JavaFX components in a more "friendly" way akin to
@@ -134,25 +134,29 @@ public class Page {
 	 * @param w Width of the rectangle
 	 * @param h Height of the rectangle
 	 */
-	public void drawRect(int x, int y, int w, int h) {
+	public Rectangle drawRect(int x, int y, int w, int h) {
 		Rectangle rect = new Rectangle(x,y,w,h);
 		rect.setStrokeWidth(1);
 		rect.setFill(Color.WHITE);
 		rect.setStroke(Color.BLACK);
 		pane.getChildren().add(rect);
+		return rect;
 	}
 	
 	/**
-	 * Draws text at a certain position on the page
+	 * Adds text at a certain position on the page
+	 * @param String labelName Name of the label component
 	 * @param x X-position of the text
 	 * @param y Y-position of the text
 	 * @param text Text to draw as a string
 	 */
-	public void drawText(int x, int y, String text) {
-		Label label = new Label(text);
-		label.setLayoutX(x);
-		label.setLayoutY(y);
-		pane.getChildren().add(label);
+	public Text addLabel(String labelName, int x, int y, String text) {
+		Text t = new Text(text);
+		t.setLayoutX(x);
+		t.setLayoutY(y+t.getFont().getSize());
+		nodeMap.put(LABEL+labelName, t);
+		pane.getChildren().add(t);
+		return t;
 	}
 	
 	/**
@@ -165,7 +169,7 @@ public class Page {
 	 * @param text The text applied to the button
 	 * @param onClick The event that occurs when the user clicks the button
 	 */
-	public void addButton(String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
+	public Button addButton(String buttonName, int x, int y, int w, int h, String text, Runnable onClick) {
 		Button button = new Button(text);
 		setupLayout(button, x, y, w, h);
 		
@@ -180,6 +184,7 @@ public class Page {
 		
 		nodeMap.put(BUTTON+buttonName, button);
 		pane.getChildren().add(button);
+		return button;
 	}
 	
 	/**
@@ -191,13 +196,14 @@ public class Page {
 	 * @param h Height of the text field
 	 * @param promptText The text that appears when no text is in the text field
 	 */
-	public void addTextField(String textFieldName, int x, int y, int w, int h, String promptText) {
+	public TextField addTextField(String textFieldName, int x, int y, int w, int h, String promptText) {
 		TextField textField = new TextField();
 		setupLayout(textField, x, y, w, h);
 		textField.setPromptText(promptText);
 		
 		nodeMap.put(TEXT_FIELD+textFieldName, textField);
 		pane.getChildren().add(textField);
+		return textField;
 	}
 	
 	/**
@@ -209,13 +215,14 @@ public class Page {
 	 * @param h Height of the text field
 	 * @param promptText The text that appears when no text is in the password field
 	 */
-	public void addPasswordField(String passwordFieldName, int x, int y, int w, int h, String promptText) {
+	public PasswordField addPasswordField(String passwordFieldName, int x, int y, int w, int h, String promptText) {
 		PasswordField textField = new PasswordField();
 		setupLayout(textField, x, y, w, h);
 		textField.setPromptText(promptText);
 		
 		nodeMap.put(TEXT_FIELD+passwordFieldName, textField);
 		pane.getChildren().add(textField);
+		return textField;
 	}
 	
 	/**
@@ -225,13 +232,14 @@ public class Page {
 	 * @param y Y-position of the check box
 	 * @param text Label to place beside the check box
 	 */
-	public void addCheckBox(String checkBoxName, int x, int y, String text) {
+	public CheckBox addCheckBox(String checkBoxName, int x, int y, String text) {
 		CheckBox checkBox = new CheckBox(text);
 		checkBox.setLayoutX(x);
 		checkBox.setLayoutY(y);
 		
 		nodeMap.put(CHECK_BOX+checkBoxName, checkBox);
 		pane.getChildren().add(checkBox);
+		return checkBox;
 	}
 	
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -242,7 +250,7 @@ public class Page {
 	 * @param y Y-position of the drop down
 	 * @param options A list of options for the drop down as strings
 	 */
-	public void addDropDown(String dropDownName, int x, int y, String... options) {
+	public ComboBox addDropDown(String dropDownName, int x, int y, String... options) {
 		ComboBox dropDown = new ComboBox();
 		dropDown.getItems().addAll((Object[])options);
 		dropDown.getSelectionModel().selectFirst();
@@ -251,6 +259,7 @@ public class Page {
 
 		nodeMap.put(DROP_DOWN+dropDownName, dropDown);
 		pane.getChildren().add(dropDown);
+		return dropDown;
 	}
 	
 	/**
@@ -329,6 +338,15 @@ public class Page {
 	 */
 	public ComboBox getDropDown(String dropDownName) {
 		return (ComboBox)nodeMap.get(DROP_DOWN+dropDownName);
+	}
+	
+	/**
+	 * Gets the label component with the given name
+	 * @param labelName Name of the label to get
+	 * @return The label component with the given name
+	 */
+	public Text getLabel(String labelName) {
+		return (Text)nodeMap.get(LABEL+labelName);
 	}
 	
 	/**

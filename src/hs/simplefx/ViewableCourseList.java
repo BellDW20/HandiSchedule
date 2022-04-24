@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import hs.core.Course;
+import hs.core.Schedule;
 import javafx.scene.Node;
 
 /**
@@ -119,6 +120,10 @@ public abstract class ViewableCourseList extends Page {
 			Node n = getPane().getChildren().get(i);
 			n.setLayoutY(n.getLayoutY()-COURSE_HEIGHT-PAD);
 		}
+	}
+	
+	public void updateCourseVisuals(Schedule schedule) {
+		//use update visual on each course in the cache
 	}
 	
 	/**

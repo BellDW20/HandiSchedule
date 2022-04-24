@@ -1,6 +1,11 @@
 package hs.simplefx;
 
 import hs.core.Course;
+import hs.core.Schedule;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 /**
  * A subpage component to be added to a page which visualizes
@@ -10,7 +15,11 @@ import hs.core.Course;
 
 public class ViewableCourse extends Page {
 	
-	private String uniqueString;
+	private static Image warningIcon = new Image("file:./warning.png");
+	
+	private Course course;
+	private ImageView conflictingWarning;
+	private Rectangle duplicateDarken;
 	
 	/**
 	 * Creates a viewable course from a given course
@@ -21,12 +30,12 @@ public class ViewableCourse extends Page {
 	 */
 	public ViewableCourse(Course course, int w, int h, int pad) {
 		super();
-		this.uniqueString = course.getUniqueString();
+		this.course = course;
 		//Make a background rectangle
 		drawRect(0, 0, w, h);
 		
 		//Draw all relevant course information
-		drawText(pad, pad, course.getDepartment() + " " + course.getCourseCode() + " "
+		addLabel("courseInfo", pad, pad, course.getDepartment() + " " + course.getCourseCode() + " "
 				+ course.getSection() + ": " 
 				+ course.getCourseName() + "\n");
 		
@@ -39,14 +48,24 @@ public class ViewableCourse extends Page {
 					meetings += " and ";
 				}
 			}
-			drawText(pad, pad + 16, meetings);
+			addLabel("meetingInfo", pad, pad + 16, meetings);
 		}
 		else {
-			drawText(pad, pad + 16, "Non-standard Class Meetings");
+			addLabel("meetingInfo", pad, pad + 16, "Non-standard Class Meetings");
 		}
 		
 		//Draw the number of credits the course is
-		drawText(pad, pad + 32, course.getCreditHours() + " credits");
+		addLabel("creditInfo", pad, pad + 32, course.getCreditHours() + " credits");
+		
+		conflictingWarning = new ImageView(warningIcon);
+		conflictingWarning.setX(w-2*(pad+40));
+		conflictingWarning.setY(h/2-16);
+		conflictingWarning.setVisible(false); //Warning off by default
+		getPane().getChildren().add(conflictingWarning);
+		
+		duplicateDarken = drawRect(0,0,w,h);
+		duplicateDarken.setFill(new Color(0,0,0,0.5f));
+		duplicateDarken.setVisible(false); //Duplicate course off by default
 	}
 	
 	@Override
@@ -54,7 +73,12 @@ public class ViewableCourse extends Page {
 
 	@Override
 	public String toString() {
-		return uniqueString;
+		return course.getUniqueString();
+	}
+	
+	public void updateVisuals(Schedule currentSchedule) {
+		//use the schedule to update the visuals, like
+		//the conflictingWarning ImageView and duplicate Rectangle
 	}
 	
 }

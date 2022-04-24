@@ -26,7 +26,7 @@ public class PageManager {
 	 */
 	public PageManager(Stage stage, int windowWidth, int windowHeight) {
 		this.pages = new HashMap<>();
-		this.pageScenes = new HashMap<>();
+		this.setPageScenes(new HashMap<>());
 		this.stage = stage;
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;
@@ -39,7 +39,9 @@ public class PageManager {
 	 */
 	public void addPageToProgram(Page page, String pageName) {
 		pages.put(pageName, page);
-		pageScenes.put(pageName, new Scene(page.getPane(), windowWidth, windowHeight));
+		Scene scene = new Scene(page.getPane(), windowWidth, windowHeight);
+		scene.getStylesheets().add(getClass().getResource("cssStyling.css").toExternalForm());
+		getPageScenes().put(pageName, scene);
 	}
 	
 	/**
@@ -48,7 +50,7 @@ public class PageManager {
 	 * @param pageName Name of the page to switch to
 	 */
 	public void goToPage(String pageName) {
-		stage.setScene(pageScenes.get(pageName));
+		stage.setScene(getPageScenes().get(pageName));
 		stage.show();
 	}
 	
@@ -75,6 +77,14 @@ public class PageManager {
 	 */
 	public int getWindowHeight() {
 		return windowHeight;
+	}
+
+	public HashMap<String, Scene> getPageScenes() {
+		return pageScenes;
+	}
+
+	public void setPageScenes(HashMap<String, Scene> pageScenes) {
+		this.pageScenes = pageScenes;
 	}
 	
 }

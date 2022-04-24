@@ -206,11 +206,7 @@ public class CourseDatabase {
 		
 		//Sort collections to be in proper order
 		db.sortDatabase();
-		
-		for(Course course : db.fullCourseList) {
-			System.out.println(course);
-		}
-		
+				
 		return db;
 	}
 	

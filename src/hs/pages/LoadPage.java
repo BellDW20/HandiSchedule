@@ -86,7 +86,7 @@ public class LoadPage extends Page {
 		});
 		
 		drawRect(0, 0, WIDTH, HEIGHT);
-		drawText(BUFFER, BUFFER, "Schedules");
+		addLabel("scheduleLabel", BUFFER, BUFFER, "Schedules");
 		
 		//gets references to the two other pages
 		courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");

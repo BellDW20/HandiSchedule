@@ -2,10 +2,12 @@ package hs.core;
 
 import hs.pages.CalendarPage;
 import hs.pages.CourseSearchPage;
+import hs.pages.HelpPage;
 import hs.pages.LoadPage;
 import hs.pages.LoginPage;
 import hs.simplefx.PageManager;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -24,6 +26,19 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		PageManager pageManager = new PageManager(stage, 1280, 720);
+		
+		// Store location of css file to use with each separate scene (page)
+//		String css = this.getClass().getResource("PageStyling.css").toExternalForm();
+//		HashMap<String, Scene> pages = pageManager.getPageScenes();
+//        Iterator<Entry<String, Scene>> hmIterator = pages.entrySet().iterator();
+//
+//        // Iterate through each page and add css functionality
+//		while (hmIterator.hasNext()) {
+//            Map.Entry<String, Scene> hmElement = (Map.Entry<String, Scene>)hmIterator.next();
+//            hmElement.getValue().getStylesheets().add(css);
+//		}
+		
+		stage.getIcons().add(new Image("file:./icon.png"));
 		
 		//Create and set up the login page
 		LoginPage loginPage = new LoginPage();
@@ -44,8 +59,13 @@ public class Launcher extends Application {
 		LoadPage lp = new LoadPage();
 		lp.initializeComponents(pageManager);
 		pageManager.addPageToProgram(lp,  "LoadPage");
+
+		//Create and set up the help page
+		HelpPage helpPage = new HelpPage();
+		helpPage.initializeComponents(pageManager);
+		pageManager.addPageToProgram(helpPage, "HelpPage");
 		
-		//Start from the course search page
+		//Start from the login page
 		pageManager.goToPage("LoginPage");
 		
 		//Give the window a title and don't allow resizing the window
