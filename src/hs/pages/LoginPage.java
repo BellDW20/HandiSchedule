@@ -30,13 +30,6 @@ public class LoginPage extends Page {
 	public void initializeComponents(PageManager pageManager) {
 		userDatabase = UserDatabase.loadDatabase("./users.dtb");
 		userDatabase.saveDatabase();
-		//pageManager.getPageScenes().get("LoginPage").getStylesheets().add("loginButton.css");
-		
-//		Color bgColor = new Color(0.71, 0.79, 0.89, 1.0);
-//		
-//		Rectangle bgRectangle = new Rectangle();
-//		bgRectangle = drawRect(0, 0, 1280, 720);
-//		bgRectangle.setFill(bgColor);
 		
 		Text title = new Text();
 		title.setText("HandiSchedule");
@@ -60,10 +53,17 @@ public class LoginPage extends Page {
 		addTextField("usernameField", 540, 320, 200, 40, "Username");
 		userField = getTextField("usernameField");
 		userField.setTextFormatter(lengthFilter.getAsTextFormatter());
+		getTextField("usernameField").setOnAction((event) -> {
+			onLoginClick(pageManager);
+		});
 		
 		addPasswordField("passwordField", 540, 380, 200, 40, "Password");
 		passField = (PasswordField)getTextField("passwordField");
 		userField.setTextFormatter(lengthFilter.getAsTextFormatter());
+		getTextField("passwordField").setOnAction((event) -> {
+			onLoginClick(pageManager);
+		});
+		
 		
 		Button loginButton = new Button();
 		loginButton = addButton("loginButton", 540, 440, 90, 40, "Login", ()->{
