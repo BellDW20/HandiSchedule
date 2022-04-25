@@ -160,7 +160,6 @@ public class Schedule implements Serializable {
 			}
 		}
 		
-		Launcher.logger.resolvedSchedule(this);
 		return !conflicting;
 	}
 	

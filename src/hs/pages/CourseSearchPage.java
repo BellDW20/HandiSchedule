@@ -321,7 +321,7 @@ public class CourseSearchPage extends Page {
 		asynchronouslySaveCurrentSchedule();
 		updateScheduleCredits();
 		updateListVisuals();
-		
+		Launcher.logger.resolvedSchedule(currentSchedule);
 	}
 	
 	//getter for the name of the first schedule created by a user that has not been modified
