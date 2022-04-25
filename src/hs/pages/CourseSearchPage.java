@@ -233,6 +233,11 @@ public class CourseSearchPage extends Page {
 		hideComponent(SUB_PAGE, "filterOptions");
 	}
 	
+	public void updateListVisuals() {
+		searchList.updateCourseVisuals(currentSchedule, currentSearch.getSearchResults());
+		scheduleList.updateCourseVisuals(currentSchedule, currentSearch.getSearchResults());
+	}
+	
 	/*
 	 * Method performs a search on the class database and displays all of the classes in
 	 * the database that match the parameters of the search and applied filters.
@@ -295,6 +300,7 @@ public class CourseSearchPage extends Page {
 		//Perform the search and display it
 		currentSearch.updateSearch();
 		searchList.addCoursesToDisplay(currentSearch.getSearchResults());
+		updateListVisuals();
 	}
 	
 	//getter for the current schedule
@@ -310,6 +316,7 @@ public class CourseSearchPage extends Page {
 		calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
 		asynchronouslySaveCurrentSchedule();
 		updateScheduleCredits();
+		updateListVisuals();
 		
 	}
 	
@@ -364,6 +371,7 @@ public class CourseSearchPage extends Page {
 
 		updateScheduleCredits();
 		isReplacingTitle = false;
+		updateListVisuals();
 		return true;
 	}
 	
@@ -386,6 +394,7 @@ public class CourseSearchPage extends Page {
 			loadMostRecentlyEditedSchedule(pageManager);
 
 			updateScheduleCredits();
+			updateListVisuals();
 			return;
 		}
 		
@@ -407,6 +416,7 @@ public class CourseSearchPage extends Page {
 			loadMostRecentlyEditedSchedule(pageManager);
 
 			updateScheduleCredits();
+			updateListVisuals();
 		}
 	}
 	

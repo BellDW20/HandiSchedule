@@ -2,6 +2,7 @@ package hs.simplefx;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import hs.core.Course;
 import hs.core.Schedule;
@@ -122,8 +123,21 @@ public abstract class ViewableCourseList extends Page {
 		}
 	}
 	
-	public void updateCourseVisuals(Schedule schedule) {
-		//use update visual on each course in the cache
+	public void updateCourseVisuals(Schedule schedule, ArrayList<Course> results) {
+		boolean conflicting = false;
+		boolean duplicate = false;
+		for (int i = 0; i < results.size(); i++) {
+			conflicting = false;
+			duplicate = false;
+			
+			for (int j = 0; j < schedule.getCourses().size(); j++) {
+				duplicate = duplicate || results.get(i).differsOnlyBySection(schedule.getCourses().get(j));
+
+				conflicting = conflicting || (results.get(i).isConflictingWith(schedule.getCourses().get(j)) && !results.get(i).equals(schedule.getCourses().get(j)));
+			}
+			cachedViewableCourses.get(results.get(i).getUniqueString()).setWarning(conflicting);
+			cachedViewableCourses.get(results.get(i).getUniqueString()).setRectangle(duplicate);
+		}
 	}
 	
 	/**

@@ -34,6 +34,7 @@ public class CourseScheduleList extends ViewableCourseList {
 			currentSchedule.removeCourse(course);
 			courseSearchPage.asynchronouslySaveCurrentSchedule();
 			courseSearchPage.getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
+			courseSearchPage.updateListVisuals();
 		});
 	}
 

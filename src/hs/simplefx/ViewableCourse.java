@@ -76,9 +76,16 @@ public class ViewableCourse extends Page {
 		return course.getUniqueString();
 	}
 	
-	public void updateVisuals(Schedule currentSchedule) {
-		//use the schedule to update the visuals, like
-		//the conflictingWarning ImageView and duplicate Rectangle
+	public void setRectangle(boolean b) {
+		duplicateDarken.setVisible(b);
+	}
+	
+	public void setWarning(boolean b) {
+		conflictingWarning.setVisible(b);
+	}
+	
+	public Course getCourse() {
+		return course;
 	}
 	
 }

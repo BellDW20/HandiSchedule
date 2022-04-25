@@ -101,6 +101,10 @@ public class Course implements Serializable {
 		return department+" "+courseCode+" "+section;
 	}
 	
+	public String getDepartmentAndCode() {
+		return department+" "+courseCode;
+	}
+	
 	
 	@Override
 	public boolean equals(Object o) {
