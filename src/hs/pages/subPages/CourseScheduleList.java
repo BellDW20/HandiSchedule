@@ -6,13 +6,19 @@ import hs.core.Course;
 import hs.core.Schedule;
 import hs.pages.CourseSearchPage;
 import hs.simplefx.ViewableCourseList;
+import javafx.scene.control.Button;
 
 public class CourseScheduleList extends ViewableCourseList {
 	
 	private CourseSearchPage courseSearchPage;
+	private Button resolveButton;
 	
 	public CourseScheduleList(ArrayList<Course> allCourses) {
 		super(allCourses, 500, 590);
+		resolveButton = super.addButton("resolveButton", getW()/2-100, ViewableCourseList.PAD, 200, 40, "Resolve Schedule", ()->{
+			courseSearchPage.resolveCurrentSchedule(null);
+		});
+		resolveButton.setVisible(false);
 	}
 	
 	/**
@@ -21,6 +27,18 @@ public class CourseScheduleList extends ViewableCourseList {
 	 */
 	public void setCourseSearchPage(CourseSearchPage courseSearchPage) {
 		this.courseSearchPage = courseSearchPage;
+	}
+	
+	@Override
+	public void addCourseToDisplay(Course course) {
+		super.addCourseToDisplay(course);
+		resolveButton.setLayoutY(super.getListHeight()+ViewableCourseList.PAD);
+	}
+	
+	@Override
+	public void updateCourseVisuals(Schedule schedule, ArrayList<Course> results) {
+		super.updateCourseVisuals(schedule, results);
+		resolveButton.setVisible(schedule.isConflicting());
 	}
 	
 	@Override
@@ -35,6 +53,7 @@ public class CourseScheduleList extends ViewableCourseList {
 			courseSearchPage.asynchronouslySaveCurrentSchedule();
 			courseSearchPage.getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
 			courseSearchPage.updateListVisuals();
+			resolveButton.setLayoutY(super.getListHeight()+ViewableCourseList.PAD);
 		});
 	}
 

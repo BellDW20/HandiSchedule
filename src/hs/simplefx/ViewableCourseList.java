@@ -2,7 +2,6 @@ package hs.simplefx;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import hs.core.Course;
 import hs.core.Schedule;
@@ -15,13 +14,13 @@ import javafx.scene.Node;
  * scrollable list. Additionally, the child class is also
  * called when a course is added to add extra functionality
  * to these course visuals.
- * @author Douglas Bell
+ * @author Douglas Bell, Levi Conrad
  */
 
 public abstract class ViewableCourseList extends Page {
 	
-	private static final int COURSE_HEIGHT = 64;
-	private static final int PAD = 2;
+	public static final int COURSE_HEIGHT = 64;
+	public static final int PAD = 2;
 
 	private int w,h;
 	private ArrayList<Course> courses;
@@ -123,20 +122,25 @@ public abstract class ViewableCourseList extends Page {
 		}
 	}
 	
-	public void updateCourseVisuals(Schedule schedule, ArrayList<Course> results) {
+	public void updateCourseVisuals(Schedule schedule, ArrayList<Course> toUpdate) {
 		boolean conflicting = false;
 		boolean duplicate = false;
-		for (int i = 0; i < results.size(); i++) {
+		
+		for(Course course : schedule.getCourses()) {
+			toUpdate.add(course);
+		}
+		
+		for (int i = 0; i < toUpdate.size(); i++) {
 			conflicting = false;
 			duplicate = false;
 			
 			for (int j = 0; j < schedule.getCourses().size(); j++) {
-				duplicate = duplicate || results.get(i).differsOnlyBySection(schedule.getCourses().get(j));
+				duplicate = duplicate || toUpdate.get(i).differsOnlyBySection(schedule.getCourses().get(j));
 
-				conflicting = conflicting || (results.get(i).isConflictingWith(schedule.getCourses().get(j)) && !results.get(i).equals(schedule.getCourses().get(j)));
+				conflicting = conflicting || (toUpdate.get(i).isConflictingWith(schedule.getCourses().get(j)) && !toUpdate.get(i).equals(schedule.getCourses().get(j)));
 			}
-			cachedViewableCourses.get(results.get(i).getUniqueString()).setWarning(conflicting);
-			cachedViewableCourses.get(results.get(i).getUniqueString()).setRectangle(duplicate);
+			cachedViewableCourses.get(toUpdate.get(i).getUniqueString()).setWarning(conflicting);
+			cachedViewableCourses.get(toUpdate.get(i).getUniqueString()).setRectangle(duplicate);
 		}
 	}
 	
@@ -154,6 +158,10 @@ public abstract class ViewableCourseList extends Page {
 	 */
 	public int getH() {
 		return h;
+	}
+	
+	public int getListHeight() {
+		return PAD + (COURSE_HEIGHT+PAD)*courses.size();
 	}
 	
 }
