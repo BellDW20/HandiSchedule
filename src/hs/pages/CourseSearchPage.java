@@ -315,7 +315,9 @@ public class CourseSearchPage extends Page {
 		currentSchedule.resolveSchedule(db);
 		scheduleList.clear();
 		scheduleList.addCoursesToDisplay(currentSchedule.getCourses());
-		calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
+		if(calendarPage != null) {
+			calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
+		}
 		asynchronouslySaveCurrentSchedule();
 		updateScheduleCredits();
 		updateListVisuals();
