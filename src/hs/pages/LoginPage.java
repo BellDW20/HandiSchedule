@@ -21,8 +21,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class LoginPage extends Page {
-
-	public static UserDatabase userDatabase;
+//akdfjaklsdfj
+	static UserDatabase userDatabase;
 	public static String loggedInUser;
 	public static String loggedInPassword;
 
