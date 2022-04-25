@@ -9,6 +9,11 @@ import hs.core.Time;
 import hs.core.TimeFrame;
 import hs.search.*;
 
+/**
+ * Tests for filters when running a search
+ * @author Douglas Bell
+ *
+ */
 public class SearchTests {
 	
 	private static CourseDatabase createDummyDB() {
