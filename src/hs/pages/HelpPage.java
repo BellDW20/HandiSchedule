@@ -228,7 +228,7 @@ public class HelpPage extends Page {
 			+ 	"	 will appear here.");
 		calendarDesc[calendarDesc.length-1] = addLabel("clndrDNote", 10, 690, 
 				"Note: The buttons along the top function the same as they do in"
-			+   "the course search page. Check the help section for the course"
+			+   "the course search page. Check the help section for the "
 			+   "course search page for more details."
 		);
 	}
