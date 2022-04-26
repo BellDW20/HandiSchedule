@@ -5,11 +5,12 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.itextpdf.io.image.ImageData;
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.pdf.*;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Image;
+import javax.imageio.ImageIO;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import java.io.*;
 
 //import java.awt.image.BufferedImage;
@@ -393,22 +394,25 @@ public class Schedule implements Serializable {
 	}
 	
 	
-	public void printAsPdf(String path) throws IOException {
-		
-		BufferedImage calendar = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
-		calendar = getAsCalendar();
-		PdfDocument pdf = new PdfDocument(new PdfWriter(path));
-		Document document = new Document(pdf);
-		String line = "'Hello! Welcome to iTextPdf";
-		
-		
-		ImageData imgData = ImageDataFactory.create(calendar, null);
-		Image img = new Image(imgData);
-		
-		document.add(img);
-		document.close();
-
-		System.out.println("Awesome PDF just got created.");
+	public void printAsPdf(String path) {
+		try {
+			PDDocument document = new PDDocument();
+			BufferedImage bimg = getAsCalendar();
+			ImageIO.write(bimg, "png", new File("./tmpimg.png"));
+			PDPage page = new PDPage();
+			document.addPage(page);
+			
+			PDImageXObject img = PDImageXObject.createFromFile("./tmpimg.png", document);
+			PDPageContentStream contentStream = new PDPageContentStream(document, page);
+			contentStream.drawImage(img, 24, page.getBBox().getHeight()-bimg.getHeight()/2-24, bimg.getWidth()/2, bimg.getHeight()/2);
+			contentStream.close();
+			document.save(path);
+			document.close();
+			
+			(new File("./tmpimg.png")).delete();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

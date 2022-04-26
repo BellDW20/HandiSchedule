@@ -50,8 +50,13 @@ public class CalendarPage extends Page {
 		});
 		
 		// add resolve schedule button
-		addButton("resolveScheduleButton", 540, 670, 200, 40, "Resolve Schedule", ()->{
+		addButton("resolveScheduleButton", 645, 670, 200, 40, "Resolve Schedule", ()->{
 			((CourseSearchPage)pageManager.getPage("CourseSearch")).resolveCurrentSchedule(this);
+		});
+		
+		// add resolve schedule button
+		addButton("printScheduleButton", 435, 670, 200, 40, "Print to PDF", ()->{
+			((CourseSearchPage)pageManager.getPage("CourseSearch")).getCurrentSchedule().printAsPdf("./myschd.pdf");
 		});
 		
 		//creates a new calendar view that will be displayed on the calendar page
