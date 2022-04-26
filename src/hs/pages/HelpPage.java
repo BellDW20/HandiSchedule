@@ -154,7 +154,7 @@ public class HelpPage extends Page {
 		);
 		
 		//Course search labels
-		cspLabels = new Text[10];
+		cspLabels = new Text[11];
 		cspLabels[0] = addLabel("cspL0", 180+30, 180+28, "1");
 		cspLabels[1] = addLabel("cspL1", 180+85, 180+28, "2");
 		cspLabels[2] = addLabel("cspL2", 180+140, 180+28, "3");
@@ -164,71 +164,82 @@ public class HelpPage extends Page {
 		cspLabels[6] = addLabel("cspL6", 180+155, 180+68, "7");
 		cspLabels[7] = addLabel("cspL7", 180+340, 180+68, "8");
 		cspLabels[8] = addLabel("cspL8", 180+395, 180+68, "9");
-		cspLabels[9] = addLabel("cspL9", 180+395, 180+400, "10");
+		cspLabels[9] = addLabel("cspL9", 180+465, 180+395, "10");
+		cspLabels[10] = addLabel("cspL10", 180+465, 180+425, "11");
 		
-		cspDesc = new Text[10];
-		cspDesc[0] = addLabel("cspD0", 1000, 120, 
+		cspDesc = new Text[11];
+		cspDesc[0] = addLabel("cspD0", 1000, 80, 
 				"1 - Clicking here will save your schedule and\n"
 			  + "	 log you out of your account, bringing you\n"
 			  + "	 back to the login page."
 		);
-		cspDesc[1] = addLabel("cspD1", 1000, 180,
+		cspDesc[1] = addLabel("cspD1", 1000, 140,
 				"2 - Clicking here will bring you to a page\n"
 			  + "	 from which you can load any of the schedules\n"
 			  + "	 you had worked on previously."
 		);
-		cspDesc[2] = addLabel("cspD2", 1000, 240,
+		cspDesc[2] = addLabel("cspD2", 1000, 200,
 				"3 - Clicking here will save your schedule and\n"
 			  + "	 open an new, untitled, blank schedult to\n"
 			  + "	 work on."
 		);
-		cspDesc[3] = addLabel("cspD3", 1000, 300,
+		cspDesc[3] = addLabel("cspD3", 1000, 260,
 				"4 - Clicking here will & typing will change the\n"
 			  + "	 name of the schedule you are currently\n"
 			  + "	 working on, autosaving these changes."
 		);
-		cspDesc[4] = addLabel("cspD4", 1000, 360,
+		cspDesc[4] = addLabel("cspD4", 1000, 320,
 				"5 - Clicking here from any page will bring\n"
 			  + "	 you back to this page - the course search\n"
 			  + "	 page."
 		);
-		cspDesc[5] = addLabel("cspD5", 1000, 420,
+		cspDesc[5] = addLabel("cspD5", 1000, 380,
 				"6 - Clicking here from any page will bring\n"
 			  + "	 you the calendar page.\n"
 		);
-		cspDesc[6] = addLabel("cspD6", 1000, 465,
+		cspDesc[6] = addLabel("cspD6", 1000, 425,
 				"7 - Clicking here, typing, and pressing enter\n"
 			  + "	 or clicking the \"Search\" button will\n"
 			  + " 	 search for courses with a similar name\n"
 			  + "	 or course code."
 		);
-		cspDesc[7] = addLabel("cspD7", 1000, 540,
+		cspDesc[7] = addLabel("cspD7", 1000, 500,
 				"8 - Clicking here will perform a search\n"
 			+   "	 for courses based on the current search\n"
 			+   "	 term and the set filters"
 		);
-		cspDesc[8] = addLabel("cspD8", 1000, 600,
+		cspDesc[8] = addLabel("cspD8", 1000, 560,
 				"9 - Clicking here will toggle a list of filters\n"
 			+   "	 which can be used to narrow your search.\n"
 			+   "	 These filters can be removed at any time."
 		);
-		cspDesc[9] = addLabel("cspD9", 1000, 660,
-				"10 - Clicking here will delete the schedule that\n"
+		cspDesc[9] = addLabel("cspD9", 1000, 620,
+				"10 - Clicking here will toggle a list of filters\n"
+			+   "	 which can be used to narrow your search.\n"
+			+   "	 These filters can be removed at any time."
+		);
+		cspDesc[10] = addLabel("cspD10", 1000, 680,
+				"11 - Clicking here will delete the schedule that\n"
 			+   "	  is currently being edited."
 		);
 		
 		//Calendar Labels
-		calendarLabels = new Text[1];
+		calendarLabels = new Text[2];
 		calendarLabels[0] = addLabel("clndrL0", 180+400, 180+225, "1");
+		calendarLabels[1] = addLabel("clndrL0", 180+400, 180+400, "2");
 		
-		calendarDesc = new Text[2];
+		calendarDesc = new Text[3];
 		calendarDesc[0] = addLabel("clndrD0", 1000, 180, 
 				"1 - When you switch to the calendar view,\n"
 			+ 	"	 a calendar containing a weekly schedule\n"
 			+ 	"	 will appear here.");
+		calendarDesc[1] = addLabel("clndrD0", 1000, 240, 
+				"2 - Clicking here will try to find a schedule,\n"
+			+ 	"	 containing the same courses without\n"
+			+ 	"	 conflicting times.");
 		calendarDesc[calendarDesc.length-1] = addLabel("clndrDNote", 10, 690, 
 				"Note: The buttons along the top function the same as they do in"
-			+   "the course search page. Check the help section for the course"
+			+   "the course search page. Check the help section for the "
 			+   "course search page for more details."
 		);
 	}

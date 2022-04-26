@@ -29,17 +29,6 @@ public class Launcher extends Application {
 	public void start(Stage stage) throws Exception {
 		PageManager pageManager = new PageManager(stage, 1280, 720);
 		
-		// Store location of css file to use with each separate scene (page)
-//		String css = this.getClass().getResource("PageStyling.css").toExternalForm();
-//		HashMap<String, Scene> pages = pageManager.getPageScenes();
-//        Iterator<Entry<String, Scene>> hmIterator = pages.entrySet().iterator();
-//
-//        // Iterate through each page and add css functionality
-//		while (hmIterator.hasNext()) {
-//            Map.Entry<String, Scene> hmElement = (Map.Entry<String, Scene>)hmIterator.next();
-//            hmElement.getValue().getStylesheets().add(css);
-//		}
-		
 		stage.getIcons().add(new Image("file:./icon.png"));
 		
 		//Create and set up the login page

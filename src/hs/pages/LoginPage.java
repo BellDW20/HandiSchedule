@@ -11,14 +11,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class LoginPage extends Page {
 
-	public static UserDatabase userDatabase;
+	static UserDatabase userDatabase;
 	public static String loggedInUser;
 	public static String loggedInPassword;
 
@@ -30,28 +34,31 @@ public class LoginPage extends Page {
 	public void initializeComponents(PageManager pageManager) {
 		userDatabase = UserDatabase.loadDatabase("./users.dtb");
 		userDatabase.saveDatabase();
-		//pageManager.getPageScenes().get("LoginPage").getStylesheets().add("loginButton.css");
 		
-//		Color bgColor = new Color(0.71, 0.79, 0.89, 1.0);
-//		
-//		Rectangle bgRectangle = new Rectangle();
-//		bgRectangle = drawRect(0, 0, 1280, 720);
-//		bgRectangle.setFill(bgColor);
-		
+		Color mainBlue = new Color(0.3019607843137255, 0.5019607843137255, 0.7686274509803922, 1);
+		Color darkerBlue = new Color(0.2274509803921569, 0.4117647058823529, 0.6509803921568627, 1);
 		Text title = new Text();
+		Text subHeading = new Text();
+		subHeading.setText("Welcome to");
+		subHeading.setFont(Font.font("Verdana", FontPosture.ITALIC, 20.0));
+		subHeading.setX(420);
+		subHeading.setY(180);
+		subHeading.setFill(darkerBlue);
 		title.setText("HandiSchedule");
-		title.setX(430);
-		title.setY(200);
-		title.setFont(Font.font("Verdana", 64.0));
-		//title.setFont(new Font(64.0));
+		title.setX(365);
+		title.setY(260);
+		title.setFont(Font.font("Verdana", 80.0));
+		title.setFill(mainBlue);
+		title.setStroke(darkerBlue);
+		getPane().getChildren().add(subHeading);
 		getPane().getChildren().add(title);
 		
 		alert = new Text();
 		alert.setX(540);
-		alert.setY(500);
+		alert.setY(510);
+		alert.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 15.0));
 		alert.setVisible(false);
 		getPane().getChildren().add(alert);
-		
 		
 		TextFilterer lengthFilter = new TextFilterer()
 			.addFilter(new LengthTextFilter(0,26))
@@ -60,10 +67,17 @@ public class LoginPage extends Page {
 		addTextField("usernameField", 540, 320, 200, 40, "Username");
 		userField = getTextField("usernameField");
 		userField.setTextFormatter(lengthFilter.getAsTextFormatter());
+		getTextField("usernameField").setOnAction((event) -> {
+			onLoginClick(pageManager);
+		});
 		
 		addPasswordField("passwordField", 540, 380, 200, 40, "Password");
 		passField = (PasswordField)getTextField("passwordField");
 		userField.setTextFormatter(lengthFilter.getAsTextFormatter());
+		getTextField("passwordField").setOnAction((event) -> {
+			onLoginClick(pageManager);
+		});
+		
 		
 		Button loginButton = new Button();
 		loginButton = addButton("loginButton", 540, 440, 90, 40, "Login", ()->{
@@ -93,11 +107,11 @@ public class LoginPage extends Page {
 			((CourseSearchPage)pageManager.getPage("CourseSearch")).loadMostRecentlyEditedSchedule(pageManager);
 			pageManager.goToPage("CourseSearch");
 		} else if(loginStatus == UserDatabase.LOGIN_INCORRECT_USERNAME) {
-			alert.setStroke(Color.RED);
+			alert.setFill(Color.RED);
 			alert.setText("Login failed: invalid username given");
 			alert.setVisible(true);
 		} else if(loginStatus == UserDatabase.LOGIN_INCORRECT_PASSWORD) {
-			alert.setStroke(Color.RED);
+			alert.setFill(Color.RED);
 			alert.setText("Login failed: incorrect password for username given");
 			alert.setVisible(true);
 		}
@@ -105,12 +119,12 @@ public class LoginPage extends Page {
 	
 	private void onRegisterClick(PageManager pageManager) {
 		if(userField.getText().length() == 0) {
-			alert.setStroke(Color.RED);
+			alert.setFill(Color.RED);
 			alert.setText("Registration failed: no username given");
 			alert.setVisible(true);
 			return;
 		} else if(passField.getText().length() == 0) {
-			alert.setStroke(Color.RED);
+			alert.setFill(Color.RED);
 			alert.setText("Registration failed: no password given");
 			alert.setVisible(true);
 			return;

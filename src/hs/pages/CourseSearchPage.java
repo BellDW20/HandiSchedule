@@ -24,6 +24,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class CourseSearchPage extends Page {
 	
@@ -319,7 +321,7 @@ public class CourseSearchPage extends Page {
 		asynchronouslySaveCurrentSchedule();
 		updateScheduleCredits();
 		updateListVisuals();
-		
+		Launcher.logger.resolvedSchedule(currentSchedule);
 	}
 	
 	//getter for the name of the first schedule created by a user that has not been modified
@@ -379,6 +381,7 @@ public class CourseSearchPage extends Page {
 	
 	private void updateScheduleCredits() {
 		getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
+		getLabel("scheduleCredits").setFont(Font.font("Arial", FontWeight.MEDIUM, 12.0));
 	}
 	
 	/**

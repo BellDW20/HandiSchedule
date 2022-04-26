@@ -1,14 +1,14 @@
 package hs.core;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 public class Logger  {
 	
 	private PrintWriter pw;
-	private File file = new File(System.nanoTime() + ".txt");
+	private File file = new File("./logs/" + System.nanoTime() + ".txt");
 	
 	
 	public Logger() {
+		(new File("./logs/")).mkdir();
 		try {
 			pw = new PrintWriter(file);
 		}
