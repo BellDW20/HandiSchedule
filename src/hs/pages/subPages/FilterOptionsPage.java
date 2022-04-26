@@ -64,17 +64,17 @@ public class FilterOptionsPage extends Page {
 		//Adds drop downs for selecting a time frame to filter by
 		addLabel("courseTimeLabel", 20, 130, "Course Times");
 		getLabel("courseTimeLabel").setFont(Font.font("Arial", 12.0));
-		addDropDown("From:", 20, 150, "From",
+		addDropDown("From:", 20, 150, "Start Time",
 					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
 		);
 		getDropDown("From:").setStyle(styleString);
-		addDropDown("AM or PMFrom:", 100, 150, "AM or PM", "AM", "PM");
+		addDropDown("AM or PMFrom:", 125, 150, "AM or PM", "AM", "PM");
 		getDropDown("AM or PMFrom:").setStyle(styleString);
-		addDropDown("To:", 240, 150, "To", 
+		addDropDown("To:", 240, 150, "End Time", 
 					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
 		);
 		getDropDown("To:").setStyle(styleString);
-		addDropDown("AM or PMTo:", 320, 150, "AM or PM", "AM", "PM");
+		addDropDown("AM or PMTo:", 342, 150, "AM or PM", "AM", "PM");
 		getDropDown("AM or PMTo:").setStyle(styleString);
 		
 		//Adds the department filter (with an "All" departments option)
