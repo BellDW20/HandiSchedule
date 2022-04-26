@@ -5,6 +5,17 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import java.io.*;
+
+//import java.awt.image.BufferedImage;
+//import java.io.ByteArrayOutputStream;
+//import javax.imageio.ImageIO;
+
 import hs.math.CartesianProduct;
 
 /*
@@ -380,6 +391,25 @@ public class Schedule implements Serializable {
 		}
 		
 		return calendar;
+	}
+	
+	
+	public void printAsPdf(String path) throws IOException {
+		
+		BufferedImage calendar = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
+		calendar = getAsCalendar();
+		PdfDocument pdf = new PdfDocument(new PdfWriter(path));
+		Document document = new Document(pdf);
+		String line = "'Hello! Welcome to iTextPdf";
+		
+		
+		ImageData imgData = ImageDataFactory.create(calendar, null);
+		Image img = new Image(imgData);
+		
+		document.add(img);
+		document.close();
+
+		 System.out.println("Awesome PDF just got created.");
 	}
 	
 }
