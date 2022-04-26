@@ -409,7 +409,7 @@ public class Schedule implements Serializable {
 		document.add(img);
 		document.close();
 
-		 System.out.println("Awesome PDF just got created.");
+		System.out.println("Awesome PDF just got created.");
 	}
 	
 }
