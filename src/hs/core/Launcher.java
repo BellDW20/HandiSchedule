@@ -19,8 +19,11 @@ import javafx.stage.Stage;
 public class Launcher extends Application {
 	
 	public static Logger logger = new Logger();
+	public static boolean cssFlag = false;
 	public static void main(String[] args) {
-		
+		if (args.length > 0 && args[0].equals("css")) {
+			cssFlag = true;
+		}
 		launch(); // Default to start any JavaFX application
 		//NOTE: start(Stage stage) will be called by JavaFX on startup
 	}

@@ -6,6 +6,8 @@ import hs.core.Course;
 import hs.pages.CourseSearchPage;
 import hs.simplefx.PageManager;
 import hs.simplefx.ViewableCourseList;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class CourseSearchList extends ViewableCourseList {
 
@@ -36,6 +38,8 @@ public class CourseSearchList extends ViewableCourseList {
 	public void initializeComponents(PageManager pageManager) {
 		//An empty search will notify the user of no results
 		addLabel("noResultLabel", 200, 30, "No Courses Found");
+		getLabel("noResultLabel").setFont(Font.font("Arial", FontWeight.MEDIUM, 12.0));
+
 	}
 	
 	@Override

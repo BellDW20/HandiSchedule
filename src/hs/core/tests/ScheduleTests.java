@@ -31,7 +31,7 @@ public class ScheduleTests {
 		Course course3 = new Course("Course 3", "MATH", 'E', 344, 2);
 		course3.addMeetingTime(new TimeFrame(new Time(1,0,Time.PM), new Time(1,50,Time.PM)), "MWRF");
 		
-		Course course4 = new Course("Course 4", "MATH", 'D', 344, 2);
+		Course course4 = new Course("Course 3", "MATH", 'D', 344, 2);
 		course4.addMeetingTime(new TimeFrame(new Time(12,0,Time.PM), new Time(12,50,Time.PM)), "MWF");
 		
 		
@@ -98,11 +98,8 @@ public class ScheduleTests {
 			CourseDatabase db = createDummyDB();
 			ArrayList<Course> courses = db.getCopyOfAllCourses();
 			for (int i = 0; i < 3; i++) {
-				System.out.println(courses.get(i));
 				s4.addCourse(courses.get(i));
 			}
-			//isConflicting returned true
-			//TODO: see why this ain't WORK!!!
 			assertEquals(true, s4.resolveSchedule(db));
 
 		}

@@ -2,6 +2,7 @@ package hs.simplefx;
 
 import java.util.HashMap;
 
+import hs.core.Launcher;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -40,7 +41,9 @@ public class PageManager {
 	public void addPageToProgram(Page page, String pageName) {
 		pages.put(pageName, page);
 		Scene scene = new Scene(page.getPane(), windowWidth, windowHeight);
-		scene.getStylesheets().add(getClass().getResource("cssStyling.css").toExternalForm());
+		if (Launcher.cssFlag) {
+			scene.getStylesheets().add(getClass().getResource("cssStyling.css").toExternalForm());
+		}
 		getPageScenes().put(pageName, scene);
 	}
 	

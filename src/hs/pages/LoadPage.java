@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class LoadPage extends Page {
 	
@@ -87,6 +89,7 @@ public class LoadPage extends Page {
 		
 		drawRect(0, 0, WIDTH, HEIGHT);
 		addLabel("scheduleLabel", BUFFER, BUFFER, "Schedules");
+		getLabel("scheduleLabel").setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 13.0));
 		
 		//gets references to the two other pages
 		courseSearchPage = (CourseSearchPage)pageManager.getPage("CourseSearch");
