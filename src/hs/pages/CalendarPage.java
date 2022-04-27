@@ -1,10 +1,13 @@
 package hs.pages;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+
 import hs.pages.subPages.CalendarView;
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 
 public class CalendarPage extends Page {
 
@@ -56,7 +59,15 @@ public class CalendarPage extends Page {
 		
 		// add resolve schedule button
 		addButton("printScheduleButton", 435, 670, 200, 40, "Print to PDF", ()->{
-			((CourseSearchPage)pageManager.getPage("CourseSearch")).getCurrentSchedule().printAsPdf("./myschd.pdf");
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Print to PDF");
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extFilter);
+			File file = fileChooser.showSaveDialog(null);
+			
+			if (file != null) {
+				((CourseSearchPage)pageManager.getPage("CourseSearch")).getCurrentSchedule().printAsPdf(file.getAbsolutePath());
+            }
 		});
 		
 		//creates a new calendar view that will be displayed on the calendar page

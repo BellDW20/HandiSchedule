@@ -10,6 +10,9 @@ import javax.imageio.ImageIO;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import java.io.*;
 
@@ -340,17 +343,18 @@ public class Schedule implements Serializable {
 			BufferedImage bimg = getAsCalendar();
 			ImageIO.write(bimg, "png", new File("./tmpimg.png"));
 			PDPage page = new PDPage();
-			PDPage classes = new PDPage();
 			document.addPage(page);
 			
 			PDImageXObject img = PDImageXObject.createFromFile("./tmpimg.png", document);
 			PDPageContentStream contentStream = new PDPageContentStream(document, page);
-			PDPageContentStream writeClasses = new PDPageContentStream(document, classes);
 			contentStream.drawImage(img, 24, page.getBBox().getHeight()-bimg.getHeight()/2-24, bimg.getWidth()/2, bimg.getHeight()/2);
+			contentStream.setFont(new PDType1Font(FontName.TIMES_ROMAN), 12);
 			for(int i = 0; i < courses.size(); i++) {
-				writeClasses.addComment(courses.get(i).toString());
+				contentStream.beginText();
+			    contentStream.newLineAtOffset(24, 450-14*i);
+				contentStream.showText(courses.get(i).toString());
+				contentStream.endText();
 			}
-			writeClasses.close();
 			contentStream.close();
 			document.save(path);
 			document.close();
