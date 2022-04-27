@@ -47,6 +47,7 @@ public class CourseSearchPage extends Page {
 	private Schedule currentSchedule; //The schedule currently being edited
 	
 	private TextField scheduleTitleField; //The text field for editing the schedule's title
+	private PageManager pageManager;
 	private boolean isReplacingTitle = true; //Magic
 	
 	private Button resolveButton;
@@ -57,6 +58,8 @@ public class CourseSearchPage extends Page {
 	 */
 	@Override
 	public void initializeComponents(PageManager pageManager) {	
+		this.pageManager = pageManager;
+		
 		//Load course database
 		db = CourseDatabase.loadFromFile("./CourseDB_CSV.csv");
 		currentSearch = new CourseSearch(db);
@@ -244,7 +247,9 @@ public class CourseSearchPage extends Page {
 	public void updateListVisuals() {
 		searchList.updateCourseVisuals(currentSchedule, currentSearch.getSearchResults());
 		scheduleList.updateCourseVisuals(currentSchedule, currentSearch.getSearchResults());
-		resolveButton.setVisible(currentSchedule.isConflicting());
+		boolean showResolve = currentSchedule.isConflicting();
+		resolveButton.setVisible(showResolve);
+		((CalendarPage)pageManager.getPage("CalendarPage")).updateResolveVisuals(showResolve);
 	}
 	
 	/*
@@ -319,16 +324,23 @@ public class CourseSearchPage extends Page {
 	}
 	
 	public void resolveCurrentSchedule(CalendarPage calendarPage) {
-		currentSchedule.resolveSchedule(db);
-		scheduleList.clear();
-		scheduleList.addCoursesToDisplay(currentSchedule.getCourses());
-		if(calendarPage != null) {
-			calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
+		boolean resolved = currentSchedule.resolveSchedule(db);
+		if(resolved) {
+			scheduleList.clear();
+			scheduleList.addCoursesToDisplay(currentSchedule.getCourses());
+			if(calendarPage != null) {
+				calendarPage.updateCalendarImage(currentSchedule.getAsCalendar());
+			}
+			asynchronouslySaveCurrentSchedule();
+			updateScheduleCredits();
+			updateListVisuals();
+			Launcher.logger.resolvedSchedule(currentSchedule);
+		} else {
+			Alert resolveError = new Alert(AlertType.ERROR);
+			resolveError.setHeaderText("Schedule Resolve Failed");
+			resolveError.setContentText("There are no ways to create a non-conflicting version of the current schedule.");
+			resolveError.showAndWait();
 		}
-		asynchronouslySaveCurrentSchedule();
-		updateScheduleCredits();
-		updateListVisuals();
-		Launcher.logger.resolvedSchedule(currentSchedule);
 	}
 	
 	//getter for the name of the first schedule created by a user that has not been modified
