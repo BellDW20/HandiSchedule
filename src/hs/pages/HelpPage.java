@@ -224,17 +224,21 @@ public class HelpPage extends Page {
 		);
 		
 		//Calendar Labels
-		calendarLabels = new Text[2];
+		calendarLabels = new Text[3];
 		calendarLabels[0] = addLabel("clndrL0", 180+400, 180+225, "1");
-		calendarLabels[1] = addLabel("clndrL0", 180+400, 180+400, "2");
+		calendarLabels[1] = addLabel("clndrL1", 180+330, 180+400, "2");
+		calendarLabels[2] = addLabel("clndrL2", 180+460, 180+400, "3");
 		
-		calendarDesc = new Text[3];
+		calendarDesc = new Text[4];
 		calendarDesc[0] = addLabel("clndrD0", 1000, 180, 
 				"1 - When you switch to the calendar view,\n"
 			+ 	"	 a calendar containing a weekly schedule\n"
 			+ 	"	 will appear here.");
 		calendarDesc[1] = addLabel("clndrD0", 1000, 240, 
-				"2 - Clicking here will try to find a schedule,\n"
+				"2 - Clicking here allows you to print your,\n"
+			+ 	"	 calendar of your schedule to a pdf.\n");
+		calendarDesc[2] = addLabel("clndrD0", 1000, 280, 
+				"3 - Clicking here will try to find a schedule,\n"
 			+ 	"	 containing the same courses without\n"
 			+ 	"	 conflicting times.");
 		calendarDesc[calendarDesc.length-1] = addLabel("clndrDNote", 10, 690, 
