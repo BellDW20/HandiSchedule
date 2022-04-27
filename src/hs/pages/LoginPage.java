@@ -135,12 +135,12 @@ public class LoginPage extends Page {
 		if(registerStatus == UserDatabase.REGISTER_USERNAME_SUCCESS) {
 			userField.clear();
 			passField.clear();
-			alert.setStroke(Color.GREEN);
+			alert.setFill(Color.GREEN);
 			alert.setText("Successfully registered");
 			alert.setVisible(true);
 			userDatabase.saveDatabase();
 		} else if(registerStatus == UserDatabase.REGISTER_USERNAME_TAKEN) {
-			alert.setStroke(Color.RED);
+			alert.setFill(Color.RED);
 			alert.setText("Registration failed: username already taken");
 			alert.setVisible(true);
 		}
