@@ -21,6 +21,8 @@ public class HSSecurity {
 	public static final int SALT_LEN = 64;
 	
 	public static byte[] generateSalt() {
+		//creates a salt of a given length
+		//using secure random number generation
 		SecureRandom srand = new SecureRandom();
 		byte[] bytes = new byte[SALT_LEN];
 		srand.nextBytes(bytes);
@@ -29,9 +31,11 @@ public class HSSecurity {
 	
 	public static byte[] generateSaltedHash(char[] password, byte[] salt) {
 		try {
+			//creates a secret key using the passowrd and salt
 			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			KeySpec keySpec = new PBEKeySpec(password, salt, PBKDF2_ITERATIONS, PBKDF2_LEN);
 			SecretKey key = keyFactory.generateSecret(keySpec);
+			//returns the encoding of the key
 			return key.getEncoded();
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			e.printStackTrace();
@@ -40,14 +44,17 @@ public class HSSecurity {
 	}
 	
 	public static SecretKey getEncryptionKey(char[] password, byte[] salt) {
+		//creates a password based encryption key
 		return new SecretKeySpec(generateSaltedHash(password, salt), "AES");
 	}
 	
 	public static byte[] encryptData(char[] password, byte[] salt, byte[] data) {
+		//encrypts a byte array with a password and salt
 		return useCipher(password, salt, data, Cipher.ENCRYPT_MODE);
 	}
 	
 	public static byte[] decryptData(char[] password, byte[] salt, byte[] data) {
+		//decrypts a byte array with a password and salt
 		return useCipher(password, salt, data, Cipher.DECRYPT_MODE);
 	}
 	
