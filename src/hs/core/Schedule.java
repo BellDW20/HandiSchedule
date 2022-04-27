@@ -273,7 +273,6 @@ public class Schedule implements Serializable {
 			int classHeight;
 			int classWidth;
 			int coursePadding;
-			int stringBuffer;
 			
 			for (int j = 0; j < temp.getMeetingTimes().size(); j++) {
 				startHour = temp.getMeetingTimes().get(j).getTimeFrame().getStartTime().getMilitaryHour();
@@ -287,11 +286,9 @@ public class Schedule implements Serializable {
 				classWidth = headerWidth;
 				coursePadding = 30;
 				
-//				boolean conflicting = false;
 				String text = courses.get(i).getDepartment() + " " + courses.get(i).getCourseCode() + " " + courses.get(i).getSection();
 				
-//				int conflictingIndex = 0;
-//				int numConflicts = 0;
+
 				for (int k = 0; k < calendarTimes.size(); k++) {
 					if(temp.getMeetingTimes().get(j).isConflictingWith(calendarTimes.get(k))) {
 						BufferedImage bad = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -299,91 +296,34 @@ public class Schedule implements Serializable {
 						g2.setColor(black);
 						g2.drawString("NO CALENDAR IS AVAILABLE: YOU HAVE A CONFLICT IN YOUR SCHEDULE", width / 3, height / 2);
 						return bad;
-//						conflicting = true;
-//						stringY += 16;
-//						conflictingIndex = k;
-//						numConflicts++;
 					}
 				}
 				
-				//stringY += 32 * (numConflicts - 1);
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("M")) {
 					g.drawRect(bufferWidth, classY, classWidth, classHeight);
-//					g.setColor(blue);
-//					g.fillRect(bufferWidth, classY, classWidth, classHeight);
-//					g.setColor(black);
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("M")) {
-//						g.drawString("CONFLICTS WITH", bufferWidth + (coursePadding / 2), stringY + (classHeight / 2));
-//						stringY += 16;
-//					}
 					g.drawString(text, bufferWidth + coursePadding, stringY + (classHeight / 2));
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("M")) {
-//						stringY -= 16;
-//					}
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("T")) {
 					g.drawRect(bufferWidth + headerWidth, classY, classWidth, classHeight);
-//					g.setColor(blue);
-//					g.fillRect(bufferWidth + headerWidth, classY, classWidth, classHeight);
-//					g.setColor(black);
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("T")) {
-//						g.drawString("CONFLICTS WITH", bufferWidth +  headerWidth + (coursePadding / 2), stringY + (classHeight / 2));
-//						stringY += 16;
-//					}
 					g.drawString(text, bufferWidth + headerWidth + coursePadding, stringY + (classHeight / 2));
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("T")) {
-//						stringY -= 16;
-//					}
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("W")) {
 					g.drawRect(bufferWidth + headerWidth * 2, classY, classWidth, classHeight);
-//					g.setColor(blue);
-//					g.fillRect(bufferWidth + headerWidth * 2, classY, classWidth, classHeight);
-//					g.setColor(black);
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("W")) {
-//						g.drawString("CONFLICTS WITH", bufferWidth + (headerWidth * 2) + (coursePadding / 2), stringY + (classHeight / 2));
-//						stringY += 16;
-//					}
 					g.drawString(text, bufferWidth + (headerWidth * 2) + coursePadding, stringY + (classHeight / 2));
-					
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("W")) {
-//						stringY -= 16;
-//					}
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("R")) {
-					g.drawRect(bufferWidth + headerWidth * 3, classY, classWidth, classHeight);
-//					g.setColor(blue);
-//					g.fillRect(bufferWidth + headerWidth * 3, classY, classWidth, classHeight);
-//					g.setColor(black);
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("R")) {
-//						g.drawString("CONFLICTS WITH", bufferWidth + (headerWidth * 3) + (coursePadding / 2), stringY + (classHeight / 2));
-//						stringY += 16;
-//					}
 					g.drawString(text, bufferWidth + (headerWidth * 3) + coursePadding, stringY + (classHeight / 2));
-					
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("R")) {
-//						stringY -= 16;
-//					}
+
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("F")) {
 					g.drawRect(bufferWidth + headerWidth * 4, classY, classWidth, classHeight);
-//					g.setColor(blue);
-//					g.fillRect(bufferWidth + headerWidth * 4, classY, classWidth, classHeight);
-//					g.setColor(black);
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("F")) {
-//						g.drawString("CONFLICTS WITH", bufferWidth + (headerWidth * 4) + (coursePadding / 2), stringY + (classHeight / 2));
-//						stringY += 16;
-//					}
 					g.drawString(text, bufferWidth + (headerWidth * 4) + coursePadding, stringY + (classHeight / 2));
-					
-//					if (conflicting && calendarTimes.get(conflictingIndex).getDaysOfWeekString().contains("F")) {
-//						stringY -= 16;
-//					}
+
 				}
 				
 				calendarTimes.add(temp.getMeetingTimes().get(j));
@@ -400,11 +340,17 @@ public class Schedule implements Serializable {
 			BufferedImage bimg = getAsCalendar();
 			ImageIO.write(bimg, "png", new File("./tmpimg.png"));
 			PDPage page = new PDPage();
+			PDPage classes = new PDPage();
 			document.addPage(page);
 			
 			PDImageXObject img = PDImageXObject.createFromFile("./tmpimg.png", document);
 			PDPageContentStream contentStream = new PDPageContentStream(document, page);
+			PDPageContentStream writeClasses = new PDPageContentStream(document, classes);
 			contentStream.drawImage(img, 24, page.getBBox().getHeight()-bimg.getHeight()/2-24, bimg.getWidth()/2, bimg.getHeight()/2);
+			for(int i = 0; i < courses.size(); i++) {
+				writeClasses.addComment(courses.get(i).toString());
+			}
+			writeClasses.close();
 			contentStream.close();
 			document.save(path);
 			document.close();
