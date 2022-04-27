@@ -319,6 +319,7 @@ public class Schedule implements Serializable {
 				}
 				
 				if (temp.getMeetingTimes().get(j).getDaysOfWeekString().contains("R")) {
+					g.drawRect(bufferWidth + headerWidth * 3, classY, classWidth, classHeight);
 					g.drawString(text, bufferWidth + (headerWidth * 3) + coursePadding, stringY + (classHeight / 2));
 
 				}
