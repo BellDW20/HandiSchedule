@@ -35,7 +35,9 @@ public class CalendarPage extends Page {
 		});
 		
 		// add New button
-		addButton("newButton", 190, 5, 80, 40, "New", null);
+		addButton("newButton", 190, 5, 80, 40, "New", ()->{
+			((CourseSearchPage)pageManager.getPage("CourseSearch")).createNewSchedule(pageManager);
+		});
 		
 		// add button to switch to the course search page
 		addButton("courseSearchSwitchButton", 1020, 5, 120, 40, "Class Search", () -> {

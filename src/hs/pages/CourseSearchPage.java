@@ -19,6 +19,8 @@ import hs.search.CourseSearch;
 import hs.search.CourseTimeFrameFilter;
 import hs.simplefx.Page;
 import hs.simplefx.PageManager;
+import hs.simplefx.text.LengthTextFilter;
+import hs.simplefx.text.TextFilterer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -116,16 +118,7 @@ public class CourseSearchPage extends Page {
 		
 		//add New button. This button creates a new schedule.
 		addButton("newButton", 190, 5, 80, 40, "New", ()->{
-			immediatelySaveCurrentSchedule();
-			
-			//make a new schedule and save it
-			currentSchedule = new Schedule(getFirstUnusedScheduleName());
-			immediatelySaveCurrentSchedule();
-			
-			//load the new schedule
-			loadMostRecentlyEditedSchedule(pageManager);
-
-			updateScheduleCredits();
+			createNewSchedule(pageManager);
 		});
 		
 		
@@ -163,7 +156,10 @@ public class CourseSearchPage extends Page {
 				renameError.setHeaderText("Schedule Rename Failed");
 				renameError.setContentText("A schedule with the name '"+newText+"' already exists.");
 				renameError.showAndWait();
+			} else if(currentSchedule.getTitle().length() >= 30 && change.isAdded()) {
+				return null;
 			}
+			
 			
 			//If the change is valid, accept it
 			if(correctFormat && !alreadyASchedule) {
@@ -215,6 +211,8 @@ public class CourseSearchPage extends Page {
 		getTextField("searchField").setOnAction((event)->{
 			performSearch();
 		});
+		TextFilterer lengthFilter = new TextFilterer().addFilter(new LengthTextFilter(0, 60));
+		getTextField("searchField").setTextFormatter(lengthFilter.getAsTextFormatter());
 		
 		/*
 		 * Add search button that users click to search for courses when they have 
@@ -391,6 +389,19 @@ public class CourseSearchPage extends Page {
 	private void updateScheduleCredits() {
 		getLabel("scheduleCredits").setText("Current Credits: " + currentSchedule.getCreditHours());
 		getLabel("scheduleCredits").setFont(Font.font("Arial", FontWeight.MEDIUM, 12.0));
+	}
+	
+	public void createNewSchedule(PageManager pageManager) {
+		immediatelySaveCurrentSchedule();
+		
+		//make a new schedule and save it
+		currentSchedule = new Schedule(getFirstUnusedScheduleName());
+		immediatelySaveCurrentSchedule();
+		
+		//load the new schedule
+		loadMostRecentlyEditedSchedule(pageManager);
+
+		updateScheduleCredits();
 	}
 	
 	/**
