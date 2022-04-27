@@ -21,6 +21,7 @@ import hs.simplefx.Page;
 import hs.simplefx.PageManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
@@ -46,6 +47,8 @@ public class CourseSearchPage extends Page {
 	private TextField scheduleTitleField; //The text field for editing the schedule's title
 	private boolean isReplacingTitle = true; //Magic
 	
+	private Button resolveButton;
+	
 	/*
 	 * Creates and initializes the the components of the course search page.
 	 * Takes in a page manager as a parameter
@@ -69,6 +72,11 @@ public class CourseSearchPage extends Page {
 		
 		//sub page contains the courses currently added to the schedule being worked on
 		addSubPage("scheduleList", scheduleList, 770, 120, scheduleList.getW(), scheduleList.getH(), true);
+		
+		resolveButton = addButton("resolveButton", 540, 570, 200, 40, "Resolve Schedule", ()->{
+			resolveCurrentSchedule(null);
+		});
+		resolveButton.setVisible(false);
 		
 		//add Delete button. This button allows the user to delete the current schedule
 		addButton("deleteButton", 540, 670, 200, 40, "Delete Schedule", ()->{
@@ -238,6 +246,7 @@ public class CourseSearchPage extends Page {
 	public void updateListVisuals() {
 		searchList.updateCourseVisuals(currentSchedule, currentSearch.getSearchResults());
 		scheduleList.updateCourseVisuals(currentSchedule, currentSearch.getSearchResults());
+		resolveButton.setVisible(currentSchedule.isConflicting());
 	}
 	
 	/*
